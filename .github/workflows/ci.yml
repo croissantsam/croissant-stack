@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22.14.0 # Specific version to ensure npm >= 11.5.1
+          node-version: 24
           cache: 'npm'
 
       - name: Install Dependencies
@@ -52,7 +52,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22.14.0 # Specific version to ensure npm >= 11.5.1
+          node-version: 24
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install Dependencies
@@ -78,7 +78,7 @@ jobs:
           # Publish to npm (using Trusted Publishing)
           # We move into the directory to ensure npm publish uses the correct package context
           cd packages/create-croissant
-          npm publish --provenance
+          npm publish --provenance --access public
           
           # Go back to root for git operations
           cd ../..
