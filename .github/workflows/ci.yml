@@ -53,7 +53,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22.14.0 # Specific version to ensure npm >= 11.5.1
-          registry-url: 'https://registry.npmjs.org'
 
       - name: Install Dependencies
         run: npm install
@@ -78,9 +77,13 @@ jobs:
           # Build the package
           npm run build
           
+          # Debug info
+          echo "Checking npm registry configuration..."
+          npm config get registry
+          
           # Publish to npm (using Trusted Publishing)
-          # The registry-url in setup-node handles the authentication via OIDC
-          npm publish --access public --provenance
+          # We explicitly set the registry to ensure we are hitting the correct endpoint
+          npm publish --access public --provenance --registry https://registry.npmjs.org
           
           # After successful publish, commit the version change and tag it
           git add package.json

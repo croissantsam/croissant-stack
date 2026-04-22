@@ -2,6 +2,11 @@
   "name": "create-croissant",
   "version": "0.1.0",
   "description": "Scaffold a new project using the Croissant Stack",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/croissantsam/croissant-stack.git",
+    "directory": "packages/create-croissant"
+  },
   "main": "./dist/index.js",
   "type": "module",
   "bin": {
