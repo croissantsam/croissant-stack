@@ -76,7 +76,7 @@ jobs:
           
           # Publish to npm (using Trusted Publishing)
           # We run this from the root using the workspace flag
-          npm publish -w create-croissant --access public --provenance --registry https://registry.npmjs.org
+          npm publish -w create-croissant --access public --provenance
           
           # After successful publish, commit the version change and tag it
           git add packages/create-croissant/package.json
