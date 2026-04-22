@@ -78,7 +78,7 @@ jobs:
           # Publish to npm (using Trusted Publishing)
           # We move into the directory to ensure npm publish uses the correct package context
           cd packages/create-croissant
-          npm publish --access public --provenance
+          npm publish --provenance
           
           # Go back to root for git operations
           cd ../..

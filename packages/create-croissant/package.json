@@ -1,5 +1,8 @@
 {
   "name": "create-croissant",
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "0.1.0",
   "description": "Scaffold a new project using the Croissant Stack",
   "repository": {
