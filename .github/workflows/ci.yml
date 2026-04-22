@@ -53,6 +53,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22.14.0 # Specific version to ensure npm >= 11.5.1
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install Dependencies
         run: npm install
