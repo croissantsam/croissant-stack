@@ -82,8 +82,8 @@ jobs:
           npm config get registry
           
           # Publish to npm (using Trusted Publishing)
-          # We explicitly set the registry to ensure we are hitting the correct endpoint
-          npm publish --access public --provenance --registry https://registry.npmjs.org
+          # We explicitly set the registry and use --no-workspaces to avoid ENOWORKSPACES in monorepos
+          npm publish --access public --provenance --registry https://registry.npmjs.org --no-workspaces
           
           # After successful publish, commit the version change and tag it
           git add package.json
