@@ -1,0 +1,24 @@
+{
+  "name": "@workspace/orpc",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "lint": "eslint",
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@orpc/server": "latest",
+    "@orpc/client": "latest",
+    "zod": "latest",
+    "@workspace/auth": "*",
+    "@workspace/db": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "exports": {
+    "./router": "./src/lib/router.ts"
+  }
+}
