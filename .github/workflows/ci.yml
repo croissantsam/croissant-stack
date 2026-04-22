@@ -76,8 +76,12 @@ jobs:
           npm run build -w create-croissant
           
           # Publish to npm (using Trusted Publishing)
-          # We run this from the root using the workspace flag
-          npm publish -w create-croissant --access public --provenance
+          # We move into the directory to ensure npm publish uses the correct package context
+          cd packages/create-croissant
+          npm publish --access public --provenance
+          
+          # Go back to root for git operations
+          cd ../..
           
           # After successful publish, commit the version change and tag it
           git add packages/create-croissant/package.json
