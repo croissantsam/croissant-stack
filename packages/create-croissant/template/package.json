@@ -1,0 +1,35 @@
+{
+  "name": "croissant-stack",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "turbo format",
+    "typecheck": "turbo typecheck",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:logs": "docker compose logs -f",
+    "update-deps": "npx npm-check-updates -u -w --root && npm install"
+  },
+  "devDependencies": {
+    "@tanstack/eslint-config": "0.3.4",
+    "eslint": "9.39.4",
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "turbo": "^2.8.17",
+    "typescript": "6.0.3"
+  },
+  "packageManager": "npm@11.12.1",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "overrides": {
+    "@noble/ciphers": "2.2.0"
+  }
+}

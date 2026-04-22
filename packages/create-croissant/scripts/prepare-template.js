@@ -25,14 +25,47 @@ async function prepareTemplate() {
   await fs.remove(templatePath);
   await fs.ensureDir(templatePath);
 
-  // Copy files
-  await fs.copy(monorepoRoot, templatePath, {
-    filter: (src) => {
-      const relativePath = path.relative(monorepoRoot, src);
-      if (!relativePath) return true; // root itself
-      return !ignoreList.some(ignore => relativePath.startsWith(ignore));
+  // Get all items in the root directory
+  const rootItems = await fs.readdir(monorepoRoot);
+
+  for (const item of rootItems) {
+    const srcPath = path.resolve(monorepoRoot, item);
+    const destPath = path.resolve(templatePath, item);
+
+    // Skip ignored items
+    if (ignoreList.some(ignore => item === ignore || item.startsWith(ignore + '/'))) {
+      continue;
     }
-  });
+
+    // Special handling for 'packages' to avoid circular copy
+    if (item === 'packages') {
+      await fs.ensureDir(destPath);
+      const packageItems = await fs.readdir(srcPath);
+      for (const pkg of packageItems) {
+        if (pkg === 'create-croissant') continue;
+        await fs.copy(path.resolve(srcPath, pkg), path.resolve(destPath, pkg), {
+          dereference: true,
+          filter: (src) => {
+            const relativePath = path.relative(monorepoRoot, src);
+            return !ignoreList.some(ignore => relativePath.startsWith(ignore));
+          }
+        });
+      }
+      continue;
+    }
+
+    try {
+      await fs.copy(srcPath, destPath, {
+        dereference: true,
+        filter: (src) => {
+          const relativePath = path.relative(monorepoRoot, src);
+          return !ignoreList.some(ignore => relativePath.startsWith(ignore));
+        }
+      });
+    } catch (err) {
+      console.warn(`Warning: Could not copy ${item}: ${err.message}`);
+    }
+  }
 
   console.log('Template prepared successfully!');
 }

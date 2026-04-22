@@ -1,0 +1,24 @@
+{
+  "name": "@workspace/auth",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "lint": "eslint",
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit",
+    "generate": "better-auth generate --output ../db/src/lib/auth-schema.ts"
+  },
+  "dependencies": {
+    "better-auth": "^1.6.6",
+    "@workspace/db": "*"
+  },
+  "devDependencies": {
+    "@better-auth/cli": "^1.4.21",
+    "drizzle-kit": "^0.31.10"
+  },
+  "exports": {
+    "./lib/*": "./src/lib/*.ts",
+    "./hooks/*": "./src/hooks/*.ts"
+  }
+}
