@@ -16,7 +16,7 @@
   "devDependencies": {
     "@better-auth/cli": "^1.4.21",
     "drizzle-kit": "^0.31.10",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   },
   "exports": {
     "./lib/*": "./src/lib/*.ts",

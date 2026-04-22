@@ -9,14 +9,14 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@orpc/server": "latest",
-    "@orpc/client": "latest",
-    "zod": "latest",
+    "@orpc/client": "*",
+    "@orpc/server": "*",
     "@workspace/auth": "*",
-    "@workspace/db": "*"
+    "@workspace/db": "*",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   },
   "exports": {
     "./router": "./src/lib/router.ts"
