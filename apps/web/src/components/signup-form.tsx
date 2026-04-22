@@ -13,9 +13,9 @@ import {
   FieldLabel,
 } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
-import { authClient } from "../lib/auth-client"
 import { useState } from "react"
 import { Link } from "@tanstack/react-router"
+import { authClient } from "../lib/auth-client"
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const [name, setName] = useState("")

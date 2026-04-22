@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-import { Command } from 'commander';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import chalk from 'chalk';
-import inquirer from 'inquirer';
-import fs from 'fs-extra';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import ora from 'ora';
+import { Command } from 'commander';
 import { execa } from 'execa';
+import fs from 'fs-extra';
+import inquirer from 'inquirer';
+import ora from 'ora';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

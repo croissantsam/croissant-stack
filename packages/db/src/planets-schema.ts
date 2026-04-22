@@ -1,4 +1,4 @@
-import { pgTable, text, real, serial, boolean, timestamp } from "drizzle-orm/pg-core";
+import { boolean, pgTable, real, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 export const planets = pgTable("planets", {
   id: serial("id").primaryKey(),

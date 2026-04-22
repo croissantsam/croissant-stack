@@ -1,7 +1,7 @@
-import { os, ORPCError } from '@orpc/server'
+import { ORPCError, os } from '@orpc/server'
+import { db, schema } from '@workspace/db'
 import { z } from 'zod'
 import type { Session } from '@workspace/auth/lib/auth'
-import { db, schema } from '@workspace/db'
 
 export type RPCContext = {
   session: Session | null

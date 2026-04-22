@@ -13,13 +13,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar"
-import { GalleryVerticalEndIcon, ChevronsUpDownIcon, CheckIcon } from "lucide-react"
+import { CheckIcon, ChevronsUpDownIcon, GalleryVerticalEndIcon } from "lucide-react"
 
 export function VersionSwitcher({
   versions,
   defaultVersion,
 }: {
-  versions: string[]
+  versions: Array<string>
   defaultVersion: string
 }) {
   const [selectedVersion, setSelectedVersion] = React.useState(defaultVersion)
