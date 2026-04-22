@@ -33,12 +33,10 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.2.4",
-    "@tanstack/eslint-config": "0.3.4",
     "@turbo/gen": "^2.8.1",
     "@types/node": "^25.6.0",
     "@types/react": "^19.2.10",
     "@types/react-dom": "^19.2.3",
-    "eslint": "9.39.4",
     "tailwindcss": "^4.1.18"
   },
   "exports": {
