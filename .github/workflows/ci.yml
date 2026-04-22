@@ -23,11 +23,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 22.14.0 # Specific version to ensure npm >= 11.5.1
           cache: 'npm'
 
       - name: Install Dependencies
-        run: npm install -g npm@latest && npm install
+        run: npm install
 
       - name: Lint
         run: npm run lint
@@ -52,11 +52,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 22.14.0 # Specific version to ensure npm >= 11.5.1
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install Dependencies
-        run: npm install -g npm@latest && npm install
+        run: npm install
 
       - name: Bump Version and Publish
         run: |
