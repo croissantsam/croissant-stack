@@ -10,7 +10,8 @@
     "typecheck": "turbo typecheck",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
-    "db:logs": "docker compose logs -f"
+    "db:logs": "docker compose logs -f",
+    "update-deps": "npx npm-check-updates -u -w --root && npm install"
   },
   "devDependencies": {
     "prettier": "^3.8.1",
