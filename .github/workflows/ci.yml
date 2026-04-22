@@ -63,30 +63,23 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Go to package directory
-          cd packages/create-croissant
-          
           # Prepare the template from the latest monorepo state
-          npm run prepare-template
+          npm run prepare-template -w create-croissant
           
           # Bump version (patch)
-          # We use --no-git-tag-version because we will handle tagging and pushing manually to ensure the published state matches the repo
-          npm version patch --no-git-tag-version
-          NEW_VERSION=$(node -p "require('./package.json').version")
+          # We do this from the root using workspaces to ensure all links are maintained
+          npm version patch --no-git-tag-version -w create-croissant
+          NEW_VERSION=$(node -p "require('./packages/create-croissant/package.json').version")
           
           # Build the package
-          npm run build
-          
-          # Debug info
-          echo "Checking npm registry configuration..."
-          npm config get registry
+          npm run build -w create-croissant
           
           # Publish to npm (using Trusted Publishing)
-          # We explicitly set the registry and use --no-workspaces to avoid ENOWORKSPACES in monorepos
-          npm publish --access public --provenance --registry https://registry.npmjs.org --no-workspaces
+          # We run this from the root using the workspace flag
+          npm publish -w create-croissant --access public --provenance --registry https://registry.npmjs.org
           
           # After successful publish, commit the version change and tag it
-          git add package.json
+          git add packages/create-croissant/package.json
           git commit -m "chore: release create-croissant v$NEW_VERSION [skip ci]"
           git tag "create-croissant@v$NEW_VERSION"
           
