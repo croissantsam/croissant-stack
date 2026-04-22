@@ -18,7 +18,7 @@ export const router = o.router({
         name: z.string().optional(),
       }),
     )
-    .handler(async ({ input }) => {
+    .handler(({ input }) => {
       return {
         message: `Hello, ${input.name ?? 'world'}!`,
       }
@@ -41,7 +41,7 @@ export const router = o.router({
         },
       })
     })
-    .handler(async ({ context }) => {
+    .handler(({ context }) => {
       return {
         secret: `This is secret data for ${context.session.user.name}`,
         email: context.session.user.email,

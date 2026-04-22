@@ -162,13 +162,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {item.items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
+                {item.items.map((subItem) => (
+                  <SidebarMenuItem key={subItem.title}>
                     <SidebarMenuButton
-                      isActive={item.isActive}
-                      render={<a href={item.url} />}
+                      isActive={subItem.isActive}
+                      render={<a href={subItem.url} />}
                     >
-                      {item.title}
+                      {subItem.title}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}

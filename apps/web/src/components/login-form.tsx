@@ -31,13 +31,13 @@ export function LoginForm({
     e.preventDefault()
     setLoading(true)
     setError(null)
-    const { error } = await authClient.signIn.email({
+    const { error: signInError } = await authClient.signIn.email({
       email,
       password,
       callbackURL: "/dashboard",
     })
-    if (error) {
-      setError(error.message || "Failed to sign in")
+    if (signInError) {
+      setError(signInError.message || "Failed to sign in")
     }
     setLoading(false)
   }

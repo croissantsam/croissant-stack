@@ -33,14 +33,14 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
     }
     setLoading(true)
     setError(null)
-    const { error } = await authClient.signUp.email({
+    const { error: signUpError } = await authClient.signUp.email({
       email,
       password,
       name,
       callbackURL: "/dashboard",
     })
-    if (error) {
-      setError(error.message || "Failed to sign up")
+    if (signUpError) {
+      setError(signUpError.message || "Failed to sign up")
     }
     setLoading(false)
   }
