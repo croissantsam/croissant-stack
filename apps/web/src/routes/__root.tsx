@@ -1,4 +1,6 @@
 import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router"
+import { SidebarProvider, SidebarTrigger } from "@workspace/ui/components/sidebar"
+import { AppSidebar } from "@/components/app-sidebar"
 
 import appCss from "@workspace/ui/globals.css?url"
 
@@ -33,7 +35,17 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        {children}
+        <SidebarProvider>
+          <AppSidebar />
+          <main className="flex flex-1 flex-col overflow-hidden">
+            <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+              <SidebarTrigger />
+            </header>
+            <div className="flex-1 overflow-auto p-4">
+              {children}
+            </div>
+          </main>
+        </SidebarProvider>
         <Scripts />
       </body>
     </html>

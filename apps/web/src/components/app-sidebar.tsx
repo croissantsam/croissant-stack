@@ -1,8 +1,11 @@
 import * as React from "react"
+import { Link } from "@tanstack/react-router"
+import { authClient } from "../lib/auth-client"
 
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -12,149 +15,57 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@workspace/ui/components/sidebar"
-import { SearchForm } from "@/components/search-form"
-import { VersionSwitcher } from "@/components/version-switcher"
+import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar"
+import { LogOut, User } from "lucide-react"
 
 // This is sample data.
 const data = {
-  versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
   navMain: [
     {
-      title: "Getting Started",
-      url: "#",
+      title: "Examples",
       items: [
         {
-          title: "Installation",
-          url: "#",
+          title: "SSR + oRPC",
+          url: "/ssr-orpc",
         },
         {
-          title: "Project Structure",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Build Your Application",
-      url: "#",
-      items: [
-        {
-          title: "Routing",
-          url: "#",
+          title: "SSR + oRPC (Auth)",
+          url: "/ssr-orpc-auth",
         },
         {
-          title: "Data Fetching",
-          url: "#",
-          isActive: true,
+          title: "Client + oRPC",
+          url: "/client-orpc",
         },
         {
-          title: "Rendering",
-          url: "#",
+          title: "Client + oRPC (Auth)",
+          url: "/client-orpc-auth",
         },
         {
-          title: "Caching",
-          url: "#",
-        },
-        {
-          title: "Styling",
-          url: "#",
-        },
-        {
-          title: "Optimizing",
-          url: "#",
-        },
-        {
-          title: "Configuring",
-          url: "#",
-        },
-        {
-          title: "Testing",
-          url: "#",
-        },
-        {
-          title: "Authentication",
-          url: "#",
-        },
-        {
-          title: "Deploying",
-          url: "#",
-        },
-        {
-          title: "Upgrading",
-          url: "#",
-        },
-        {
-          title: "Examples",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "API Reference",
-      url: "#",
-      items: [
-        {
-          title: "Components",
-          url: "#",
-        },
-        {
-          title: "File Conventions",
-          url: "#",
-        },
-        {
-          title: "Functions",
-          url: "#",
-        },
-        {
-          title: "next.config.js Options",
-          url: "#",
-        },
-        {
-          title: "CLI",
-          url: "#",
-        },
-        {
-          title: "Edge Runtime",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Architecture",
-      url: "#",
-      items: [
-        {
-          title: "Accessibility",
-          url: "#",
-        },
-        {
-          title: "Fast Refresh",
-          url: "#",
-        },
-        {
-          title: "Next.js Compiler",
-          url: "#",
-        },
-        {
-          title: "Supported Browsers",
-          url: "#",
-        },
-        {
-          title: "Turbopack",
-          url: "#",
+          title: "ISR",
+          url: "/isr",
         },
       ],
     },
   ],
 }
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [user, setUser] = React.useState<any>(null)
+
+  React.useEffect(() => {
+    const checkSession = async () => {
+      const { data } = await authClient.getSession()
+      setUser(data?.user || null)
+    }
+    checkSession()
+  }, [])
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <VersionSwitcher
-          versions={data.versions}
-          defaultVersion={data.versions[0]}
-        />
-        <SearchForm />
+        <div className="flex items-center gap-2 px-4 py-2">
+          <span className="font-bold">LLM Trust</span>
+        </div>
       </SidebarHeader>
       <SidebarContent>
         {data.navMain.map((item) => (
@@ -165,8 +76,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 {item.items.map((subItem) => (
                   <SidebarMenuItem key={subItem.title}>
                     <SidebarMenuButton
-                      isActive={subItem.isActive}
-                      render={<a href={subItem.url} />}
+                      render={
+                        <Link
+                          to={subItem.url}
+                          activeProps={{ className: "bg-sidebar-accent" }}
+                        />
+                      }
                     >
                       {subItem.title}
                     </SidebarMenuButton>
@@ -177,6 +92,47 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroup>
         ))}
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            {user ? (
+              <SidebarMenuButton
+                size="lg"
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              >
+                <Avatar className="h-8 w-8 rounded-lg">
+                  <AvatarImage src={user.image || ""} alt={user.name} />
+                  <AvatarFallback className="rounded-lg">
+                    {user.name?.charAt(0) || "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">{user.name}</span>
+                  <span className="truncate text-xs">{user.email}</span>
+                </div>
+                <button
+                  onClick={async () => {
+                    await authClient.signOut()
+                    window.location.reload()
+                  }}
+                  className="ml-auto"
+                >
+                  <LogOut className="h-4 w-4" />
+                </button>
+              </SidebarMenuButton>
+            ) : (
+              <SidebarMenuButton
+                render={
+                  <Link to="/login" className="flex items-center gap-2" />
+                }
+              >
+                <User className="h-4 w-4" />
+                <span>Sign In</span>
+              </SidebarMenuButton>
+            )}
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   )
