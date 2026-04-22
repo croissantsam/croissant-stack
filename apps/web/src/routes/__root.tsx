@@ -1,8 +1,8 @@
 import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router"
 import { SidebarProvider, SidebarTrigger } from "@workspace/ui/components/sidebar"
-import { AppSidebar } from "@/components/app-sidebar"
 
 import appCss from "@workspace/ui/globals.css?url"
+import { AppSidebar } from "@/components/app-sidebar"
 
 export const Route = createRootRoute({
   head: () => ({

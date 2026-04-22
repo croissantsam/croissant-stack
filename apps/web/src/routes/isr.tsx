@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/isr")({
-  loader: async () => {
+  loader: () => {
     // In a real ISR scenario, this would be cached on the server
     // For this example, we'll just show the time it was "generated"
     return {

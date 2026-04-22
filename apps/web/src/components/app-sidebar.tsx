@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Link } from "@tanstack/react-router"
-import { authClient } from "../lib/auth-client"
+import { LogOut, User } from "lucide-react"
 
 import {
   Sidebar,
@@ -16,7 +16,7 @@ import {
   SidebarRail,
 } from "@workspace/ui/components/sidebar"
 import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar"
-import { LogOut, User } from "lucide-react"
+import { authClient } from "../lib/auth-client"
 
 // This is sample data.
 const data = {
@@ -54,8 +54,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   React.useEffect(() => {
     const checkSession = async () => {
-      const { data } = await authClient.getSession()
-      setUser(data?.user || null)
+      const { data: sessionData } = await authClient.getSession()
+      setUser(sessionData?.user || null)
     }
     checkSession()
   }, [])

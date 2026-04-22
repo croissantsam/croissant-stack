@@ -1,6 +1,6 @@
+import * as React from "react"
 import { createFileRoute } from "@tanstack/react-router"
 import { orpc } from "../lib/orpc"
-import * as React from "react"
 
 export const Route = createFileRoute("/client-orpc")({
   component: ClientORPC,

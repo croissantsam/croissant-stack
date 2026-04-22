@@ -1,7 +1,7 @@
+import * as React from "react"
 import { createFileRoute, redirect } from "@tanstack/react-router"
 import { getSessionFn } from "../lib/auth-utils"
 import { orpc } from "../lib/orpc"
-import * as React from "react"
 
 export const Route = createFileRoute("/client-orpc-auth")({
   beforeLoad: async () => {
