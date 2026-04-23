@@ -1,5 +1,6 @@
 import { ORPCError, os } from '@orpc/server'
 import { db, schema } from '@workspace/db'
+import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 import type { Session } from '@workspace/auth/lib/auth'
 
@@ -46,6 +47,68 @@ export const router = o.router({
         secret: `This is secret data for ${context.session.user.name}`,
         email: context.session.user.email,
       }
+    }),
+
+  createPlanet: o
+    .input(
+      z.object({
+        name: z.string().min(1),
+        description: z.string().optional(),
+        distanceFromSun: z.number(),
+        diameter: z.number(),
+        hasRings: z.boolean().default(false),
+        atmosphere: z.string().optional(),
+      }),
+    )
+    .handler(async ({ input }) => {
+      const [newPlanet] = await db.insert(planets).values(input).returning()
+      return newPlanet
+    }),
+
+  updatePlanet: o
+    .input(
+      z.object({
+        id: z.number(),
+        name: z.string().min(1),
+        description: z.string().optional(),
+        distanceFromSun: z.number(),
+        diameter: z.number(),
+        hasRings: z.boolean(),
+        atmosphere: z.string().optional(),
+      }),
+    )
+    .handler(async ({ input }) => {
+      const { id, ...data } = input
+      const [updatedPlanet] = await db
+        .update(planets)
+        .set({ ...data, updatedAt: new Date() })
+        .where(eq(planets.id, id))
+        .returning()
+      
+      if (!updatedPlanet) {
+        throw new ORPCError('NOT_FOUND')
+      }
+      
+      return updatedPlanet
+    }),
+
+  deletePlanet: o
+    .input(
+      z.object({
+        id: z.number(),
+      }),
+    )
+    .handler(async ({ input }) => {
+      const [deletedPlanet] = await db
+        .delete(planets)
+        .where(eq(planets.id, input.id))
+        .returning()
+      
+      if (!deletedPlanet) {
+        throw new ORPCError('NOT_FOUND')
+      }
+      
+      return deletedPlanet
     }),
 })
 

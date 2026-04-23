@@ -1,5 +1,6 @@
 import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router"
 import { SidebarProvider, SidebarTrigger } from "@workspace/ui/components/sidebar"
+import { Toaster } from "@workspace/ui/components/sonner"
 
 import appCss from "@workspace/ui/globals.css?url"
 import { AppSidebar } from "@/components/app-sidebar"
@@ -45,6 +46,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               {children}
             </div>
           </main>
+          <Toaster />
         </SidebarProvider>
         <Scripts />
       </body>

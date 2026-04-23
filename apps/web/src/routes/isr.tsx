@@ -13,6 +13,10 @@ export const Route = createFileRoute("/isr")({
       message: "This page is an example of ISR. In a production build with proper configuration, this data would be cached and updated in the background.",
     }
   },
+  headers: () => ({
+    // Cache at CDN for 10 seconds, allow stale content for up to 1 minute
+    "Cache-Control": "public, max-age=10, s-maxage=10, stale-while-revalidate=60",
+  }),
   component: ISRExample,
 })
 

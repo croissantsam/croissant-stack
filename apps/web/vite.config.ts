@@ -8,7 +8,11 @@ const config = defineConfig({
   plugins: [
     nitro(),
     tailwindcss(),
-    tanstackStart(),
+    tanstackStart({
+      prerender: {
+        filter: ({ path }) => path === "/isr",
+      },
+    }),
     viteReact(),
   ],
   resolve: {
