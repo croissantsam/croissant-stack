@@ -2,6 +2,16 @@
 
 A modern, type-safe full-stack monorepo powered by **TanStack Start**, **Better Auth**, **oRPC**, and **Drizzle ORM**.
 
+## 🚀 Quick Start
+
+The fastest way to scaffold a new project with the Croissant Stack is using our CLI:
+
+```bash
+npx create-croissant@latest
+```
+
+---
+
 ## 🚀 Features
 
 - **Frontend**: [TanStack Start](https://tanstack.com/start) for a seamless, type-safe React experience.
