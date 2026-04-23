@@ -1,11 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { orpc } from "../lib/orpc"
 
 export const Route = createFileRoute("/isr")({
-  loader: () => {
+  loader: async () => {
     // In a real ISR scenario, this would be cached on the server
-    // For this example, we'll just show the time it was "generated"
+    // For this example, we'll fetch planets via oRPC
+    const planets = await orpc.getPlanets()
+    
     return {
       generatedAt: new Date().toISOString(),
+      planets,
       message: "This page is an example of ISR. In a production build with proper configuration, this data would be cached and updated in the background.",
     }
   },
@@ -13,16 +17,31 @@ export const Route = createFileRoute("/isr")({
 })
 
 function ISRExample() {
-  const { generatedAt, message } = Route.useLoaderData()
+  const { generatedAt, message, planets } = Route.useLoaderData()
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">ISR Example</h1>
+      <h1 className="text-2xl font-bold">ISR Example + oRPC</h1>
       <p>{message}</p>
       
       <div className="rounded-lg border p-4">
-        <h2 className="font-semibold">Generated At:</h2>
+        <h2 className="font-semibold">Generated At (Server-side):</h2>
         <p className="font-mono">{generatedAt}</p>
+      </div>
+
+      <div className="rounded-lg border p-4">
+        <h2 className="font-semibold mb-4">Planets (Fetched via oRPC):</h2>
+        {planets.length === 0 ? (
+          <p className="text-gray-500 italic">No planets found.</p>
+        ) : (
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {planets.map((planet) => (
+              <li key={planet.id} className="rounded-md border p-3 bg-muted/50">
+                <span className="font-bold">{planet.name}</span> - {planet.description}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
       
       <p className="text-sm text-muted-foreground">
