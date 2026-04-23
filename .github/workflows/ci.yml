@@ -84,8 +84,10 @@ jobs:
           # We do this from the root using workspaces to ensure all links are maintained
           npm version patch --no-git-tag-version -w create-croissant
           NEW_VERSION=$(node -p "require('./packages/create-croissant/package.json').version")
+          REPO_VERSION=$(node -p "require('./package.json').version")
           
           echo "New version to be published: $NEW_VERSION"
+          echo "Current repo version: $REPO_VERSION"
 
           # Build the package
           npm run build -w create-croissant
@@ -101,7 +103,17 @@ jobs:
           # After successful publish, commit the version change and tag it
           git add packages/create-croissant/package.json
           git commit -m "chore: release create-croissant v$NEW_VERSION [skip ci]"
-          git tag "create-croissant@v$NEW_VERSION"
+          git tag "v$NEW_VERSION"
           
           # Push the version bump commit and tag back to main
           git push origin main --follow-tags
+
+          # Create a GitHub Release
+          # --generate-notes automatically creates a changelog based on commits
+          gh release create "v$NEW_VERSION" \
+            --title "Release v$NEW_VERSION (create-croissant)" \
+            --generate-notes \
+            --latest
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
