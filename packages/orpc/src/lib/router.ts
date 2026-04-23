@@ -79,11 +79,13 @@ export const router = o.router({
     )
     .handler(async ({ input }) => {
       const { id, ...data } = input
-      const [updatedPlanet] = await db
+      const results = await db
         .update(planets)
         .set({ ...data, updatedAt: new Date() })
         .where(eq(planets.id, id))
         .returning()
+      
+      const updatedPlanet = results[0]
       
       if (!updatedPlanet) {
         throw new ORPCError('NOT_FOUND')
@@ -99,10 +101,12 @@ export const router = o.router({
       }),
     )
     .handler(async ({ input }) => {
-      const [deletedPlanet] = await db
+      const results = await db
         .delete(planets)
         .where(eq(planets.id, input.id))
         .returning()
+      
+      const deletedPlanet = results[0]
       
       if (!deletedPlanet) {
         throw new ORPCError('NOT_FOUND')
