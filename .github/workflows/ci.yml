@@ -74,8 +74,8 @@ jobs:
           echo "NPM version: $NPM_VERSION"
           echo "Local version: $LOCAL_VERSION"
           
-          # If npm has a higher or equal version, sync local version first
-          if [ "$(printf '%s\n' "$NPM_VERSION" "$LOCAL_VERSION" | sort -V | tail -n1)" = "$NPM_VERSION" ] && [ "$NPM_VERSION" != "0.0.0" ]; then
+          # If npm has a higher version, sync local version first
+          if [ "$NPM_VERSION" != "$LOCAL_VERSION" ] && [ "$(printf '%s\n' "$NPM_VERSION" "$LOCAL_VERSION" | sort -V | tail -n1)" = "$NPM_VERSION" ] && [ "$NPM_VERSION" != "0.0.0" ]; then
             echo "Syncing local version to $NPM_VERSION to avoid conflict"
             npm version $NPM_VERSION --no-git-tag-version -w create-croissant
           fi
