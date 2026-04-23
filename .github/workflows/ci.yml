@@ -67,11 +67,26 @@ jobs:
           # Prepare the template from the latest monorepo state
           npm run prepare-template -w create-croissant
           
+          # Get the latest version from npm to avoid conflicts
+          NPM_VERSION=$(npm view create-croissant version 2>/dev/null || echo "0.0.0")
+          LOCAL_VERSION=$(node -p "require('./packages/create-croissant/package.json').version")
+          
+          echo "NPM version: $NPM_VERSION"
+          echo "Local version: $LOCAL_VERSION"
+          
+          # If npm has a higher or equal version, sync local version first
+          if [ "$(printf '%s\n' "$NPM_VERSION" "$LOCAL_VERSION" | sort -V | tail -n1)" = "$NPM_VERSION" ] && [ "$NPM_VERSION" != "0.0.0" ]; then
+            echo "Syncing local version to $NPM_VERSION to avoid conflict"
+            npm version $NPM_VERSION --no-git-tag-version -w create-croissant
+          fi
+
           # Bump version (patch)
           # We do this from the root using workspaces to ensure all links are maintained
           npm version patch --no-git-tag-version -w create-croissant
           NEW_VERSION=$(node -p "require('./packages/create-croissant/package.json').version")
           
+          echo "New version to be published: $NEW_VERSION"
+
           # Build the package
           npm run build -w create-croissant
           
