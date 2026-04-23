@@ -85,13 +85,11 @@ export const router = o.router({
         .where(eq(planets.id, id))
         .returning()
       
-      const updatedPlanet = results[0]
-      
-      if (!updatedPlanet) {
+      if (results.length === 0) {
         throw new ORPCError('NOT_FOUND')
       }
       
-      return updatedPlanet
+      return results[0]
     }),
 
   deletePlanet: o
@@ -106,13 +104,11 @@ export const router = o.router({
         .where(eq(planets.id, input.id))
         .returning()
       
-      const deletedPlanet = results[0]
-      
-      if (!deletedPlanet) {
+      if (results.length === 0) {
         throw new ORPCError('NOT_FOUND')
       }
       
-      return deletedPlanet
+      return results[0]
     }),
 })
 
