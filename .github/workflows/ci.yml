@@ -110,7 +110,9 @@ jobs:
 
           # Create a GitHub Release
           # --generate-notes automatically creates a changelog based on commits
+          # We use --target main to ensure the release is associated with the pushed branch
           gh release create "v$NEW_VERSION" \
+            --target main \
             --title "Release v$NEW_VERSION (create-croissant)" \
             --generate-notes \
             --latest
