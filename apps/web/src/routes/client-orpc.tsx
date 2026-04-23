@@ -1,17 +1,19 @@
 import * as React from "react"
 import { createFileRoute } from "@tanstack/react-router"
+import { Check, Pencil, Plus, Trash2, X } from "lucide-react"
 import { toast } from "sonner"
-import { orpc } from "../lib/orpc"
+
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
-import { Plus, Pencil, Trash2, X, Check } from "lucide-react"
+
+import { orpc } from "../lib/orpc"
 
 export const Route = createFileRoute("/client-orpc")({
   component: ClientORPC,
 })
 
 function ClientORPC() {
-  const [planets, setPlanets] = React.useState<any[]>([])
+  const [planets, setPlanets] = React.useState<Array<any>>([])
   const [loading, setLoading] = React.useState(true)
   const [editingId, setEditingId] = React.useState<number | null>(null)
   

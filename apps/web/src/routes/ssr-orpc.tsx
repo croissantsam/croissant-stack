@@ -1,10 +1,12 @@
 import * as React from "react"
 import { createFileRoute, useRouter } from "@tanstack/react-router"
+import { Check, Pencil, Plus, Trash2 } from "lucide-react"
 import { toast } from "sonner"
-import { orpc } from "../lib/orpc"
+
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
-import { Plus, Pencil, Trash2, Check } from "lucide-react"
+
+import { orpc } from "../lib/orpc"
 
 export const Route = createFileRoute("/ssr-orpc")({
   loader: async () => {
@@ -109,11 +111,6 @@ function SSRORPC() {
       <div>
         <h1 className="text-2xl font-bold mb-2">SSR + oRPC CRUD</h1>
         <p className="text-muted-foreground">Manage planets using SSR loaders for fetching and oRPC mutations for actions.</p>
-      </div>
-
-      <div className="rounded-lg border p-4 bg-muted/20">
-        <h2 className="font-semibold mb-2">Message from oRPC (SSR):</h2>
-        <p className="text-sm font-medium text-blue-600">{data.message}</p>
       </div>
 
       <div className="rounded-lg border p-6 bg-muted/30">
