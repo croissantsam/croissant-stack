@@ -8,15 +8,18 @@
     "lint": "turbo lint",
     "format": "turbo format",
     "typecheck": "turbo typecheck",
+    "ci": "npm run lint && npm run typecheck && npm run build",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
     "db:logs": "docker compose logs -f",
-    "update-deps": "npx npm-check-updates -u -w --root && npm install"
+    "update-deps": "npx npm-check-updates -u -w --root && npm install",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@better-auth/core": "^1.6.7",
     "@tanstack/eslint-config": "0.4.0",
     "eslint": "10.2.1",
+    "husky": "^9.1.7",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "turbo": "^2.8.17",
