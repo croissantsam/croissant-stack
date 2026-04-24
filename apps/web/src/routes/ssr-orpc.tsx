@@ -2,11 +2,25 @@ import * as React from "react"
 import { createFileRoute, useRouter } from "@tanstack/react-router"
 import { Check, Pencil, Plus, Trash2 } from "lucide-react"
 import { toast } from "sonner"
+import { useForm } from "@tanstack/react-form"
+import { z } from "zod"
 
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
+import {
+  Field,
+  FieldLabel,
+  FieldError,
+} from "@workspace/ui/components/field"
 
 import { orpc } from "../lib/orpc"
+
+const planetSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  description: z.string(),
+  distance: z.string().refine((val) => !isNaN(parseFloat(val)), "Must be a number"),
+  diameter: z.string().refine((val) => !isNaN(parseFloat(val)), "Must be a number"),
+})
 
 export const Route = createFileRoute("/ssr-orpc")({
   loader: async () => {
@@ -21,69 +35,55 @@ function SSRORPC() {
   const router = useRouter()
   const [editingId, setEditingId] = React.useState<number | null>(null)
   
-  // Form states
-  const [name, setName] = React.useState("")
-  const [description, setDescription] = React.useState("")
-  const [distance, setDistance] = React.useState("0")
-  const [diameter, setDiameter] = React.useState("0")
-  const [isSubmitting, setIsSubmitting] = React.useState(false)
+  const form = useForm({
+    defaultValues: {
+      name: "",
+      description: "",
+      distance: "0",
+      diameter: "0",
+    },
+    validators: {
+      onChange: planetSchema,
+    },
+    onSubmit: async ({ value }) => {
+      const toastId = toast.loading(editingId ? "Updating planet..." : "Adding planet...")
+      try {
+        if (editingId) {
+          await orpc.updatePlanet({
+            id: editingId,
+            name: value.name,
+            description: value.description,
+            distanceFromSun: parseFloat(value.distance),
+            diameter: parseFloat(value.diameter),
+            hasRings: false,
+          })
+          toast.success("Planet updated successfully", { id: toastId })
+        } else {
+          await orpc.createPlanet({
+            name: value.name,
+            description: value.description,
+            distanceFromSun: parseFloat(value.distance),
+            diameter: parseFloat(value.diameter),
+            hasRings: false,
+          })
+          toast.success("Planet added successfully", { id: toastId })
+        }
+        await router.invalidate()
+        resetForm()
+      } catch (err: any) {
+        console.error(err)
+        toast.error(err.message || "Operation failed", { id: toastId })
+      }
+    },
+  })
 
   const resetForm = () => {
-    setName("")
-    setDescription("")
-    setDistance("0")
-    setDiameter("0")
+    form.reset()
     setEditingId(null)
-  }
-
-  const handleAdd = async () => {
-    setIsSubmitting(true)
-    const toastId = toast.loading("Adding planet...")
-    try {
-      await orpc.createPlanet({
-        name,
-        description,
-        distanceFromSun: parseFloat(distance),
-        diameter: parseFloat(diameter),
-        hasRings: false,
-      })
-      await router.invalidate()
-      resetForm()
-      toast.success("Planet added successfully", { id: toastId })
-    } catch (err: any) {
-      console.error(err)
-      toast.error(err.message || "Failed to add planet", { id: toastId })
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
-  const handleUpdate = async (id: number) => {
-    setIsSubmitting(true)
-    const toastId = toast.loading("Updating planet...")
-    try {
-      await orpc.updatePlanet({
-        id,
-        name,
-        description,
-        distanceFromSun: parseFloat(distance),
-        diameter: parseFloat(diameter),
-        hasRings: false,
-      })
-      await router.invalidate()
-      resetForm()
-      toast.success("Planet updated successfully", { id: toastId })
-    } catch (err: any) {
-      console.error(err)
-      toast.error(err.message || "Failed to update planet", { id: toastId })
-    } finally {
-      setIsSubmitting(false)
-    }
   }
 
   const handleDelete = async (id: number) => {
     if (!confirm("Are you sure you want to delete this planet?")) return
-    setIsSubmitting(true)
     const toastId = toast.loading("Deleting planet...")
     try {
       await orpc.deletePlanet({ id })
@@ -92,17 +92,15 @@ function SSRORPC() {
     } catch (err: any) {
       console.error(err)
       toast.error(err.message || "Failed to delete planet", { id: toastId })
-    } finally {
-      setIsSubmitting(false)
     }
   }
 
   const startEdit = (planet: any) => {
     setEditingId(planet.id)
-    setName(planet.name)
-    setDescription(planet.description || "")
-    setDistance(planet.distanceFromSun.toString())
-    setDiameter(planet.diameter.toString())
+    form.setFieldValue("name", planet.name)
+    form.setFieldValue("description", planet.description || "")
+    form.setFieldValue("distance", planet.distanceFromSun.toString())
+    form.setFieldValue("diameter", planet.diameter.toString())
   }
 
   return (
@@ -117,40 +115,115 @@ function SSRORPC() {
           {editingId ? <Pencil className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
           {editingId ? "Edit Planet (SSR)" : "Add New Planet (SSR)"}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Name</label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Mars" disabled={isSubmitting} />
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            form.handleSubmit()
+          }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form.Field
+              name="name"
+              children={(field) => (
+                <Field data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
+                  <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                  <Input
+                    id={field.name}
+                    name={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="Mars"
+                  />
+                  {field.state.meta.isTouched && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              )}
+            />
+            <form.Field
+              name="description"
+              children={(field) => (
+                <Field data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
+                  <FieldLabel htmlFor={field.name}>Description</FieldLabel>
+                  <Input
+                    id={field.name}
+                    name={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="The red planet"
+                  />
+                  {field.state.meta.isTouched && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              )}
+            />
+            <form.Field
+              name="distance"
+              children={(field) => (
+                <Field data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
+                  <FieldLabel htmlFor={field.name}>Distance (M km)</FieldLabel>
+                  <Input
+                    id={field.name}
+                    name={field.name}
+                    type="number"
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  {field.state.meta.isTouched && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              )}
+            />
+            <form.Field
+              name="diameter"
+              children={(field) => (
+                <Field data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
+                  <FieldLabel htmlFor={field.name}>Diameter (km)</FieldLabel>
+                  <Input
+                    id={field.name}
+                    name={field.name}
+                    type="number"
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  {field.state.meta.isTouched && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              )}
+            />
           </div>
-          <div className="space-y-2">
-            <label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Description</label>
-            <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="The red planet" disabled={isSubmitting} />
+          <div className="mt-6 flex gap-2">
+            <form.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
+              children={([canSubmit, isSubmitting]) => (
+                <>
+                  {editingId ? (
+                    <>
+                      <Button 
+                        type="submit"
+                        className="flex items-center gap-2"
+                        disabled={!canSubmit || isSubmitting}
+                      >
+                        <Check className="h-4 w-4" /> {isSubmitting ? "Saving..." : "Save Changes"}
+                      </Button>
+                      <Button variant="outline" type="button" onClick={resetForm} disabled={isSubmitting}>
+                        Cancel
+                      </Button>
+                    </>
+                  ) : (
+                    <Button 
+                      type="submit"
+                      className="flex items-center gap-2"
+                      disabled={!canSubmit || isSubmitting}
+                    >
+                      <Plus className="h-4 w-4" /> {isSubmitting ? "Adding..." : "Add Planet"}
+                    </Button>
+                  )}
+                </>
+              )}
+            />
           </div>
-          <div className="space-y-2">
-            <label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Distance (M km)</label>
-            <Input type="number" value={distance} onChange={(e) => setDistance(e.target.value)} disabled={isSubmitting} />
-          </div>
-          <div className="space-y-2">
-            <label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Diameter (km)</label>
-            <Input type="number" value={diameter} onChange={(e) => setDiameter(e.target.value)} disabled={isSubmitting} />
-          </div>
-        </div>
-        <div className="mt-6 flex gap-2">
-          {editingId ? (
-            <>
-              <Button onClick={() => handleUpdate(editingId)} className="flex items-center gap-2" disabled={isSubmitting}>
-                <Check className="h-4 w-4" /> {isSubmitting ? "Saving..." : "Save Changes"}
-              </Button>
-              <Button variant="outline" onClick={resetForm} disabled={isSubmitting}>
-                Cancel
-              </Button>
-            </>
-          ) : (
-            <Button onClick={handleAdd} className="flex items-center gap-2" disabled={isSubmitting}>
-              <Plus className="h-4 w-4" /> {isSubmitting ? "Adding..." : "Add Planet"}
-            </Button>
-          )}
-        </div>
+        </form>
       </div>
 
       <div className="space-y-4">
@@ -173,10 +246,10 @@ function SSRORPC() {
                   </div>
                 </div>
                 <div className="flex gap-2 ml-4">
-                  <Button variant="outline" size="icon" onClick={() => startEdit(planet)} disabled={isSubmitting}>
+                  <Button variant="outline" size="icon" onClick={() => startEdit(planet)}>
                     <Pencil className="h-4 w-4" />
                   </Button>
-                  <Button variant="destructive" size="icon" onClick={() => handleDelete(planet.id)} disabled={isSubmitting}>
+                  <Button variant="destructive" size="icon" onClick={() => handleDelete(planet.id)}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
