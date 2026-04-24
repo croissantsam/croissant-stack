@@ -16,17 +16,18 @@ npx create-croissant@latest
 
 - **Frontend**: [TanStack Start](https://tanstack.com/start) for a seamless, type-safe React experience.
 - **Authentication**: [Better Auth](https://www.better-auth.com/) with Drizzle adapter and PostgreSQL.
-- **API**: [oRPC](https://orpc.sh/) for end-to-end type-safety between server and client.
+- **API**: [oRPC](https://orpc.sh/) with a modular, namespaced router for end-to-end type-safety.
 - **Database**: [Drizzle ORM](https://orm.drizzle.team/) with PostgreSQL and Docker Compose setup.
 - **Styling**: [shadcn/ui](https://ui.shadcn.com/) components with Tailwind CSS.
 - **Monorepo**: Managed by [Turborepo](https://turbo.build/).
+- **Developer Experience**: Path aliases (`@/`), strict TypeScript, and automated linting/formatting.
 
 ## 📁 Project Structure
 
-- `apps/web`: The main TanStack Start application.
+- `apps/web`: The main TanStack Start application. Uses `@/` path alias for clean imports.
 - `packages/auth`: Authentication logic and Better Auth configuration.
 - `packages/db`: Database schema, migrations, and Drizzle client.
-- `packages/orpc`: Type-safe API router and procedures.
+- `packages/orpc`: Type-safe API router. Organized into modular files (e.g., `lib/planets.ts`).
 - `packages/ui`: Shared UI components and styles.
 
 ## 🛠️ Getting Started
@@ -49,11 +50,18 @@ This command runs a PostgreSQL container named `samstack` on port `5432`.
 
 ### 3. Environment Variables
 
-Create a `.env` file in the root directory (you can copy from `.env.example` if available) and provide the necessary variables:
+Create a `.env` file in the root directory by copying the example:
+
+```bash
+cp .env.example .env
+```
+
+Ensure you provide the necessary variables:
 
 ```env
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/auth
 BETTER_AUTH_URL=http://localhost:3000
+BETTER_AUTH_SECRET=your-secret-here
 ```
 
 ### 4. Push Database Schema
@@ -80,15 +88,35 @@ The application will be available at `http://localhost:3000`.
 - `npm run db:up`: Start the PostgreSQL Docker container.
 - `npm run db:down`: Stop and remove the database container.
 - `npm run db:logs`: Tail logs from the database container.
+- `npm run db:push --filter @workspace/db`: Push Drizzle schema to the database.
+- `npm run db:studio --filter @workspace/db`: Open Drizzle Studio to explore your data.
 - `npm run lint`: Lint all packages.
+- `npm run format`: Format all packages using Prettier.
 - `npm run typecheck`: Run TypeScript type checking.
+
+## 🔗 oRPC & Type Safety
+
+The project uses oRPC for end-to-end type safety. The router is modularized for better maintainability:
+
+- `packages/orpc/src/lib/router.ts`: Main router entry point.
+- `packages/orpc/src/lib/planets.ts`: Planet-related procedures.
+
+On the client side, you can infer types directly from the router:
+
+```typescript
+import type { router } from "@workspace/orpc/router"
+import type { InferRouterInputs, InferRouterOutputs } from "@orpc/server"
+
+type Inputs = InferRouterInputs<typeof router>
+type Outputs = InferRouterOutputs<typeof router>
+```
 
 ## 🧱 Adding Components
 
 To add components to the shared UI package:
 
 ```bash
-pnpm dlx shadcn@latest add [component-name] -c apps/web
+npx shadcn@latest add [component-name] -c apps/web
 ```
 
 This will place the UI components in `packages/ui/src/components`.
