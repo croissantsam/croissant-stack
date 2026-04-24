@@ -50,15 +50,11 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const [user, setUser] = React.useState<typeof authClient.$Infer.Session.user | null>(null)
+  const {
+    data: session,
+  } = authClient.useSession()
 
-  React.useEffect(() => {
-    const checkSession = async () => {
-      const { data: sessionData } = await authClient.getSession()
-      setUser(sessionData?.user || null)
-    }
-    checkSession()
-  }, [])
+  const user = session?.user || null
 
   return (
     <Sidebar {...props}>
