@@ -2,6 +2,7 @@ import * as React from "react"
 import { createFileRoute } from "@tanstack/react-router"
 import { Check, Pencil, Plus, Trash2 } from "lucide-react"
 import { toast } from "sonner"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
@@ -13,8 +14,7 @@ export const Route = createFileRoute("/client-orpc")({
 })
 
 function ClientORPC() {
-  const [planets, setPlanets] = React.useState<Array<any>>([])
-  const [loading, setLoading] = React.useState(true)
+  const queryClient = useQueryClient()
   const [editingId, setEditingId] = React.useState<number | null>(null)
   
   // Form states
@@ -23,20 +23,10 @@ function ClientORPC() {
   const [distance, setDistance] = React.useState("0")
   const [diameter, setDiameter] = React.useState("0")
 
-  const fetchPlanets = async () => {
-    try {
-      const res = await orpc.getPlanets()
-      setPlanets(res)
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  React.useEffect(() => {
-    fetchPlanets()
-  }, [])
+  const { data: planets = [], isLoading } = useQuery({
+    queryKey: ["planets"],
+    queryFn: () => orpc.getPlanets(),
+  })
 
   const resetForm = () => {
     setName("")
@@ -46,56 +36,65 @@ function ClientORPC() {
     setEditingId(null)
   }
 
-  const handleAdd = async () => {
-    const toastId = toast.loading("Adding planet...")
-    try {
-      await orpc.createPlanet({
-        name,
-        description,
-        distanceFromSun: parseFloat(distance),
-        diameter: parseFloat(diameter),
-        hasRings: false,
-      })
-      await fetchPlanets()
+  const createMutation = useMutation({
+    mutationFn: (newPlanet: any) => orpc.createPlanet(newPlanet),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["planets"] })
       resetForm()
-      toast.success("Planet added successfully", { id: toastId })
-    } catch (err: any) {
-      console.error(err)
-      toast.error(err.message || "Failed to add planet", { id: toastId })
-    }
+      toast.success("Planet added successfully")
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Failed to add planet")
+    },
+  })
+
+  const updateMutation = useMutation({
+    mutationFn: (updatedPlanet: any) => orpc.updatePlanet(updatedPlanet),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["planets"] })
+      resetForm()
+      toast.success("Planet updated successfully")
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Failed to update planet")
+    },
+  })
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => orpc.deletePlanet({ id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["planets"] })
+      toast.success("Planet deleted successfully")
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Failed to delete planet")
+    },
+  })
+
+  const handleAdd = async () => {
+    createMutation.mutate({
+      name,
+      description,
+      distanceFromSun: parseFloat(distance),
+      diameter: parseFloat(diameter),
+      hasRings: false,
+    })
   }
 
   const handleUpdate = async (id: number) => {
-    const toastId = toast.loading("Updating planet...")
-    try {
-      await orpc.updatePlanet({
-        id,
-        name,
-        description,
-        distanceFromSun: parseFloat(distance),
-        diameter: parseFloat(diameter),
-        hasRings: false,
-      })
-      await fetchPlanets()
-      resetForm()
-      toast.success("Planet updated successfully", { id: toastId })
-    } catch (err: any) {
-      console.error(err)
-      toast.error(err.message || "Failed to update planet", { id: toastId })
-    }
+    updateMutation.mutate({
+      id,
+      name,
+      description,
+      distanceFromSun: parseFloat(distance),
+      diameter: parseFloat(diameter),
+      hasRings: false,
+    })
   }
 
   const handleDelete = async (id: number) => {
     if (!confirm("Are you sure you want to delete this planet?")) return
-    const toastId = toast.loading("Deleting planet...")
-    try {
-      await orpc.deletePlanet({ id })
-      await fetchPlanets()
-      toast.success("Planet deleted successfully", { id: toastId })
-    } catch (err: any) {
-      console.error(err)
-      toast.error(err.message || "Failed to delete planet", { id: toastId })
-    }
+    deleteMutation.mutate(id)
   }
 
   const startEdit = (planet: any) => {
@@ -110,7 +109,7 @@ function ClientORPC() {
     <div className="flex flex-col gap-8">
       <div>
         <h1 className="text-2xl font-bold mb-2">Client + oRPC CRUD</h1>
-        <p className="text-muted-foreground">Manage planets directly from the client using oRPC mutations.</p>
+        <p className="text-muted-foreground">Manage planets directly from the client using TanStack Query and oRPC.</p>
       </div>
 
       <div className="rounded-lg border p-6 bg-muted/30">
@@ -139,16 +138,24 @@ function ClientORPC() {
         <div className="mt-6 flex gap-2">
           {editingId ? (
             <>
-              <Button onClick={() => handleUpdate(editingId)} className="flex items-center gap-2">
-                <Check className="h-4 w-4" /> Save Changes
+              <Button 
+                onClick={() => handleUpdate(editingId)} 
+                className="flex items-center gap-2"
+                disabled={updateMutation.isPending}
+              >
+                <Check className="h-4 w-4" /> {updateMutation.isPending ? "Saving..." : "Save Changes"}
               </Button>
-              <Button variant="outline" onClick={resetForm}>
+              <Button variant="outline" onClick={resetForm} disabled={updateMutation.isPending}>
                 Cancel
               </Button>
             </>
           ) : (
-            <Button onClick={handleAdd} className="flex items-center gap-2">
-              <Plus className="h-4 w-4" /> Add Planet
+            <Button 
+              onClick={handleAdd} 
+              className="flex items-center gap-2"
+              disabled={createMutation.isPending}
+            >
+              <Plus className="h-4 w-4" /> {createMutation.isPending ? "Adding..." : "Add Planet"}
             </Button>
           )}
         </div>
@@ -156,7 +163,7 @@ function ClientORPC() {
 
       <div className="space-y-4">
         <h2 className="font-semibold text-lg">Current Planets</h2>
-        {loading ? (
+        {isLoading ? (
           <p>Loading planets...</p>
         ) : planets.length === 0 ? (
           <p className="text-gray-500 italic">No planets found.</p>
@@ -179,7 +186,12 @@ function ClientORPC() {
                   <Button variant="outline" size="icon" onClick={() => startEdit(planet)}>
                     <Pencil className="h-4 w-4" />
                   </Button>
-                  <Button variant="destructive" size="icon" onClick={() => handleDelete(planet.id)}>
+                  <Button 
+                    variant="destructive" 
+                    size="icon" 
+                    onClick={() => handleDelete(planet.id)}
+                    disabled={deleteMutation.isPending}
+                  >
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
