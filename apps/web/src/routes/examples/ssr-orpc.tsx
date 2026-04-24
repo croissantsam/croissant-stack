@@ -27,7 +27,7 @@ const planetSchema = z.object({
   diameter: z.string().refine((val) => !isNaN(parseFloat(val)), "Must be a number"),
 })
 
-export const Route = createFileRoute("/ssr-orpc")({
+export const Route = createFileRoute("/examples/ssr-orpc")({
   loader: async () => {
     const planets = await orpc.planets.getPlanets()
     return { planets }

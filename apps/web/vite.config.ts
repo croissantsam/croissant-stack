@@ -10,7 +10,7 @@ const config = defineConfig({
     tailwindcss(),
     tanstackStart({
       prerender: {
-        filter: ({ path }) => path === "/isr",
+        filter: ({ path }) => path === "/examples/isr",
       },
     }),
     viteReact(),

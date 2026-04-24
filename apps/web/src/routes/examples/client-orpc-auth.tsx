@@ -3,14 +3,14 @@ import { useQuery } from "@tanstack/react-query"
 import { getSessionFn } from "@/lib/auth-utils"
 import { orpc } from "@/lib/orpc"
 
-export const Route = createFileRoute("/client-orpc-auth")({
+export const Route = createFileRoute("/examples/client-orpc-auth")({
   beforeLoad: async () => {
     const session = await getSessionFn()
     if (!session) {
       throw redirect({
         to: "/login",
         search: {
-          redirect: "/client-orpc-auth",
+          redirect: "/examples/client-orpc-auth",
         },
       })
     }

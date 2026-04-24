@@ -9,29 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SsrOrpcAuthRouteImport } from './routes/ssr-orpc-auth'
-import { Route as SsrOrpcRouteImport } from './routes/ssr-orpc'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as IsrRouteImport } from './routes/isr'
 import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as ClientOrpcAuthRouteImport } from './routes/client-orpc-auth'
-import { Route as ClientOrpcRouteImport } from './routes/client-orpc'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ExamplesSsrOrpcAuthRouteImport } from './routes/examples/ssr-orpc-auth'
+import { Route as ExamplesSsrOrpcRouteImport } from './routes/examples/ssr-orpc'
+import { Route as ExamplesIsrRouteImport } from './routes/examples/isr'
+import { Route as ExamplesClientOrpcAuthRouteImport } from './routes/examples/client-orpc-auth'
+import { Route as ExamplesClientOrpcRouteImport } from './routes/examples/client-orpc'
 import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc.$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
-const SsrOrpcAuthRoute = SsrOrpcAuthRouteImport.update({
-  id: '/ssr-orpc-auth',
-  path: '/ssr-orpc-auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SsrOrpcRoute = SsrOrpcRouteImport.update({
-  id: '/ssr-orpc',
-  path: '/ssr-orpc',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -42,24 +32,9 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IsrRoute = IsrRouteImport.update({
-  id: '/isr',
-  path: '/isr',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClientOrpcAuthRoute = ClientOrpcAuthRouteImport.update({
-  id: '/client-orpc-auth',
-  path: '/client-orpc-auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClientOrpcRoute = ClientOrpcRouteImport.update({
-  id: '/client-orpc',
-  path: '/client-orpc',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountRoute = AccountRouteImport.update({
@@ -70,6 +45,31 @@ const AccountRoute = AccountRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamplesSsrOrpcAuthRoute = ExamplesSsrOrpcAuthRouteImport.update({
+  id: '/examples/ssr-orpc-auth',
+  path: '/examples/ssr-orpc-auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamplesSsrOrpcRoute = ExamplesSsrOrpcRouteImport.update({
+  id: '/examples/ssr-orpc',
+  path: '/examples/ssr-orpc',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamplesIsrRoute = ExamplesIsrRouteImport.update({
+  id: '/examples/isr',
+  path: '/examples/isr',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamplesClientOrpcAuthRoute = ExamplesClientOrpcAuthRouteImport.update({
+  id: '/examples/client-orpc-auth',
+  path: '/examples/client-orpc-auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamplesClientOrpcRoute = ExamplesClientOrpcRouteImport.update({
+  id: '/examples/client-orpc',
+  path: '/examples/client-orpc',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
@@ -86,28 +86,28 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
-  '/client-orpc': typeof ClientOrpcRoute
-  '/client-orpc-auth': typeof ClientOrpcAuthRoute
   '/dashboard': typeof DashboardRoute
-  '/isr': typeof IsrRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/ssr-orpc': typeof SsrOrpcRoute
-  '/ssr-orpc-auth': typeof SsrOrpcAuthRoute
+  '/examples/client-orpc': typeof ExamplesClientOrpcRoute
+  '/examples/client-orpc-auth': typeof ExamplesClientOrpcAuthRoute
+  '/examples/isr': typeof ExamplesIsrRoute
+  '/examples/ssr-orpc': typeof ExamplesSsrOrpcRoute
+  '/examples/ssr-orpc-auth': typeof ExamplesSsrOrpcAuthRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
-  '/client-orpc': typeof ClientOrpcRoute
-  '/client-orpc-auth': typeof ClientOrpcAuthRoute
   '/dashboard': typeof DashboardRoute
-  '/isr': typeof IsrRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/ssr-orpc': typeof SsrOrpcRoute
-  '/ssr-orpc-auth': typeof SsrOrpcAuthRoute
+  '/examples/client-orpc': typeof ExamplesClientOrpcRoute
+  '/examples/client-orpc-auth': typeof ExamplesClientOrpcAuthRoute
+  '/examples/isr': typeof ExamplesIsrRoute
+  '/examples/ssr-orpc': typeof ExamplesSsrOrpcRoute
+  '/examples/ssr-orpc-auth': typeof ExamplesSsrOrpcAuthRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
@@ -115,14 +115,14 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
-  '/client-orpc': typeof ClientOrpcRoute
-  '/client-orpc-auth': typeof ClientOrpcAuthRoute
   '/dashboard': typeof DashboardRoute
-  '/isr': typeof IsrRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/ssr-orpc': typeof SsrOrpcRoute
-  '/ssr-orpc-auth': typeof SsrOrpcAuthRoute
+  '/examples/client-orpc': typeof ExamplesClientOrpcRoute
+  '/examples/client-orpc-auth': typeof ExamplesClientOrpcAuthRoute
+  '/examples/isr': typeof ExamplesIsrRoute
+  '/examples/ssr-orpc': typeof ExamplesSsrOrpcRoute
+  '/examples/ssr-orpc-auth': typeof ExamplesSsrOrpcAuthRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
@@ -131,42 +131,42 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/account'
-    | '/client-orpc'
-    | '/client-orpc-auth'
     | '/dashboard'
-    | '/isr'
     | '/login'
     | '/signup'
-    | '/ssr-orpc'
-    | '/ssr-orpc-auth'
+    | '/examples/client-orpc'
+    | '/examples/client-orpc-auth'
+    | '/examples/isr'
+    | '/examples/ssr-orpc'
+    | '/examples/ssr-orpc-auth'
     | '/api/auth/$'
     | '/api/rpc/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/account'
-    | '/client-orpc'
-    | '/client-orpc-auth'
     | '/dashboard'
-    | '/isr'
     | '/login'
     | '/signup'
-    | '/ssr-orpc'
-    | '/ssr-orpc-auth'
+    | '/examples/client-orpc'
+    | '/examples/client-orpc-auth'
+    | '/examples/isr'
+    | '/examples/ssr-orpc'
+    | '/examples/ssr-orpc-auth'
     | '/api/auth/$'
     | '/api/rpc/$'
   id:
     | '__root__'
     | '/'
     | '/account'
-    | '/client-orpc'
-    | '/client-orpc-auth'
     | '/dashboard'
-    | '/isr'
     | '/login'
     | '/signup'
-    | '/ssr-orpc'
-    | '/ssr-orpc-auth'
+    | '/examples/client-orpc'
+    | '/examples/client-orpc-auth'
+    | '/examples/isr'
+    | '/examples/ssr-orpc'
+    | '/examples/ssr-orpc-auth'
     | '/api/auth/$'
     | '/api/rpc/$'
   fileRoutesById: FileRoutesById
@@ -174,34 +174,20 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRoute
-  ClientOrpcRoute: typeof ClientOrpcRoute
-  ClientOrpcAuthRoute: typeof ClientOrpcAuthRoute
   DashboardRoute: typeof DashboardRoute
-  IsrRoute: typeof IsrRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
-  SsrOrpcRoute: typeof SsrOrpcRoute
-  SsrOrpcAuthRoute: typeof SsrOrpcAuthRoute
+  ExamplesClientOrpcRoute: typeof ExamplesClientOrpcRoute
+  ExamplesClientOrpcAuthRoute: typeof ExamplesClientOrpcAuthRoute
+  ExamplesIsrRoute: typeof ExamplesIsrRoute
+  ExamplesSsrOrpcRoute: typeof ExamplesSsrOrpcRoute
+  ExamplesSsrOrpcAuthRoute: typeof ExamplesSsrOrpcAuthRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/ssr-orpc-auth': {
-      id: '/ssr-orpc-auth'
-      path: '/ssr-orpc-auth'
-      fullPath: '/ssr-orpc-auth'
-      preLoaderRoute: typeof SsrOrpcAuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ssr-orpc': {
-      id: '/ssr-orpc'
-      path: '/ssr-orpc'
-      fullPath: '/ssr-orpc'
-      preLoaderRoute: typeof SsrOrpcRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/signup': {
       id: '/signup'
       path: '/signup'
@@ -216,32 +202,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/isr': {
-      id: '/isr'
-      path: '/isr'
-      fullPath: '/isr'
-      preLoaderRoute: typeof IsrRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/client-orpc-auth': {
-      id: '/client-orpc-auth'
-      path: '/client-orpc-auth'
-      fullPath: '/client-orpc-auth'
-      preLoaderRoute: typeof ClientOrpcAuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/client-orpc': {
-      id: '/client-orpc'
-      path: '/client-orpc'
-      fullPath: '/client-orpc'
-      preLoaderRoute: typeof ClientOrpcRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account': {
@@ -256,6 +221,41 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/examples/ssr-orpc-auth': {
+      id: '/examples/ssr-orpc-auth'
+      path: '/examples/ssr-orpc-auth'
+      fullPath: '/examples/ssr-orpc-auth'
+      preLoaderRoute: typeof ExamplesSsrOrpcAuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/examples/ssr-orpc': {
+      id: '/examples/ssr-orpc'
+      path: '/examples/ssr-orpc'
+      fullPath: '/examples/ssr-orpc'
+      preLoaderRoute: typeof ExamplesSsrOrpcRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/examples/isr': {
+      id: '/examples/isr'
+      path: '/examples/isr'
+      fullPath: '/examples/isr'
+      preLoaderRoute: typeof ExamplesIsrRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/examples/client-orpc-auth': {
+      id: '/examples/client-orpc-auth'
+      path: '/examples/client-orpc-auth'
+      fullPath: '/examples/client-orpc-auth'
+      preLoaderRoute: typeof ExamplesClientOrpcAuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/examples/client-orpc': {
+      id: '/examples/client-orpc'
+      path: '/examples/client-orpc'
+      fullPath: '/examples/client-orpc'
+      preLoaderRoute: typeof ExamplesClientOrpcRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/rpc/$': {
@@ -278,14 +278,14 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRoute,
-  ClientOrpcRoute: ClientOrpcRoute,
-  ClientOrpcAuthRoute: ClientOrpcAuthRoute,
   DashboardRoute: DashboardRoute,
-  IsrRoute: IsrRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
-  SsrOrpcRoute: SsrOrpcRoute,
-  SsrOrpcAuthRoute: SsrOrpcAuthRoute,
+  ExamplesClientOrpcRoute: ExamplesClientOrpcRoute,
+  ExamplesClientOrpcAuthRoute: ExamplesClientOrpcAuthRoute,
+  ExamplesIsrRoute: ExamplesIsrRoute,
+  ExamplesSsrOrpcRoute: ExamplesSsrOrpcRoute,
+  ExamplesSsrOrpcAuthRoute: ExamplesSsrOrpcAuthRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
 }

@@ -26,23 +26,23 @@ const data = {
       items: [
         {
           title: "SSR + oRPC",
-          url: "/ssr-orpc",
+          url: "/examples/ssr-orpc",
         },
         {
           title: "SSR + oRPC (Auth)",
-          url: "/ssr-orpc-auth",
+          url: "/examples/ssr-orpc-auth",
         },
         {
           title: "Client + oRPC",
-          url: "/client-orpc",
+          url: "/examples/client-orpc",
         },
         {
           title: "Client + oRPC (Auth)",
-          url: "/client-orpc-auth",
+          url: "/examples/client-orpc-auth",
         },
         {
           title: "ISR",
-          url: "/isr",
+          url: "/examples/isr",
         },
       ],
     },

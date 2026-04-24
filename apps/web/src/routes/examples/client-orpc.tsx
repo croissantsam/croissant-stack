@@ -29,7 +29,7 @@ const planetSchema = z.object({
   diameter: z.string().refine((val) => !isNaN(parseFloat(val)), "Must be a number"),
 })
 
-export const Route = createFileRoute("/client-orpc")({
+export const Route = createFileRoute("/examples/client-orpc")({
   component: ClientORPC,
 })
 
