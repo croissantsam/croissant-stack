@@ -18,6 +18,9 @@ export const Route = createFileRoute("/(public)/")({
       planets,
     }
   },
+  headers: () => ({
+    "Cache-Control": "public, max-age=10, s-maxage=10, stale-while-revalidate=60",
+  }),
   component: App,
 })
 

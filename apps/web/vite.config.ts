@@ -10,7 +10,8 @@ const config = defineConfig({
     tailwindcss(),
     tanstackStart({
       prerender: {
-        filter: ({ path }) => path === "/examples/isr",
+        // In this version of TanStack Start, we use 'filter' to specify ISR routes
+        filter: ({ path }) => ["/", "/login", "/signup", "/examples/isr"].includes(path),
       },
     }),
     viteReact(),
