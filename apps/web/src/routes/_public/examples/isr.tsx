@@ -2,6 +2,17 @@ import { createFileRoute } from "@tanstack/react-router"
 import { orpc } from "@/lib/orpc"
 
 export const Route = createFileRoute("/_public/examples/isr")({
+  head: () => ({
+    meta: [
+      {
+        title: "Incremental Static Regeneration (ISR) Example | Croissant Stack",
+      },
+      {
+        name: "description",
+        content: "Experience high-performance page loads with ISR in Croissant Stack.",
+      },
+    ],
+  }),
   loader: async () => {
     // In a real ISR scenario, this would be cached on the server
     // For this example, we'll fetch planets via oRPC

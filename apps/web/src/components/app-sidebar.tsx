@@ -114,7 +114,7 @@ export function AppSidebar({ items = authNavItems, ...props }: AppSidebarProps) 
     <Sidebar {...props}>
       <SidebarHeader>
         <div className="flex items-center gap-2 px-4 py-2">
-          <span className="font-bold">LLM Trust</span>
+          <span className="font-bold">Croissant Stack</span>
         </div>
       </SidebarHeader>
       <SidebarContent>

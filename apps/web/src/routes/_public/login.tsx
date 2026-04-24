@@ -2,6 +2,21 @@ import { createFileRoute } from "@tanstack/react-router"
 import { LoginForm } from "@/components/login-form"
 
 export const Route = createFileRoute("/_public/login")({
+  head: () => ({
+    meta: [
+      {
+        title: "Sign In | Croissant Stack",
+      },
+      {
+        name: "description",
+        content: "Sign in to your Croissant Stack account.",
+      },
+      {
+        name: "robots",
+        content: "noindex, follow",
+      },
+    ],
+  }),
   headers: () => ({
     "Cache-Control": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400",
   }),

@@ -30,6 +30,17 @@ const planetSchema = z.object({
 })
 
 export const Route = createFileRoute("/_public/examples/client-orpc")({
+  head: () => ({
+    meta: [
+      {
+        title: "Client + oRPC Example | Croissant Stack",
+      },
+      {
+        name: "description",
+        content: "Explore client-side data fetching and mutations with oRPC in Croissant Stack.",
+      },
+    ],
+  }),
   component: ClientORPC,
 })
 

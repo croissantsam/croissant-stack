@@ -8,6 +8,29 @@ type Outputs = InferRouterOutputs<typeof router>
 type Planet = Outputs["planets"]["getPlanets"][number]
 
 export const Route = createFileRoute("/_public/")({
+  head: () => ({
+    meta: [
+      {
+        title: "Croissant Stack - The Ultimate TanStack Starter",
+      },
+      {
+        name: "description",
+        content: "Build full-stack applications faster with Croissant Stack. Featuring TanStack Start, oRPC, and Better Auth.",
+      },
+      {
+        property: "og:title",
+        content: "Croissant Stack - The Ultimate TanStack Starter",
+      },
+      {
+        property: "og:description",
+        content: "Build full-stack applications faster with Croissant Stack.",
+      },
+      {
+        property: "og:image",
+        content: "/og-image.png",
+      },
+    ],
+  }),
   loader: async () => {
     const [helloRes, planets] = await Promise.all([
       orpc.hello({ name: "Croissant Stack" }),

@@ -28,6 +28,17 @@ const planetSchema = z.object({
 })
 
 export const Route = createFileRoute("/_public/examples/ssr-orpc")({
+  head: () => ({
+    meta: [
+      {
+        title: "SSR + oRPC Example | Croissant Stack",
+      },
+      {
+        name: "description",
+        content: "Learn how to use Server-Side Rendering (SSR) with oRPC in Croissant Stack.",
+      },
+    ],
+  }),
   loader: async () => {
     const planets = await orpc.planets.getPlanets()
     return { planets }
