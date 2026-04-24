@@ -19,7 +19,7 @@ import { useState } from "react"
 import { Link } from "@tanstack/react-router"
 import { useForm } from "@tanstack/react-form"
 import { z } from "zod"
-import { authClient } from "../lib/auth-client"
+import { authClient } from "@/lib/auth-client"
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),

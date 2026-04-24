@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Link } from "@tanstack/react-router"
-import { LogOut, User, Settings } from "lucide-react"
+import { LogOut, Settings, User } from "lucide-react"
 
 import {
   Sidebar,
@@ -16,7 +16,7 @@ import {
   SidebarRail,
 } from "@workspace/ui/components/sidebar"
 import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar"
-import { authClient } from "../lib/auth-client"
+import { authClient } from "@/lib/auth-client"
 
 // This is sample data.
 const data = {
@@ -50,7 +50,7 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const [user, setUser] = React.useState<any>(null)
+  const [user, setUser] = React.useState<typeof authClient.$Infer.Session.user | null>(null)
 
   React.useEffect(() => {
     const checkSession = async () => {
@@ -105,7 +105,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <Avatar className="h-8 w-8 rounded-lg">
                       <AvatarImage src={user.image || ""} alt={user.name} />
                       <AvatarFallback className="rounded-lg">
-                        {user.name?.charAt(0) || "U"}
+                        {user.name.charAt(0) || "U"}
                       </AvatarFallback>
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">

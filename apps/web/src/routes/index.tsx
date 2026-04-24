@@ -1,12 +1,17 @@
 import { Link, createFileRoute } from "@tanstack/react-router"
 import { Button } from "@workspace/ui/components/button"
-import { orpc } from "../lib/orpc"
+import type { router } from "@workspace/orpc/router"
+import type { InferRouterOutputs } from "@orpc/server"
+import { orpc } from "@/lib/orpc"
+
+type Outputs = InferRouterOutputs<typeof router>
+type Planet = Outputs["planets"]["getPlanets"][number]
 
 export const Route = createFileRoute("/")({
   loader: async () => {
     const [helloRes, planets] = await Promise.all([
       orpc.hello({ name: "TanStack Start" }),
-      orpc.getPlanets(),
+      orpc.planets.getPlanets(),
     ])
     return { 
       message: helloRes.message,
@@ -32,7 +37,7 @@ function App() {
               <p className="text-gray-500 italic">No planets found in the database. Run `db:push` and seed data if needed.</p>
             ) : (
               <ul className="grid grid-cols-1 gap-2">
-                {planets.map((planet) => (
+                {planets.map((planet: Planet) => (
                   <li key={planet.id} className="rounded-md border p-3 bg-white shadow-sm">
                     <span className="font-bold">{planet.name}</span> - {planet.description}
                   </li>

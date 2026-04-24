@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { orpc } from "../lib/orpc"
+import { orpc } from "@/lib/orpc"
 
 export const Route = createFileRoute("/isr")({
   loader: async () => {
     // In a real ISR scenario, this would be cached on the server
     // For this example, we'll fetch planets via oRPC
-    const planets = await orpc.getPlanets()
+    const planets = await orpc.planets.getPlanets()
     
     return {
       generatedAt: new Date().toISOString(),

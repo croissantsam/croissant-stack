@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router"
 import { useQuery } from "@tanstack/react-query"
-import { getSessionFn } from "../lib/auth-utils"
-import { orpc } from "../lib/orpc"
+import { getSessionFn } from "@/lib/auth-utils"
+import { orpc } from "@/lib/orpc"
 
 export const Route = createFileRoute("/client-orpc-auth")({
   beforeLoad: async () => {

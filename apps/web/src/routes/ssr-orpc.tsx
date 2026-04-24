@@ -13,7 +13,12 @@ import {
   FieldLabel,
 } from "@workspace/ui/components/field"
 
-import { orpc } from "../lib/orpc"
+import type { router } from "@workspace/orpc/router"
+import type { InferRouterOutputs } from "@orpc/server"
+import { orpc } from "@/lib/orpc"
+
+type Outputs = InferRouterOutputs<typeof router>
+type Planet = Outputs["planets"]["getPlanets"][number]
 
 const planetSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -24,7 +29,7 @@ const planetSchema = z.object({
 
 export const Route = createFileRoute("/ssr-orpc")({
   loader: async () => {
-    const planets = await orpc.getPlanets()
+    const planets = await orpc.planets.getPlanets()
     return { planets }
   },
   component: SSRORPC,
@@ -49,7 +54,7 @@ function SSRORPC() {
       const toastId = toast.loading(editingId ? "Updating planet..." : "Adding planet...")
       try {
         if (editingId) {
-          await orpc.updatePlanet({
+          await orpc.planets.updatePlanet({
             id: editingId,
             name: value.name,
             description: value.description,
@@ -59,7 +64,7 @@ function SSRORPC() {
           })
           toast.success("Planet updated successfully", { id: toastId })
         } else {
-          await orpc.createPlanet({
+          await orpc.planets.createPlanet({
             name: value.name,
             description: value.description,
             distanceFromSun: parseFloat(value.distance),
@@ -86,7 +91,7 @@ function SSRORPC() {
     if (!confirm("Are you sure you want to delete this planet?")) return
     const toastId = toast.loading("Deleting planet...")
     try {
-      await orpc.deletePlanet({ id })
+      await orpc.planets.deletePlanet({ id })
       await router.invalidate()
       toast.success("Planet deleted successfully", { id: toastId })
     } catch (err: any) {
@@ -95,7 +100,7 @@ function SSRORPC() {
     }
   }
 
-  const startEdit = (planet: any) => {
+  const startEdit = (planet: Planet) => {
     setEditingId(planet.id)
     form.setFieldValue("name", planet.name)
     form.setFieldValue("description", planet.description || "")

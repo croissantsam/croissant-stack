@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router"
-import { getSessionFn } from "../lib/auth-utils"
-import { authClient } from "../lib/auth-client"
-import { orpc } from "../lib/orpc"
+import { getSessionFn } from "@/lib/auth-utils"
+import { authClient } from "@/lib/auth-client"
+import { orpc } from "@/lib/orpc"
 
 export const Route = createFileRoute("/dashboard")({
   beforeLoad: async () => {

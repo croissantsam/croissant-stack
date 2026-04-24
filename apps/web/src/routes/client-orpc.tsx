@@ -14,7 +14,13 @@ import {
   FieldLabel,
 } from "@workspace/ui/components/field"
 
-import { orpc } from "../lib/orpc"
+import type { router } from "@workspace/orpc/router"
+import type { InferRouterInputs, InferRouterOutputs } from "@orpc/server"
+import { orpc } from "@/lib/orpc"
+
+type Inputs = InferRouterInputs<typeof router>
+type Outputs = InferRouterOutputs<typeof router>
+type Planet = Outputs["planets"]["getPlanets"][number]
 
 const planetSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -33,7 +39,7 @@ function ClientORPC() {
   
   const { data: planets = [], isLoading } = useQuery({
     queryKey: ["planets"],
-    queryFn: () => orpc.getPlanets(),
+    queryFn: () => orpc.planets.getPlanets(),
   })
 
   const form = useForm({
@@ -74,46 +80,46 @@ function ClientORPC() {
   }
 
   const createMutation = useMutation({
-    mutationFn: (newPlanet: any) => orpc.createPlanet(newPlanet),
+    mutationFn: (input: Inputs["planets"]["createPlanet"]) => orpc.planets.createPlanet(input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["planets"] })
       resetForm()
       toast.success("Planet added successfully")
     },
-    onError: (err: any) => {
+    onError: (err) => {
       toast.error(err.message || "Failed to add planet")
     },
   })
 
   const updateMutation = useMutation({
-    mutationFn: (updatedPlanet: any) => orpc.updatePlanet(updatedPlanet),
+    mutationFn: (input: Inputs["planets"]["updatePlanet"]) => orpc.planets.updatePlanet(input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["planets"] })
       resetForm()
       toast.success("Planet updated successfully")
     },
-    onError: (err: any) => {
+    onError: (err) => {
       toast.error(err.message || "Failed to update planet")
     },
   })
 
   const deleteMutation = useMutation({
-    mutationFn: (id: number) => orpc.deletePlanet({ id }),
+    mutationFn: (input: Inputs["planets"]["deletePlanet"]) => orpc.planets.deletePlanet(input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["planets"] })
       toast.success("Planet deleted successfully")
     },
-    onError: (err: any) => {
+    onError: (err) => {
       toast.error(err.message || "Failed to delete planet")
     },
   })
 
   const handleDelete = async (id: number) => {
     if (!confirm("Are you sure you want to delete this planet?")) return
-    await deleteMutation.mutateAsync(id)
+    await deleteMutation.mutateAsync({ id })
   }
 
-  const startEdit = (planet: any) => {
+  const startEdit = (planet: Planet) => {
     setEditingId(planet.id)
     form.setFieldValue("name", planet.name)
     form.setFieldValue("description", planet.description || "")
