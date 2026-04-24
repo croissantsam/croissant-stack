@@ -2,7 +2,7 @@ import * as React from "react"
 import { createFileRoute } from "@tanstack/react-router"
 import { Check, Pencil, Plus, Trash2 } from "lucide-react"
 import { toast } from "sonner"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "@tanstack/react-form"
 import { z } from "zod"
 
@@ -10,8 +10,8 @@ import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
 import {
   Field,
-  FieldLabel,
   FieldError,
+  FieldLabel,
 } from "@workspace/ui/components/field"
 
 import { orpc } from "../lib/orpc"
@@ -48,7 +48,7 @@ function ClientORPC() {
       },
       onSubmit: async ({ value }) => {
       if (editingId) {
-        updateMutation.mutate({
+        await updateMutation.mutateAsync({
           id: editingId,
           name: value.name,
           description: value.description,
@@ -57,7 +57,7 @@ function ClientORPC() {
           hasRings: false,
         })
       } else {
-        createMutation.mutate({
+        await createMutation.mutateAsync({
           name: value.name,
           description: value.description,
           distanceFromSun: parseFloat(value.distance),
@@ -110,7 +110,7 @@ function ClientORPC() {
 
   const handleDelete = async (id: number) => {
     if (!confirm("Are you sure you want to delete this planet?")) return
-    deleteMutation.mutate(id)
+    await deleteMutation.mutateAsync(id)
   }
 
   const startEdit = (planet: any) => {

@@ -10,16 +10,16 @@ import {
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
-  FieldError,
 } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
 import { useState } from "react"
 import { Link } from "@tanstack/react-router"
-import { authClient } from "../lib/auth-client"
 import { useForm } from "@tanstack/react-form"
 import { z } from "zod"
+import { authClient } from "../lib/auth-client"
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),

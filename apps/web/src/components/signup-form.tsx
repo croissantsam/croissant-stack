@@ -9,16 +9,16 @@ import {
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
-  FieldError,
 } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
 import { useState } from "react"
 import { Link } from "@tanstack/react-router"
-import { authClient } from "../lib/auth-client"
 import { useForm } from "@tanstack/react-form"
 import { z } from "zod"
+import { authClient } from "../lib/auth-client"
 
 const signupSchema = z.object({
   name: z.string().min(1, "Full name is required"),
