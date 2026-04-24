@@ -3,7 +3,7 @@ import { getSessionFn } from "@/lib/auth-utils"
 import { authClient } from "@/lib/auth-client"
 import { orpc } from "@/lib/orpc"
 
-export const Route = createFileRoute("/(auth)/dashboard")({
+export const Route = createFileRoute("/_auth/dashboard")({
   beforeLoad: async () => {
     const session = await getSessionFn()
     if (!session) {

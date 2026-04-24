@@ -19,37 +19,91 @@ import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/av
 import { authClient } from "@/lib/auth-client"
 
 // This is sample data.
-const data = {
-  navMain: [
-    {
-      title: "Examples",
-      items: [
-        {
-          title: "SSR + oRPC",
-          url: "/examples/ssr-orpc",
-        },
-        {
-          title: "SSR + oRPC (Auth)",
-          url: "/examples/ssr-orpc-auth",
-        },
-        {
-          title: "Client + oRPC",
-          url: "/examples/client-orpc",
-        },
-        {
-          title: "Client + oRPC (Auth)",
-          url: "/examples/client-orpc-auth",
-        },
-        {
-          title: "ISR",
-          url: "/examples/isr",
-        },
-      ],
-    },
-  ],
+export const authNavItems = [
+  {
+    title: "Dashboard",
+    items: [
+      {
+        title: "Overview",
+        url: "/dashboard",
+      },
+      {
+        title: "Account",
+        url: "/account",
+      },
+    ],
+  },
+  {
+    title: "Examples",
+    items: [
+      {
+        title: "SSR + oRPC (Auth)",
+        url: "/examples/ssr-orpc-auth",
+      },
+      {
+        title: "Client + oRPC (Auth)",
+        url: "/examples/client-orpc-auth",
+      },
+    ],
+  },
+]
+
+export const publicNavItems = [
+  {
+    title: "Welcome",
+    items: [
+      {
+        title: "Home",
+        url: "/",
+      },
+      {
+        title: "Login",
+        url: "/login",
+      },
+      {
+        title: "Sign Up",
+        url: "/signup",
+      },
+    ],
+  },
+  {
+    title: "Examples",
+    items: [
+      {
+        title: "SSR + oRPC",
+        url: "/examples/ssr-orpc",
+      },
+      {
+        title: "Client + oRPC",
+        url: "/examples/client-orpc",
+      },
+      {
+        title: "ISR",
+        url: "/examples/isr",
+      },
+    ],
+  },
+]
+
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  items?: Array<{
+    title: string
+    items: Array<{
+      title: string
+      url: string
+    }>
+  }>
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AuthSidebar(props: React.ComponentProps<typeof Sidebar>) {
+  return <AppSidebar items={authNavItems} {...props} />
+}
+
+export function PublicSidebar(props: React.ComponentProps<typeof Sidebar>) {
+  return <AppSidebar items={publicNavItems} {...props} />
+}
+
+export function AppSidebar({ items = authNavItems, ...props }: AppSidebarProps) {
   const {
     data: session,
   } = authClient.useSession()
@@ -64,7 +118,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </div>
       </SidebarHeader>
       <SidebarContent>
-        {data.navMain.map((item) => (
+        {items.map((item) => (
           <SidebarGroup key={item.title}>
             <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
             <SidebarGroupContent>

@@ -28,7 +28,7 @@ const passwordSchema = z.object({
   path: ["confirmPassword"],
 })
 
-export const Route = createFileRoute("/(auth)/account")({
+export const Route = createFileRoute("/_auth/account")({
   beforeLoad: async () => {
     const session = await getSessionFn()
     if (!session) {

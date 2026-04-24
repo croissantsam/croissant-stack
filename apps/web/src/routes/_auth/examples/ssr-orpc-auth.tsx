@@ -2,7 +2,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router"
 import { getSessionFn } from "@/lib/auth-utils"
 import { orpc } from "@/lib/orpc"
 
-export const Route = createFileRoute("/examples/ssr-orpc-auth")({
+export const Route = createFileRoute("/_auth/examples/ssr-orpc-auth")({
   beforeLoad: async () => {
     const session = await getSessionFn()
     if (!session) {

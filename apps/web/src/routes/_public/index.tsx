@@ -7,7 +7,7 @@ import { orpc } from "@/lib/orpc"
 type Outputs = InferRouterOutputs<typeof router>
 type Planet = Outputs["planets"]["getPlanets"][number]
 
-export const Route = createFileRoute("/(public)/")({
+export const Route = createFileRoute("/_public/")({
   loader: async () => {
     const [helloRes, planets] = await Promise.all([
       orpc.hello({ name: "Croissant Stack" }),
