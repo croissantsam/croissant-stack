@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Link } from "@tanstack/react-router"
-import { LogOut, User } from "lucide-react"
+import { LogOut, User, Settings } from "lucide-react"
 
 import {
   Sidebar,
@@ -95,32 +95,47 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            {user ? (
-              <SidebarMenuButton
-                size="lg"
-                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-              >
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.image || ""} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">
-                    {user.name?.charAt(0) || "U"}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
-                </div>
-                <button
-                  onClick={async () => {
-                    await authClient.signOut()
-                    window.location.reload()
-                  }}
-                  className="ml-auto"
+              {user ? (
+                <SidebarMenuButton
+                  size="lg"
+                  render={<div />}
+                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 >
-                  <LogOut className="h-4 w-4" />
-                </button>
-              </SidebarMenuButton>
-            ) : (
+                  <div className="flex items-center gap-2 w-full">
+                    <Avatar className="h-8 w-8 rounded-lg">
+                      <AvatarImage src={user.image || ""} alt={user.name} />
+                      <AvatarFallback className="rounded-lg">
+                        {user.name?.charAt(0) || "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                      <span className="truncate font-semibold">{user.name}</span>
+                      <span className="truncate text-xs">{user.email}</span>
+                    </div>
+                    <div className="flex items-center gap-1 ml-auto">
+                      <Link
+                        to="/account"
+                        className="p-1 rounded hover:bg-sidebar-accent-foreground/10"
+                        title="Account Settings"
+                      >
+                        <Settings className="h-4 w-4" />
+                      </Link>
+                      <button
+                        onClick={async (e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          await authClient.signOut()
+                          window.location.reload()
+                        }}
+                        className="p-1 rounded hover:bg-sidebar-accent-foreground/10"
+                        title="Sign Out"
+                      >
+                        <LogOut className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </SidebarMenuButton>
+              ) : (
               <SidebarMenuButton
                 render={
                   <Link to="/login" className="flex items-center gap-2" />
