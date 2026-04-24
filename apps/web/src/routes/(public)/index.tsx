@@ -10,7 +10,7 @@ type Planet = Outputs["planets"]["getPlanets"][number]
 export const Route = createFileRoute("/(public)/")({
   loader: async () => {
     const [helloRes, planets] = await Promise.all([
-      orpc.hello({ name: "TanStack Start" }),
+      orpc.hello({ name: "Croissant Stack" }),
       orpc.planets.getPlanets(),
     ])
     return { 
