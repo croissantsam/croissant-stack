@@ -1,6 +1,6 @@
 import * as React from "react"
 import { createFileRoute } from "@tanstack/react-router"
-import { Check, Pencil, Plus, Trash2, X } from "lucide-react"
+import { Check, Pencil, Plus, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 
 import { Button } from "@workspace/ui/components/button"

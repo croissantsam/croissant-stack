@@ -10,15 +10,14 @@ import { orpc } from "../lib/orpc"
 
 export const Route = createFileRoute("/ssr-orpc")({
   loader: async () => {
-    const data = await orpc.hello({ name: "SSR User" })
     const planets = await orpc.getPlanets()
-    return { data, planets }
+    return { planets }
   },
   component: SSRORPC,
 })
 
 function SSRORPC() {
-  const { data, planets } = Route.useLoaderData()
+  const { planets } = Route.useLoaderData()
   const router = useRouter()
   const [editingId, setEditingId] = React.useState<number | null>(null)
   
