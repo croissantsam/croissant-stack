@@ -69,7 +69,7 @@ function App() {
             ) : (
               <ul className="grid grid-cols-1 gap-2">
                 {planets.map((planet: Planet) => (
-                  <li key={planet.id} className="rounded-md border p-3 bg-white shadow-sm">
+                  <li key={planet.id} className="rounded-md border p-3 shadow-sm">
                     <span className="font-bold">{planet.name}</span> - {planet.description}
                   </li>
                 ))}

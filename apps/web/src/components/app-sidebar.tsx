@@ -16,6 +16,8 @@ import {
   SidebarRail,
 } from "@workspace/ui/components/sidebar"
 import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar"
+import { ModeToggle } from "@workspace/ui/components/mode-toggle"
+
 import { authClient } from "@/lib/auth-client"
 
 // This is sample data.
@@ -113,8 +115,9 @@ export function AppSidebar({ items = authNavItems, ...props }: AppSidebarProps) 
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <div className="flex items-center gap-2 px-4 py-2">
+        <div className="flex items-center justify-between px-4 py-2">
           <span className="font-bold">Croissant Stack</span>
+          <ModeToggle />
         </div>
       </SidebarHeader>
       <SidebarContent>
