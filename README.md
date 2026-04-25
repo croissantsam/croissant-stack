@@ -34,7 +34,7 @@ You can see the configuration in `turbo.json`.
 
 ## 📁 Project Structure
 
-- `apps/web`: The main TanStack Start application. Uses `@/` path alias for clean imports.
+- `apps/platform`: The main TanStack Start application. Uses `@/` path alias for clean imports.
 - `packages/auth`: Authentication logic and Better Auth configuration.
 - `packages/db`: Database schema, migrations, and Drizzle client.
 - `packages/orpc`: Type-safe API router. Organized into modular files (e.g., `lib/planets.ts`).
