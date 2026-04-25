@@ -1,6 +1,16 @@
 import { createFileRoute, redirect } from "@tanstack/react-router"
+import { createServerFn } from "@tanstack/react-start"
 import { getSessionFn } from "@/lib/auth-utils"
 import { orpc } from "@/lib/orpc"
+
+const getSecretData = createServerFn({ method: "GET" }).handler(async () => {
+  try {
+    const secretData = await orpc.getSecretData()
+    return { secretData }
+  } catch (err) {
+    return { secretData: null, error: "Failed to fetch secret data" }
+  }
+})
 
 export const Route = createFileRoute("/_auth/examples/ssr-orpc-auth")({
   beforeLoad: async () => {
@@ -15,14 +25,7 @@ export const Route = createFileRoute("/_auth/examples/ssr-orpc-auth")({
     }
     return { session }
   },
-  loader: async () => {
-    try {
-      const secretData = await orpc.getSecretData()
-      return { secretData }
-    } catch (err) {
-      return { secretData: null, error: "Failed to fetch secret data" }
-    }
-  },
+  loader: () => getSecretData(),
   component: SSRORPCAuth,
 })
 

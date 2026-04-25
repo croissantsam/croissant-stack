@@ -1,4 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router"
+import { createServerFn } from "@tanstack/react-start"
 import { Button } from "@workspace/ui/components/button"
 import type { router } from "@workspace/orpc/router"
 import type { InferRouterOutputs } from "@orpc/server"
@@ -6,6 +7,17 @@ import { orpc } from "@/lib/orpc"
 
 type Outputs = InferRouterOutputs<typeof router>
 type Planet = Outputs["planets"]["getPlanets"][number]
+
+const getHomeData = createServerFn({ method: "GET" }).handler(async () => {
+  const [helloRes, planets] = await Promise.all([
+    orpc.hello({ name: "Croissant Stack" }),
+    orpc.planets.getPlanets(),
+  ])
+  return {
+    message: helloRes.message,
+    planets,
+  }
+})
 
 export const Route = createFileRoute("/_public/")({
   head: () => ({
@@ -15,7 +27,8 @@ export const Route = createFileRoute("/_public/")({
       },
       {
         name: "description",
-        content: "Build full-stack applications faster with Croissant Stack. Featuring TanStack Start, oRPC, and Better Auth.",
+        content:
+          "Build full-stack applications faster with Croissant Stack. Featuring TanStack Start, oRPC, and Better Auth.",
       },
       {
         property: "og:title",
@@ -31,18 +44,10 @@ export const Route = createFileRoute("/_public/")({
       },
     ],
   }),
-  loader: async () => {
-    const [helloRes, planets] = await Promise.all([
-      orpc.hello({ name: "Croissant Stack" }),
-      orpc.planets.getPlanets(),
-    ])
-    return { 
-      message: helloRes.message,
-      planets,
-    }
-  },
+  loader: () => getHomeData(),
   headers: () => ({
-    "Cache-Control": "public, max-age=10, s-maxage=10, stale-while-revalidate=60",
+    "Cache-Control":
+      "public, max-age=10, s-maxage=10, stale-while-revalidate=60",
   }),
   component: App,
 })

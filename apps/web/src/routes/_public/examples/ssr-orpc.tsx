@@ -1,5 +1,6 @@
 import * as React from "react"
 import { createFileRoute, useRouter } from "@tanstack/react-router"
+import { createServerFn } from "@tanstack/react-start"
 import { Check, Pencil, Plus, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import { useForm } from "@tanstack/react-form"
@@ -27,6 +28,11 @@ const planetSchema = z.object({
   diameter: z.string().refine((val) => !isNaN(parseFloat(val)), "Must be a number"),
 })
 
+const getPlanets = createServerFn({ method: "GET" }).handler(async () => {
+  const planets = await orpc.planets.getPlanets()
+  return { planets }
+})
+
 export const Route = createFileRoute("/_public/examples/ssr-orpc")({
   head: () => ({
     meta: [
@@ -35,14 +41,12 @@ export const Route = createFileRoute("/_public/examples/ssr-orpc")({
       },
       {
         name: "description",
-        content: "Learn how to use Server-Side Rendering (SSR) with oRPC in Croissant Stack.",
+        content:
+          "Learn how to use Server-Side Rendering (SSR) with oRPC in Croissant Stack.",
       },
     ],
   }),
-  loader: async () => {
-    const planets = await orpc.planets.getPlanets()
-    return { planets }
-  },
+  loader: () => getPlanets(),
   component: SSRORPC,
 })
 

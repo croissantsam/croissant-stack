@@ -1,5 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { createServerFn } from "@tanstack/react-start"
 import { orpc } from "@/lib/orpc"
+
+const getISRData = createServerFn({ method: "GET" }).handler(async () => {
+  // In a real ISR scenario, this would be cached on the server
+  // For this example, we'll fetch planets via oRPC
+  const planets = await orpc.planets.getPlanets()
+
+  return {
+    generatedAt: new Date().toISOString(),
+    planets,
+    message:
+      "This page is an example of ISR. In a production build with proper configuration, this data would be cached and updated in the background.",
+  }
+})
 
 export const Route = createFileRoute("/_public/examples/isr")({
   head: () => ({
@@ -9,21 +23,12 @@ export const Route = createFileRoute("/_public/examples/isr")({
       },
       {
         name: "description",
-        content: "Experience high-performance page loads with ISR in Croissant Stack.",
+        content:
+          "Experience high-performance page loads with ISR in Croissant Stack.",
       },
     ],
   }),
-  loader: async () => {
-    // In a real ISR scenario, this would be cached on the server
-    // For this example, we'll fetch planets via oRPC
-    const planets = await orpc.planets.getPlanets()
-    
-    return {
-      generatedAt: new Date().toISOString(),
-      planets,
-      message: "This page is an example of ISR. In a production build with proper configuration, this data would be cached and updated in the background.",
-    }
-  },
+  loader: () => getISRData(),
   headers: () => ({
     // Cache at CDN for 10 seconds, allow stale content for up to 1 minute
     "Cache-Control": "public, max-age=10, s-maxage=10, stale-while-revalidate=60",
