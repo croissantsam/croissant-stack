@@ -163,25 +163,25 @@ export function AppSidebar({ items = authNavItems, ...props }: AppSidebarProps) 
                       <span className="truncate text-xs">{user.email}</span>
                     </div>
                     <div className="flex items-center gap-1 ml-auto">
-                      <Link
-                        to="/account"
-                        className="p-1 rounded hover:bg-sidebar-accent-foreground/10"
+                      <SidebarMenuButton
+                        render={<Link to="/account" />}
+                        className="p-1 h-auto w-auto rounded hover:bg-sidebar-accent-foreground/10"
                         title="Account Settings"
                       >
                         <Settings className="h-4 w-4" />
-                      </Link>
-                      <button
+                      </SidebarMenuButton>
+                      <SidebarMenuButton
                         onClick={async (e) => {
                           e.preventDefault()
                           e.stopPropagation()
                           await authClient.signOut()
                           window.location.reload()
                         }}
-                        className="p-1 rounded hover:bg-sidebar-accent-foreground/10"
+                        className="p-1 h-auto w-auto rounded hover:bg-sidebar-accent-foreground/10"
                         title="Sign Out"
                       >
                         <LogOut className="h-4 w-4" />
-                      </button>
+                      </SidebarMenuButton>
                     </div>
                   </div>
                 </SidebarMenuButton>
