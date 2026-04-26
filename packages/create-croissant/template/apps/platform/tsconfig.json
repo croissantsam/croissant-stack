@@ -1,8 +1,15 @@
 {
   "extends": "@workspace/config-typescript/react.json",
+  "include": ["**/*.ts", "**/*.tsx", "vite.config.ts", "eslint.config.ts", "prettier.config.ts"],
   "compilerOptions": {
+    "target": "ES2022",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "moduleResolution": "bundler"
-  },
-  "include": ["**/*.ts", "**/*.tsx", "vite.config.ts", "eslint.config.ts", "prettier.config.ts"]
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@workspace/ui/*": ["../../packages/ui/src/*"]
+    }
+  }
 }

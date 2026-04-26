@@ -18,7 +18,8 @@
     "@workspace/config-typescript": "*",
     "@workspace/config-prettier": "*",
     "@better-auth/cli": "^1.4.22",
-    "drizzle-kit": "^0.31.10"
+    "drizzle-kit": "^0.31.10",
+    "tsx": "^4.21.0"
   },
   "exports": {
     "./lib/*": "./src/lib/*.ts",

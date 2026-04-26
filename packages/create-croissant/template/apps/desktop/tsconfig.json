@@ -1,3 +1,9 @@
 {
-  "extends": "@workspace/config-typescript/base.json"
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.node.json" },
+    { "path": "./tsconfig.web.json" }
+  ],
+  "include": [],
+  "exclude": ["node_modules", "out", "dist"]
 }

@@ -17,7 +17,8 @@
   "devDependencies": {
     "@workspace/config-eslint": "*",
     "@workspace/config-typescript": "*",
-    "@workspace/config-prettier": "*"
+    "@workspace/config-prettier": "*",
+    "@types/node": "^22.19.1"
   },
   "exports": {
     "./router": "./src/lib/router.ts"
