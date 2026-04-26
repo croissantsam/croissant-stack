@@ -1,8 +1,7 @@
 {
-  "extends": "@workspace/config-typescript/react.json",
+  "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "baseUrl": ".",
     "paths": {
       "@/*": [
         "./*"
@@ -10,14 +9,9 @@
     }
   },
   "include": [
-    "app",
-    "components",
-    "constants",
-    "hooks",
-    "assets",
-    "eslint.config.ts",
-    "prettier.config.ts",
-    "expo-env.d.ts",
-    ".expo/types/**/*.ts"
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
   ]
 }

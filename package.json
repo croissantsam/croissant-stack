@@ -15,9 +15,14 @@
     "update-deps": "npx npm-check-updates -u -w --root && npm install",
     "prepare": "husky"
   },
+  "dependencies": {
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
+  },
   "devDependencies": {
     "@better-auth/core": "^1.6.9",
     "@tanstack/eslint-config": "0.3.4",
+    "arktype": "^2.2.0",
     "eslint": "^9.39.4",
     "husky": "^9.1.7",
     "prettier": "^3.8.3",
@@ -25,7 +30,10 @@
     "turbo": "^2.9.6",
     "typescript": "6.0.3",
     "vite": "^8.0.10",
-    "arktype": "^2.2.0"
+    "expo": "^55.0.17",
+    "expo-router": "~55.0.13",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3"
   },
   "packageManager": "npm@11.13.0",
   "engines": {

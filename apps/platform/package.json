@@ -30,8 +30,6 @@
     "better-auth": "^1.6.9",
     "lucide-react": "^1.11.0",
     "nitro": "latest",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
     "tailwindcss": "^4.2.4",
     "vite-tsconfig-paths": "^6.1.1"
   },
@@ -40,8 +38,6 @@
     "@workspace/config-typescript": "*",
     "@workspace/config-prettier": "*",
     "@types/node": "^25.6.0",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
     "vite": "^8.0.10"
   }
