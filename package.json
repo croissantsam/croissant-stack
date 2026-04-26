@@ -2,11 +2,19 @@
   "name": "croissant-stack",
   "version": "0.0.1",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
-    "lint": "turbo lint",
-    "format": "turbo format",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "format": "oxfmt --check",
+    "format:fix": "oxfmt .",
+    "quality": "turbo quality",
+    "quality:fix": "turbo quality:fix",
     "typecheck": "turbo typecheck",
     "ci": "npm run lint && npm run typecheck && npm run build",
     "db:up": "docker compose up -d",
@@ -21,32 +29,26 @@
   },
   "devDependencies": {
     "@better-auth/core": "^1.6.9",
-    "@tanstack/eslint-config": "0.3.4",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
     "arktype": "^2.2.0",
-    "eslint": "^9.39.4",
-    "husky": "^9.1.7",
-    "prettier": "^3.8.3",
-    "prettier-plugin-tailwindcss": "^0.7.3",
-    "turbo": "^2.9.6",
-    "typescript": "6.0.3",
-    "vite": "^8.0.10",
     "expo": "^55.0.17",
     "expo-router": "~55.0.13",
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3"
+    "husky": "^9.1.7",
+    "oxfmt": "^0.46.0",
+    "oxlint": "^1.61.0",
+    "turbo": "^2.9.6",
+    "typescript": "6.0.3",
+    "vite": "^8.0.10"
   },
-  "packageManager": "npm@11.13.0",
+  "overrides": {
+    "@noble/ciphers": "2.2.0",
+    "drizzle-orm": "^0.45.2",
+    "react": "19.2.5",
+    "react-dom": "19.2.5"
+  },
   "engines": {
     "node": ">=20"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
-  "overrides": {
-    "react": "19.2.5",
-    "react-dom": "19.2.5",
-    "@noble/ciphers": "2.2.0",
-    "drizzle-orm": "^0.45.2"
-  }
+  "packageManager": "npm@11.13.0"
 }

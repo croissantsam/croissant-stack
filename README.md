@@ -133,11 +133,11 @@ The project uses oRPC for end-to-end type safety. The router is modularized for 
 On the client side, you can infer types directly from the router:
 
 ```typescript
-import type { router } from "@workspace/orpc/router"
-import type { InferRouterInputs, InferRouterOutputs } from "@orpc/server"
+import type { router } from "@workspace/orpc/router";
+import type { InferRouterInputs, InferRouterOutputs } from "@orpc/server";
 
-type Inputs = InferRouterInputs<typeof router>
-type Outputs = InferRouterOutputs<typeof router>
+type Inputs = InferRouterInputs<typeof router>;
+type Outputs = InferRouterOutputs<typeof router>;
 ```
 
 ## 🧱 Adding Components

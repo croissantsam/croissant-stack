@@ -1,8 +1,12 @@
 {
   "name": "@workspace/db",
   "version": "0.0.0",
-  "type": "module",
   "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./src/schema.ts"
+  },
   "scripts": {
     "lint": "eslint",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
@@ -16,15 +20,11 @@
     "pg": "^8.20.0"
   },
   "devDependencies": {
-    "@workspace/config-eslint": "*",
-    "@workspace/config-typescript": "*",
-    "@workspace/config-prettier": "*",
     "@types/pg": "^8.20.0",
+    "@workspace/config-eslint": "*",
+    "@workspace/config-prettier": "*",
+    "@workspace/config-typescript": "*",
     "drizzle-kit": "^0.31.10",
     "tsx": "^4.21.0"
-  },
-  "exports": {
-    ".": "./src/index.ts",
-    "./schema": "./src/schema.ts"
   }
 }

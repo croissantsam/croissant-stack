@@ -1,8 +1,8 @@
 {
   "name": "platform",
   "version": "0.0.1",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite dev --port 3000",
     "build": "vite build",
@@ -34,11 +34,11 @@
     "vite-tsconfig-paths": "^6.1.1"
   },
   "devDependencies": {
-    "@workspace/config-eslint": "*",
-    "@workspace/config-typescript": "*",
-    "@workspace/config-prettier": "*",
     "@types/node": "^25.6.0",
     "@vitejs/plugin-react": "^6.0.1",
+    "@workspace/config-eslint": "*",
+    "@workspace/config-prettier": "*",
+    "@workspace/config-typescript": "*",
     "vite": "^8.0.10"
   }
 }

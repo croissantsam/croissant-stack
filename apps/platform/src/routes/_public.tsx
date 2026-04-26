@@ -1,10 +1,10 @@
-import { Outlet, createFileRoute } from "@tanstack/react-router"
-import { SidebarProvider, SidebarTrigger } from "@workspace/ui/components/sidebar"
-import { PublicSidebar } from "@/components/app-sidebar"
+import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { SidebarProvider, SidebarTrigger } from "@workspace/ui/components/sidebar";
+import { PublicSidebar } from "@/components/app-sidebar";
 
 export const Route = createFileRoute("/_public")({
   component: PublicLayout,
-})
+});
 
 function PublicLayout() {
   return (
@@ -19,5 +19,5 @@ function PublicLayout() {
         </div>
       </main>
     </SidebarProvider>
-  )
+  );
 }

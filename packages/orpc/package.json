@@ -1,8 +1,11 @@
 {
   "name": "@workspace/orpc",
   "version": "0.0.0",
-  "type": "module",
   "private": true,
+  "type": "module",
+  "exports": {
+    "./router": "./src/lib/router.ts"
+  },
   "scripts": {
     "lint": "eslint",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
@@ -15,12 +18,9 @@
     "@workspace/db": "*"
   },
   "devDependencies": {
+    "@types/node": "^22.19.1",
     "@workspace/config-eslint": "*",
-    "@workspace/config-typescript": "*",
     "@workspace/config-prettier": "*",
-    "@types/node": "^22.19.1"
-  },
-  "exports": {
-    "./router": "./src/lib/router.ts"
+    "@workspace/config-typescript": "*"
   }
 }

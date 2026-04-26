@@ -4,5 +4,11 @@
     "composite": true,
     "types": ["electron-vite/node"]
   },
-  "include": ["src/main/**/*", "src/preload/**/*", "electron.vite.config.ts", "eslint.config.ts", "prettier.config.ts"]
+  "include": [
+    "src/main/**/*",
+    "src/preload/**/*",
+    "electron.vite.config.ts",
+    "eslint.config.ts",
+    "prettier.config.ts"
+  ]
 }

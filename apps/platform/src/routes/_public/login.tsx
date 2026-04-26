@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router"
-import { LoginForm } from "@/components/login-form"
+import { createFileRoute } from "@tanstack/react-router";
+import { LoginForm } from "@/components/login-form";
 
 export const Route = createFileRoute("/_public/login")({
   head: () => ({
@@ -21,7 +21,7 @@ export const Route = createFileRoute("/_public/login")({
     "Cache-Control": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400",
   }),
   component: Login,
-})
+});
 
 function Login() {
   return (
@@ -30,5 +30,5 @@ function Login() {
         <LoginForm />
       </div>
     </div>
-  )
+  );
 }

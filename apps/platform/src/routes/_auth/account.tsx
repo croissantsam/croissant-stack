@@ -1,23 +1,30 @@
-import * as React from "react"
-import { createFileRoute, redirect } from "@tanstack/react-router"
-import { useForm } from "@tanstack/react-form"
-import { toast } from "sonner"
-import { Loader2, User } from "lucide-react"
-import { type } from "arktype"
+import * as React from "react";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { useForm } from "@tanstack/react-form";
+import { toast } from "sonner";
+import { Loader2, User } from "lucide-react";
+import { type } from "arktype";
 
-import { Button } from "@workspace/ui/components/button"
-import { Input } from "@workspace/ui/components/input"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@workspace/ui/components/card"
-import { Field, FieldError, FieldLabel } from "@workspace/ui/components/field"
-import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar"
-import { Separator } from "@workspace/ui/components/separator"
+import { Button } from "@workspace/ui/components/button";
+import { Input } from "@workspace/ui/components/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
+import { Field, FieldError, FieldLabel } from "@workspace/ui/components/field";
+import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar";
+import { Separator } from "@workspace/ui/components/separator";
 
-import { authClient } from "@/lib/auth-client"
-import { getSessionFn } from "@/lib/auth-utils"
+import { authClient } from "@/lib/auth-client";
+import { getSessionFn } from "@/lib/auth-utils";
 
 const profileSchema = type({
   name: "string>0",
-})
+});
 
 const passwordSchema = type({
   currentPassword: "string>0",
@@ -28,32 +35,32 @@ const passwordSchema = type({
     ctx.error({
       message: "Passwords do not match",
       path: ["confirmPassword"],
-    })
-    return false
+    });
+    return false;
   }
-  return true
-})
+  return true;
+});
 
 export const Route = createFileRoute("/_auth/account")({
   beforeLoad: async () => {
-    const session = await getSessionFn()
+    const session = await getSessionFn();
     if (!session) {
       throw redirect({
         to: "/login",
         search: {
           redirect: "/account",
         },
-      })
+      });
     }
-    return { session }
+    return { session };
   },
   component: AccountPage,
-})
+});
 
 function AccountPage() {
-  const { session } = Route.useRouteContext()
-  const [loading, setLoading] = React.useState(false)
-  const user = session.user
+  const { session } = Route.useRouteContext();
+  const [loading, setLoading] = React.useState(false);
+  const user = session.user;
 
   const profileForm = useForm({
     defaultValues: {
@@ -63,19 +70,19 @@ function AccountPage() {
       onChange: profileSchema,
     },
     onSubmit: async ({ value }) => {
-      setLoading(true)
+      setLoading(true);
       const { error } = await authClient.updateUser({
         name: value.name,
-      })
+      });
 
       if (error) {
-        toast.error(error.message || "Failed to update profile")
+        toast.error(error.message || "Failed to update profile");
       } else {
-        toast.success("Profile updated successfully")
+        toast.success("Profile updated successfully");
       }
-      setLoading(false)
+      setLoading(false);
     },
-  })
+  });
 
   const passwordForm = useForm({
     defaultValues: {
@@ -87,21 +94,21 @@ function AccountPage() {
       onChange: passwordSchema,
     },
     onSubmit: async ({ value }) => {
-      setLoading(true)
+      setLoading(true);
       const { error } = await authClient.changePassword({
         currentPassword: value.currentPassword,
         newPassword: value.newPassword,
-      })
+      });
 
       if (error) {
-        toast.error(error.message || "Failed to change password")
+        toast.error(error.message || "Failed to change password");
       } else {
-        toast.success("Password changed successfully")
-        passwordForm.reset()
+        toast.success("Password changed successfully");
+        passwordForm.reset();
       }
-      setLoading(false)
+      setLoading(false);
     },
-  })
+  });
 
   return (
     <div className="container max-w-4xl py-10">
@@ -136,9 +143,9 @@ function AccountPage() {
 
               <form
                 onSubmit={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  profileForm.handleSubmit()
+                  e.preventDefault();
+                  e.stopPropagation();
+                  profileForm.handleSubmit();
                 }}
                 className="space-y-4"
               >
@@ -174,9 +181,9 @@ function AccountPage() {
             <CardContent>
               <form
                 onSubmit={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  passwordForm.handleSubmit()
+                  e.preventDefault();
+                  e.stopPropagation();
+                  passwordForm.handleSubmit();
                 }}
                 className="space-y-4"
               >
@@ -248,12 +255,16 @@ function AccountPage() {
               <Button
                 variant="destructive"
                 onClick={async () => {
-                  if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
-                    const { error } = await authClient.deleteUser()
+                  if (
+                    confirm(
+                      "Are you sure you want to delete your account? This action cannot be undone.",
+                    )
+                  ) {
+                    const { error } = await authClient.deleteUser();
                     if (error) {
-                      toast.error(error.message || "Failed to delete account")
+                      toast.error(error.message || "Failed to delete account");
                     } else {
-                      window.location.href = "/"
+                      window.location.href = "/";
                     }
                   }
                 }}
@@ -265,5 +276,5 @@ function AccountPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

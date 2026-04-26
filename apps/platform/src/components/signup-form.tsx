@@ -1,24 +1,24 @@
-import { Button } from "@workspace/ui/components/button"
+import { Button } from "@workspace/ui/components/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@workspace/ui/components/card"
+} from "@workspace/ui/components/card";
 import {
   Field,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@workspace/ui/components/field"
-import { Input } from "@workspace/ui/components/input"
-import { useState } from "react"
-import { Link } from "@tanstack/react-router"
-import { useForm } from "@tanstack/react-form"
-import { type } from "arktype"
-import { authClient } from "@/lib/auth-client"
+} from "@workspace/ui/components/field";
+import { Input } from "@workspace/ui/components/input";
+import { useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { useForm } from "@tanstack/react-form";
+import { type } from "arktype";
+import { authClient } from "@/lib/auth-client";
 
 const signupSchema = type({
   name: "string>0",
@@ -30,15 +30,15 @@ const signupSchema = type({
     ctx.error({
       message: "Passwords do not match",
       path: ["confirmPassword"],
-    })
-    return false
+    });
+    return false;
   }
-  return true
-})
+  return true;
+});
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const form = useForm({
     defaultValues: {
@@ -51,47 +51,41 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       onChange: signupSchema,
     },
     onSubmit: async ({ value }) => {
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
       const { error: signUpError } = await authClient.signUp.email({
         email: value.email,
         password: value.password,
         name: value.name,
         callbackURL: "/dashboard",
-      })
+      });
       if (signUpError) {
-        setError(signUpError.message || "Failed to sign up")
+        setError(signUpError.message || "Failed to sign up");
       }
-      setLoading(false)
+      setLoading(false);
     },
-  })
+  });
 
   return (
     <Card {...props}>
       <CardHeader>
         <CardTitle>Create an account</CardTitle>
-        <CardDescription>
-          Enter your information below to create your account
-        </CardDescription>
+        <CardDescription>Enter your information below to create your account</CardDescription>
       </CardHeader>
       <CardContent>
         <form
           onSubmit={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            form.handleSubmit()
+            e.preventDefault();
+            e.stopPropagation();
+            form.handleSubmit();
           }}
         >
           <FieldGroup>
-            {error && (
-              <div className="rounded bg-red-100 p-2 text-sm text-red-600">
-                {error}
-              </div>
-            )}
+            {error && <div className="rounded bg-red-100 p-2 text-sm text-red-600">{error}</div>}
             <form.Field
               name="name"
               children={(field) => {
-                const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0
+                const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0;
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>Full Name</FieldLabel>
@@ -107,13 +101,13 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                     />
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>
-                )
+                );
               }}
             />
             <form.Field
               name="email"
               children={(field) => {
-                const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0
+                const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0;
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>Email</FieldLabel>
@@ -128,18 +122,18 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                       required
                     />
                     <FieldDescription>
-                      We&apos;ll use this to contact you. We will not share your email
-                      with anyone else.
+                      We&apos;ll use this to contact you. We will not share your email with anyone
+                      else.
                     </FieldDescription>
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>
-                )
+                );
               }}
             />
             <form.Field
               name="password"
               children={(field) => {
-                const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0
+                const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0;
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>Password</FieldLabel>
@@ -152,23 +146,19 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                       onChange={(e) => field.handleChange(e.target.value)}
                       required
                     />
-                    <FieldDescription>
-                      Must be at least 8 characters long.
-                    </FieldDescription>
+                    <FieldDescription>Must be at least 8 characters long.</FieldDescription>
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>
-                )
+                );
               }}
             />
             <form.Field
               name="confirmPassword"
               children={(field) => {
-                const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0
+                const isInvalid = field.state.meta.isTouched && field.state.meta.errors.length > 0;
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>
-                      Confirm Password
-                    </FieldLabel>
+                    <FieldLabel htmlFor={field.name}>Confirm Password</FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -181,7 +171,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                     <FieldDescription>Please confirm your password.</FieldDescription>
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>
-                )
+                );
               }}
             />
             <FieldGroup>
@@ -209,5 +199,5 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }

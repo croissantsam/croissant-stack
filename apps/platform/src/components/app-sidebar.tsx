@@ -1,6 +1,6 @@
-import * as React from "react"
-import { Link } from "@tanstack/react-router"
-import { LogOut, Settings, User } from "lucide-react"
+import * as React from "react";
+import { Link } from "@tanstack/react-router";
+import { LogOut, Settings, User } from "lucide-react";
 
 import {
   Sidebar,
@@ -14,11 +14,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@workspace/ui/components/sidebar"
-import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar"
-import { ModeToggle } from "@workspace/ui/components/mode-toggle"
+} from "@workspace/ui/components/sidebar";
+import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar";
+import { ModeToggle } from "@workspace/ui/components/mode-toggle";
 
-import { authClient } from "@/lib/auth-client"
+import { authClient } from "@/lib/auth-client";
 
 // This is sample data.
 export const authNavItems = [
@@ -48,7 +48,7 @@ export const authNavItems = [
       },
     ],
   },
-]
+];
 
 export const publicNavItems = [
   {
@@ -85,32 +85,30 @@ export const publicNavItems = [
       },
     ],
   },
-]
+];
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   items?: Array<{
-    title: string
+    title: string;
     items: Array<{
-      title: string
-      url: string
-    }>
-  }>
+      title: string;
+      url: string;
+    }>;
+  }>;
 }
 
 export function AuthSidebar(props: React.ComponentProps<typeof Sidebar>) {
-  return <AppSidebar items={authNavItems} {...props} />
+  return <AppSidebar items={authNavItems} {...props} />;
 }
 
 export function PublicSidebar(props: React.ComponentProps<typeof Sidebar>) {
-  return <AppSidebar items={publicNavItems} {...props} />
+  return <AppSidebar items={publicNavItems} {...props} />;
 }
 
 export function AppSidebar({ items = authNavItems, ...props }: AppSidebarProps) {
-  const {
-    data: session,
-  } = authClient.useSession()
+  const { data: session } = authClient.useSession();
 
-  const user = session?.user || null
+  const user = session?.user || null;
 
   return (
     <Sidebar {...props}>
@@ -130,10 +128,7 @@ export function AppSidebar({ items = authNavItems, ...props }: AppSidebarProps) 
                   <SidebarMenuItem key={subItem.title}>
                     <SidebarMenuButton
                       render={
-                        <Link
-                          to={subItem.url}
-                          activeProps={{ className: "bg-sidebar-accent" }}
-                        />
+                        <Link to={subItem.url} activeProps={{ className: "bg-sidebar-accent" }} />
                       }
                     >
                       {subItem.title}
@@ -148,52 +143,48 @@ export function AppSidebar({ items = authNavItems, ...props }: AppSidebarProps) 
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-              {user ? (
-                <SidebarMenuButton
-                  size="lg"
-                  render={<div />}
-                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                >
-                  <div className="flex items-center gap-2 w-full">
-                    <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarImage src={user.image || ""} alt={user.name} />
-                      <AvatarFallback className="rounded-lg">
-                        {user.name.charAt(0) || "U"}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">{user.name}</span>
-                      <span className="truncate text-xs">{user.email}</span>
-                    </div>
-                    <div className="flex items-center gap-1 ml-auto">
-                      <SidebarMenuButton
-                        render={<Link to="/account" />}
-                        className="p-1 h-auto w-auto rounded hover:bg-sidebar-accent-foreground/10"
-                        title="Account Settings"
-                      >
-                        <Settings className="h-4 w-4" />
-                      </SidebarMenuButton>
-                      <SidebarMenuButton
-                        onClick={async (e) => {
-                          e.preventDefault()
-                          e.stopPropagation()
-                          await authClient.signOut()
-                          window.location.reload()
-                        }}
-                        className="p-1 h-auto w-auto rounded hover:bg-sidebar-accent-foreground/10"
-                        title="Sign Out"
-                      >
-                        <LogOut className="h-4 w-4" />
-                      </SidebarMenuButton>
-                    </div>
-                  </div>
-                </SidebarMenuButton>
-              ) : (
+            {user ? (
               <SidebarMenuButton
-                render={
-                  <Link to="/login" className="flex items-center gap-2" />
-                }
+                size="lg"
+                render={<div />}
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
+                <div className="flex items-center gap-2 w-full">
+                  <Avatar className="h-8 w-8 rounded-lg">
+                    <AvatarImage src={user.image || ""} alt={user.name} />
+                    <AvatarFallback className="rounded-lg">
+                      {user.name.charAt(0) || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-semibold">{user.name}</span>
+                    <span className="truncate text-xs">{user.email}</span>
+                  </div>
+                  <div className="flex items-center gap-1 ml-auto">
+                    <SidebarMenuButton
+                      render={<Link to="/account" />}
+                      className="p-1 h-auto w-auto rounded hover:bg-sidebar-accent-foreground/10"
+                      title="Account Settings"
+                    >
+                      <Settings className="h-4 w-4" />
+                    </SidebarMenuButton>
+                    <SidebarMenuButton
+                      onClick={async (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        await authClient.signOut();
+                        window.location.reload();
+                      }}
+                      className="p-1 h-auto w-auto rounded hover:bg-sidebar-accent-foreground/10"
+                      title="Sign Out"
+                    >
+                      <LogOut className="h-4 w-4" />
+                    </SidebarMenuButton>
+                  </div>
+                </div>
+              </SidebarMenuButton>
+            ) : (
+              <SidebarMenuButton render={<Link to="/login" className="flex items-center gap-2" />}>
                 <User className="h-4 w-4" />
                 <span>Sign In</span>
               </SidebarMenuButton>
@@ -203,5 +194,5 @@ export function AppSidebar({ items = authNavItems, ...props }: AppSidebarProps) 
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

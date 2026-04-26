@@ -1,26 +1,22 @@
-import * as React from "react"
-import { createFileRoute } from "@tanstack/react-router"
-import { Check, Pencil, Plus, Trash2 } from "lucide-react"
-import { toast } from "sonner"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useForm } from "@tanstack/react-form"
-import { type } from "arktype"
+import * as React from "react";
+import { createFileRoute } from "@tanstack/react-router";
+import { Check, Pencil, Plus, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "@tanstack/react-form";
+import { type } from "arktype";
 
-import { Button } from "@workspace/ui/components/button"
-import { Input } from "@workspace/ui/components/input"
-import {
-  Field,
-  FieldError,
-  FieldLabel,
-} from "@workspace/ui/components/field"
+import { Button } from "@workspace/ui/components/button";
+import { Input } from "@workspace/ui/components/input";
+import { Field, FieldError, FieldLabel } from "@workspace/ui/components/field";
 
-import type { router } from "@workspace/orpc/router"
-import type { InferRouterInputs, InferRouterOutputs } from "@orpc/server"
-import { orpc } from "@/lib/orpc"
+import type { router } from "@workspace/orpc/router";
+import type { InferRouterInputs, InferRouterOutputs } from "@orpc/server";
+import { orpc } from "@/lib/orpc";
 
-type Inputs = InferRouterInputs<typeof router>
-type Outputs = InferRouterOutputs<typeof router>
-type Planet = Outputs["planets"]["getPlanets"][number]
+type Inputs = InferRouterInputs<typeof router>;
+type Outputs = InferRouterOutputs<typeof router>;
+type Planet = Outputs["planets"]["getPlanets"][number];
 
 const planetSchema = type({
   name: "string>0",
@@ -29,13 +25,13 @@ const planetSchema = type({
   diameter: "string",
 }).narrow((data, ctx) => {
   if (isNaN(parseFloat(data.distance))) {
-    ctx.error({ message: "Must be a number", path: ["distance"] })
+    ctx.error({ message: "Must be a number", path: ["distance"] });
   }
   if (isNaN(parseFloat(data.diameter))) {
-    ctx.error({ message: "Must be a number", path: ["diameter"] })
+    ctx.error({ message: "Must be a number", path: ["diameter"] });
   }
-  return true
-})
+  return true;
+});
 
 export const Route = createFileRoute("/_public/examples/client-orpc")({
   head: () => ({
@@ -50,28 +46,28 @@ export const Route = createFileRoute("/_public/examples/client-orpc")({
     ],
   }),
   component: ClientORPC,
-})
+});
 
 function ClientORPC() {
-  const queryClient = useQueryClient()
-  const [editingId, setEditingId] = React.useState<number | null>(null)
-  
+  const queryClient = useQueryClient();
+  const [editingId, setEditingId] = React.useState<number | null>(null);
+
   const { data: planets = [], isLoading } = useQuery({
     queryKey: ["planets"],
     queryFn: () => orpc.planets.getPlanets(),
-  })
+  });
 
   const form = useForm({
-     defaultValues: {
-        name: "",
-        description: "",
-        distance: "0",
-        diameter: "0",
-      },
-      validators: {
-        onChange: planetSchema,
-      },
-      onSubmit: async ({ value }) => {
+    defaultValues: {
+      name: "",
+      description: "",
+      distance: "0",
+      diameter: "0",
+    },
+    validators: {
+      onChange: planetSchema,
+    },
+    onSubmit: async ({ value }) => {
       if (editingId) {
         await updateMutation.mutateAsync({
           id: editingId,
@@ -80,7 +76,7 @@ function ClientORPC() {
           distanceFromSun: parseFloat(value.distance),
           diameter: parseFloat(value.diameter),
           hasRings: false,
-        })
+        });
       } else {
         await createMutation.mutateAsync({
           name: value.name,
@@ -88,69 +84,71 @@ function ClientORPC() {
           distanceFromSun: parseFloat(value.distance),
           diameter: parseFloat(value.diameter),
           hasRings: false,
-        })
+        });
       }
     },
-  })
+  });
 
   const resetForm = () => {
-    form.reset()
-    setEditingId(null)
-  }
+    form.reset();
+    setEditingId(null);
+  };
 
   const createMutation = useMutation({
     mutationFn: (input: Inputs["planets"]["createPlanet"]) => orpc.planets.createPlanet(input),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["planets"] })
-      resetForm()
-      toast.success("Planet added successfully")
+      queryClient.invalidateQueries({ queryKey: ["planets"] });
+      resetForm();
+      toast.success("Planet added successfully");
     },
     onError: (err) => {
-      toast.error(err.message || "Failed to add planet")
+      toast.error(err.message || "Failed to add planet");
     },
-  })
+  });
 
   const updateMutation = useMutation({
     mutationFn: (input: Inputs["planets"]["updatePlanet"]) => orpc.planets.updatePlanet(input),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["planets"] })
-      resetForm()
-      toast.success("Planet updated successfully")
+      queryClient.invalidateQueries({ queryKey: ["planets"] });
+      resetForm();
+      toast.success("Planet updated successfully");
     },
     onError: (err) => {
-      toast.error(err.message || "Failed to update planet")
+      toast.error(err.message || "Failed to update planet");
     },
-  })
+  });
 
   const deleteMutation = useMutation({
     mutationFn: (input: Inputs["planets"]["deletePlanet"]) => orpc.planets.deletePlanet(input),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["planets"] })
-      toast.success("Planet deleted successfully")
+      queryClient.invalidateQueries({ queryKey: ["planets"] });
+      toast.success("Planet deleted successfully");
     },
     onError: (err) => {
-      toast.error(err.message || "Failed to delete planet")
+      toast.error(err.message || "Failed to delete planet");
     },
-  })
+  });
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this planet?")) return
-    await deleteMutation.mutateAsync({ id })
-  }
+    if (!confirm("Are you sure you want to delete this planet?")) return;
+    await deleteMutation.mutateAsync({ id });
+  };
 
   const startEdit = (planet: Planet) => {
-    setEditingId(planet.id)
-    form.setFieldValue("name", planet.name)
-    form.setFieldValue("description", planet.description || "")
-    form.setFieldValue("distance", planet.distanceFromSun.toString())
-    form.setFieldValue("diameter", planet.diameter.toString())
-  }
+    setEditingId(planet.id);
+    form.setFieldValue("name", planet.name);
+    form.setFieldValue("description", planet.description || "");
+    form.setFieldValue("distance", planet.distanceFromSun.toString());
+    form.setFieldValue("diameter", planet.diameter.toString());
+  };
 
   return (
     <div className="flex flex-col gap-8">
       <div>
         <h1 className="text-2xl font-bold mb-2">Client + oRPC CRUD</h1>
-        <p className="text-muted-foreground">Manage planets directly from the client using TanStack Query, TanStack Form and oRPC.</p>
+        <p className="text-muted-foreground">
+          Manage planets directly from the client using TanStack Query, TanStack Form and oRPC.
+        </p>
       </div>
 
       <div className="rounded-lg border p-6 bg-muted/30">
@@ -160,16 +158,18 @@ function ClientORPC() {
         </h2>
         <form
           onSubmit={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            form.handleSubmit()
+            e.preventDefault();
+            e.stopPropagation();
+            form.handleSubmit();
           }}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <form.Field
               name="name"
               children={(field) => (
-                <Field data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
+                <Field
+                  data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}
+                >
                   <FieldLabel htmlFor={field.name}>Name</FieldLabel>
                   <Input
                     id={field.name}
@@ -186,7 +186,9 @@ function ClientORPC() {
             <form.Field
               name="description"
               children={(field) => (
-                <Field data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
+                <Field
+                  data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}
+                >
                   <FieldLabel htmlFor={field.name}>Description</FieldLabel>
                   <Input
                     id={field.name}
@@ -203,7 +205,9 @@ function ClientORPC() {
             <form.Field
               name="distance"
               children={(field) => (
-                <Field data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
+                <Field
+                  data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}
+                >
                   <FieldLabel htmlFor={field.name}>Distance (M km)</FieldLabel>
                   <Input
                     id={field.name}
@@ -220,7 +224,9 @@ function ClientORPC() {
             <form.Field
               name="diameter"
               children={(field) => (
-                <Field data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
+                <Field
+                  data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}
+                >
                   <FieldLabel htmlFor={field.name}>Diameter (km)</FieldLabel>
                   <Input
                     id={field.name}
@@ -242,24 +248,31 @@ function ClientORPC() {
                 <>
                   {editingId ? (
                     <>
-                      <Button 
+                      <Button
                         type="submit"
                         className="flex items-center gap-2"
                         disabled={!canSubmit || isSubmitting || updateMutation.isPending}
                       >
-                        <Check className="h-4 w-4" /> {isSubmitting || updateMutation.isPending ? "Saving..." : "Save Changes"}
+                        <Check className="h-4 w-4" />{" "}
+                        {isSubmitting || updateMutation.isPending ? "Saving..." : "Save Changes"}
                       </Button>
-                      <Button variant="outline" type="button" onClick={resetForm} disabled={isSubmitting || updateMutation.isPending}>
+                      <Button
+                        variant="outline"
+                        type="button"
+                        onClick={resetForm}
+                        disabled={isSubmitting || updateMutation.isPending}
+                      >
                         Cancel
                       </Button>
                     </>
                   ) : (
-                    <Button 
+                    <Button
                       type="submit"
                       className="flex items-center gap-2"
                       disabled={!canSubmit || isSubmitting || createMutation.isPending}
                     >
-                      <Plus className="h-4 w-4" /> {isSubmitting || createMutation.isPending ? "Adding..." : "Add Planet"}
+                      <Plus className="h-4 w-4" />{" "}
+                      {isSubmitting || createMutation.isPending ? "Adding..." : "Add Planet"}
                     </Button>
                   )}
                 </>
@@ -278,13 +291,20 @@ function ClientORPC() {
         ) : (
           <div className="grid grid-cols-1 gap-3">
             {planets.map((planet) => (
-              <div key={planet.id} className="flex items-center justify-between rounded-lg border p-4 bg-background shadow-sm hover:shadow-md transition-shadow">
+              <div
+                key={planet.id}
+                className="flex items-center justify-between rounded-lg border p-4 bg-background shadow-sm hover:shadow-md transition-shadow"
+              >
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-lg">{planet.name}</span>
-                    <span className="text-xs bg-muted px-2 py-0.5 rounded-full text-muted-foreground">ID: {planet.id}</span>
+                    <span className="text-xs bg-muted px-2 py-0.5 rounded-full text-muted-foreground">
+                      ID: {planet.id}
+                    </span>
                   </div>
-                  <p className="text-sm text-muted-foreground">{planet.description || "No description provided."}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {planet.description || "No description provided."}
+                  </p>
                   <div className="mt-2 flex gap-4 text-xs text-muted-foreground font-mono">
                     <span>Distance: {planet.distanceFromSun} M km</span>
                     <span>Diameter: {planet.diameter} km</span>
@@ -294,9 +314,9 @@ function ClientORPC() {
                   <Button variant="outline" size="icon" onClick={() => startEdit(planet)}>
                     <Pencil className="h-4 w-4" />
                   </Button>
-                  <Button 
-                    variant="destructive" 
-                    size="icon" 
+                  <Button
+                    variant="destructive"
+                    size="icon"
                     onClick={() => handleDelete(planet.id)}
                     disabled={deleteMutation.isPending}
                   >
@@ -309,5 +329,5 @@ function ClientORPC() {
         )}
       </div>
     </div>
-  )
+  );
 }

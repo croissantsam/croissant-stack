@@ -1,25 +1,21 @@
-import * as React from "react"
-import { createFileRoute, useRouter } from "@tanstack/react-router"
-import { createServerFn } from "@tanstack/react-start"
-import { Check, Pencil, Plus, Trash2 } from "lucide-react"
-import { toast } from "sonner"
-import { useForm } from "@tanstack/react-form"
-import { type } from "arktype"
+import * as React from "react";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { Check, Pencil, Plus, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import { useForm } from "@tanstack/react-form";
+import { type } from "arktype";
 
-import { Button } from "@workspace/ui/components/button"
-import { Input } from "@workspace/ui/components/input"
-import {
-  Field,
-  FieldError,
-  FieldLabel,
-} from "@workspace/ui/components/field"
+import { Button } from "@workspace/ui/components/button";
+import { Input } from "@workspace/ui/components/input";
+import { Field, FieldError, FieldLabel } from "@workspace/ui/components/field";
 
-import type { router } from "@workspace/orpc/router"
-import type { InferRouterOutputs } from "@orpc/server"
-import { orpc } from "@/lib/orpc"
+import type { router } from "@workspace/orpc/router";
+import type { InferRouterOutputs } from "@orpc/server";
+import { orpc } from "@/lib/orpc";
 
-type Outputs = InferRouterOutputs<typeof router>
-type Planet = Outputs["planets"]["getPlanets"][number]
+type Outputs = InferRouterOutputs<typeof router>;
+type Planet = Outputs["planets"]["getPlanets"][number];
 
 const planetSchema = type({
   name: "string>0",
@@ -28,18 +24,18 @@ const planetSchema = type({
   diameter: "string",
 }).narrow((data, ctx) => {
   if (isNaN(parseFloat(data.distance))) {
-    ctx.error({ message: "Must be a number", path: ["distance"] })
+    ctx.error({ message: "Must be a number", path: ["distance"] });
   }
   if (isNaN(parseFloat(data.diameter))) {
-    ctx.error({ message: "Must be a number", path: ["diameter"] })
+    ctx.error({ message: "Must be a number", path: ["diameter"] });
   }
-  return true
-})
+  return true;
+});
 
 const getPlanets = createServerFn({ method: "GET" }).handler(async () => {
-  const planets = await orpc.planets.getPlanets()
-  return { planets }
-})
+  const planets = await orpc.planets.getPlanets();
+  return { planets };
+});
 
 export const Route = createFileRoute("/_public/examples/ssr-orpc")({
   head: () => ({
@@ -49,20 +45,19 @@ export const Route = createFileRoute("/_public/examples/ssr-orpc")({
       },
       {
         name: "description",
-        content:
-          "Learn how to use Server-Side Rendering (SSR) with oRPC in Croissant Stack.",
+        content: "Learn how to use Server-Side Rendering (SSR) with oRPC in Croissant Stack.",
       },
     ],
   }),
   loader: () => getPlanets(),
   component: SSRORPC,
-})
+});
 
 function SSRORPC() {
-  const { planets } = Route.useLoaderData()
-  const router = useRouter()
-  const [editingId, setEditingId] = React.useState<number | null>(null)
-  
+  const { planets } = Route.useLoaderData();
+  const router = useRouter();
+  const [editingId, setEditingId] = React.useState<number | null>(null);
+
   const form = useForm({
     defaultValues: {
       name: "",
@@ -74,7 +69,7 @@ function SSRORPC() {
       onChange: planetSchema,
     },
     onSubmit: async ({ value }) => {
-      const toastId = toast.loading(editingId ? "Updating planet..." : "Adding planet...")
+      const toastId = toast.loading(editingId ? "Updating planet..." : "Adding planet...");
       try {
         if (editingId) {
           await orpc.planets.updatePlanet({
@@ -84,8 +79,8 @@ function SSRORPC() {
             distanceFromSun: parseFloat(value.distance),
             diameter: parseFloat(value.diameter),
             hasRings: false,
-          })
-          toast.success("Planet updated successfully", { id: toastId })
+          });
+          toast.success("Planet updated successfully", { id: toastId });
         } else {
           await orpc.planets.createPlanet({
             name: value.name,
@@ -93,49 +88,51 @@ function SSRORPC() {
             distanceFromSun: parseFloat(value.distance),
             diameter: parseFloat(value.diameter),
             hasRings: false,
-          })
-          toast.success("Planet added successfully", { id: toastId })
+          });
+          toast.success("Planet added successfully", { id: toastId });
         }
-        await router.invalidate()
-        resetForm()
+        await router.invalidate();
+        resetForm();
       } catch (err: any) {
-        console.error(err)
-        toast.error(err.message || "Operation failed", { id: toastId })
+        console.error(err);
+        toast.error(err.message || "Operation failed", { id: toastId });
       }
     },
-  })
+  });
 
   const resetForm = () => {
-    form.reset()
-    setEditingId(null)
-  }
+    form.reset();
+    setEditingId(null);
+  };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this planet?")) return
-    const toastId = toast.loading("Deleting planet...")
+    if (!confirm("Are you sure you want to delete this planet?")) return;
+    const toastId = toast.loading("Deleting planet...");
     try {
-      await orpc.planets.deletePlanet({ id })
-      await router.invalidate()
-      toast.success("Planet deleted successfully", { id: toastId })
+      await orpc.planets.deletePlanet({ id });
+      await router.invalidate();
+      toast.success("Planet deleted successfully", { id: toastId });
     } catch (err: any) {
-      console.error(err)
-      toast.error(err.message || "Failed to delete planet", { id: toastId })
+      console.error(err);
+      toast.error(err.message || "Failed to delete planet", { id: toastId });
     }
-  }
+  };
 
   const startEdit = (planet: Planet) => {
-    setEditingId(planet.id)
-    form.setFieldValue("name", planet.name)
-    form.setFieldValue("description", planet.description || "")
-    form.setFieldValue("distance", planet.distanceFromSun.toString())
-    form.setFieldValue("diameter", planet.diameter.toString())
-  }
+    setEditingId(planet.id);
+    form.setFieldValue("name", planet.name);
+    form.setFieldValue("description", planet.description || "");
+    form.setFieldValue("distance", planet.distanceFromSun.toString());
+    form.setFieldValue("diameter", planet.diameter.toString());
+  };
 
   return (
     <div className="flex flex-col gap-8">
       <div>
         <h1 className="text-2xl font-bold mb-2">SSR + oRPC CRUD</h1>
-        <p className="text-muted-foreground">Manage planets using SSR loaders for fetching and oRPC mutations for actions.</p>
+        <p className="text-muted-foreground">
+          Manage planets using SSR loaders for fetching and oRPC mutations for actions.
+        </p>
       </div>
 
       <div className="rounded-lg border p-6 bg-muted/30">
@@ -145,16 +142,18 @@ function SSRORPC() {
         </h2>
         <form
           onSubmit={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            form.handleSubmit()
+            e.preventDefault();
+            e.stopPropagation();
+            form.handleSubmit();
           }}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <form.Field
               name="name"
               children={(field) => (
-                <Field data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
+                <Field
+                  data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}
+                >
                   <FieldLabel htmlFor={field.name}>Name</FieldLabel>
                   <Input
                     id={field.name}
@@ -171,7 +170,9 @@ function SSRORPC() {
             <form.Field
               name="description"
               children={(field) => (
-                <Field data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
+                <Field
+                  data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}
+                >
                   <FieldLabel htmlFor={field.name}>Description</FieldLabel>
                   <Input
                     id={field.name}
@@ -188,7 +189,9 @@ function SSRORPC() {
             <form.Field
               name="distance"
               children={(field) => (
-                <Field data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
+                <Field
+                  data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}
+                >
                   <FieldLabel htmlFor={field.name}>Distance (M km)</FieldLabel>
                   <Input
                     id={field.name}
@@ -205,7 +208,9 @@ function SSRORPC() {
             <form.Field
               name="diameter"
               children={(field) => (
-                <Field data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
+                <Field
+                  data-invalid={field.state.meta.isTouched && field.state.meta.errors.length > 0}
+                >
                   <FieldLabel htmlFor={field.name}>Diameter (km)</FieldLabel>
                   <Input
                     id={field.name}
@@ -227,19 +232,24 @@ function SSRORPC() {
                 <>
                   {editingId ? (
                     <>
-                      <Button 
+                      <Button
                         type="submit"
                         className="flex items-center gap-2"
                         disabled={!canSubmit || isSubmitting}
                       >
                         <Check className="h-4 w-4" /> {isSubmitting ? "Saving..." : "Save Changes"}
                       </Button>
-                      <Button variant="outline" type="button" onClick={resetForm} disabled={isSubmitting}>
+                      <Button
+                        variant="outline"
+                        type="button"
+                        onClick={resetForm}
+                        disabled={isSubmitting}
+                      >
                         Cancel
                       </Button>
                     </>
                   ) : (
-                    <Button 
+                    <Button
                       type="submit"
                       className="flex items-center gap-2"
                       disabled={!canSubmit || isSubmitting}
@@ -261,13 +271,20 @@ function SSRORPC() {
         ) : (
           <div className="grid grid-cols-1 gap-3">
             {planets.map((planet) => (
-              <div key={planet.id} className="flex items-center justify-between rounded-lg border p-4 bg-background shadow-sm hover:shadow-md transition-shadow">
+              <div
+                key={planet.id}
+                className="flex items-center justify-between rounded-lg border p-4 bg-background shadow-sm hover:shadow-md transition-shadow"
+              >
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-lg">{planet.name}</span>
-                    <span className="text-xs bg-muted px-2 py-0.5 rounded-full text-muted-foreground">ID: {planet.id}</span>
+                    <span className="text-xs bg-muted px-2 py-0.5 rounded-full text-muted-foreground">
+                      ID: {planet.id}
+                    </span>
                   </div>
-                  <p className="text-sm text-muted-foreground">{planet.description || "No description provided."}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {planet.description || "No description provided."}
+                  </p>
                   <div className="mt-2 flex gap-4 text-xs text-muted-foreground font-mono">
                     <span>Distance: {planet.distanceFromSun} M km</span>
                     <span>Diameter: {planet.diameter} km</span>
@@ -287,5 +304,5 @@ function SSRORPC() {
         )}
       </div>
     </div>
-  )
+  );
 }

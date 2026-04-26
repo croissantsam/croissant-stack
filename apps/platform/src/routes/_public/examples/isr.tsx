@@ -1,19 +1,19 @@
-import { createFileRoute } from "@tanstack/react-router"
-import { createServerFn } from "@tanstack/react-start"
-import { orpc } from "@/lib/orpc"
+import { createFileRoute } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { orpc } from "@/lib/orpc";
 
 const getISRData = createServerFn({ method: "GET" }).handler(async () => {
   // In a real ISR scenario, this would be cached on the server
   // For this example, we'll fetch planets via oRPC
-  const planets = await orpc.planets.getPlanets()
+  const planets = await orpc.planets.getPlanets();
 
   return {
     generatedAt: new Date().toISOString(),
     planets,
     message:
       "This page is an example of ISR. In a production build with proper configuration, this data would be cached and updated in the background.",
-  }
-})
+  };
+});
 
 export const Route = createFileRoute("/_public/examples/isr")({
   head: () => ({
@@ -23,8 +23,7 @@ export const Route = createFileRoute("/_public/examples/isr")({
       },
       {
         name: "description",
-        content:
-          "Experience high-performance page loads with ISR in Croissant Stack.",
+        content: "Experience high-performance page loads with ISR in Croissant Stack.",
       },
     ],
   }),
@@ -34,16 +33,16 @@ export const Route = createFileRoute("/_public/examples/isr")({
     "Cache-Control": "public, max-age=10, s-maxage=10, stale-while-revalidate=60",
   }),
   component: ISRExample,
-})
+});
 
 function ISRExample() {
-  const { generatedAt, message, planets } = Route.useLoaderData()
+  const { generatedAt, message, planets } = Route.useLoaderData();
 
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-2xl font-bold">ISR Example + oRPC</h1>
       <p>{message}</p>
-      
+
       <div className="rounded-lg border p-4">
         <h2 className="font-semibold">Generated At (Server-side):</h2>
         <p className="font-mono">{generatedAt}</p>
@@ -63,10 +62,11 @@ function ISRExample() {
           </ul>
         )}
       </div>
-      
+
       <p className="text-sm text-muted-foreground">
-        Refresh the page to see if the time updates. In a true ISR setup, it would only update after a certain interval.
+        Refresh the page to see if the time updates. In a true ISR setup, it would only update after
+        a certain interval.
       </p>
     </div>
-  )
+  );
 }

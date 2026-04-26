@@ -1,10 +1,10 @@
-import { Outlet, createFileRoute } from "@tanstack/react-router"
-import { SidebarProvider, SidebarTrigger } from "@workspace/ui/components/sidebar"
-import { AuthSidebar } from "@/components/app-sidebar"
+import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { SidebarProvider, SidebarTrigger } from "@workspace/ui/components/sidebar";
+import { AuthSidebar } from "@/components/app-sidebar";
 
 export const Route = createFileRoute("/_auth")({
   component: AuthLayout,
-})
+});
 
 function AuthLayout() {
   return (
@@ -19,5 +19,5 @@ function AuthLayout() {
         </div>
       </main>
     </SidebarProvider>
-  )
+  );
 }

@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install Dependencies
         run: npm install
@@ -53,7 +53,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: "https://registry.npmjs.org"
 
       - name: Install Dependencies
         run: npm install
@@ -63,17 +63,17 @@ jobs:
           # Configure git
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           # Prepare the template from the latest monorepo state
           npm run prepare-template -w create-croissant
-          
+
           # Get the latest version from npm to avoid conflicts
           NPM_VERSION=$(npm view create-croissant version 2>/dev/null || echo "0.0.0")
           LOCAL_VERSION=$(node -p "require('./packages/create-croissant/package.json').version")
-          
+
           echo "NPM version: $NPM_VERSION"
           echo "Local version: $LOCAL_VERSION"
-          
+
           # If npm has a higher version, sync local version first
           if [ "$NPM_VERSION" != "$LOCAL_VERSION" ] && [ "$(printf '%s\n' "$NPM_VERSION" "$LOCAL_VERSION" | sort -V | tail -n1)" = "$NPM_VERSION" ] && [ "$NPM_VERSION" != "0.0.0" ]; then
             echo "Syncing local version to $NPM_VERSION to avoid conflict"
@@ -85,26 +85,26 @@ jobs:
           npm version patch --no-git-tag-version -w create-croissant
           NEW_VERSION=$(node -p "require('./packages/create-croissant/package.json').version")
           REPO_VERSION=$(node -p "require('./package.json').version")
-          
+
           echo "New version to be published: $NEW_VERSION"
           echo "Current repo version: $REPO_VERSION"
 
           # Build the package
           npm run build -w create-croissant
-          
+
           # Publish to npm (using Trusted Publishing)
           # We move into the directory to ensure npm publish uses the correct package context
           cd packages/create-croissant
           npm publish --provenance --access public
-          
+
           # Go back to root for git operations
           cd ../..
-          
+
           # After successful publish, commit the version change and tag it
           git add packages/create-croissant/package.json
           git commit -m "chore: release create-croissant v$NEW_VERSION [skip ci]"
           git tag "v$NEW_VERSION"
-          
+
           # Push the version bump commit and tag back to main
           git push origin main --follow-tags
 
