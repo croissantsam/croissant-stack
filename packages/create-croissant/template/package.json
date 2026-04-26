@@ -8,21 +8,24 @@
     "lint": "turbo lint",
     "format": "turbo format",
     "typecheck": "turbo typecheck",
+    "ci": "npm run lint && npm run typecheck && npm run build",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
     "db:logs": "docker compose logs -f",
-    "update-deps": "npx npm-check-updates -u -w --root && npm install"
+    "update-deps": "npx npm-check-updates -u -w --root && npm install",
+    "prepare": "husky"
   },
   "devDependencies": {
-    "@better-auth/core": "^1.6.7",
-    "@tanstack/eslint-config": "0.3.4",
-    "eslint": "9.39.4",
-    "prettier": "^3.8.1",
-    "prettier-plugin-tailwindcss": "^0.7.2",
-    "turbo": "^2.8.17",
+    "@better-auth/core": "^1.6.9",
+    "@tanstack/eslint-config": "0.4.0",
+    "eslint": "10.2.1",
+    "husky": "^9.1.7",
+    "prettier": "^3.8.3",
+    "prettier-plugin-tailwindcss": "^0.7.3",
+    "turbo": "^2.9.6",
     "typescript": "6.0.3"
   },
-  "packageManager": "npm@11.12.1",
+  "packageManager": "npm@11.13.0",
   "engines": {
     "node": ">=20"
   },
@@ -32,6 +35,12 @@
   ],
   "overrides": {
     "@noble/ciphers": "2.2.0",
-    "@better-auth/core": "^1.6.7"
+    "@better-auth/core": "^1.6.9",
+    "drizzle-orm": "^0.45.2",
+    "esbuild": "^0.25.0",
+    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
+    "postcss": "^8.5.10",
+    "uuid": "^14.0.0"
   }
 }

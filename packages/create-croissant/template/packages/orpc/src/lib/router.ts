@@ -1,17 +1,17 @@
 import { ORPCError, os } from '@orpc/server'
-import { db, schema } from '@workspace/db'
 import { z } from 'zod'
+import { planetRouter } from './planets'
 import type { Session } from '@workspace/auth/lib/auth'
 
 export type RPCContext = {
   session: Session | null
 }
 
-const { planets } = schema
-
 const o = os.$context<RPCContext>()
 
 export const router = o.router({
+  planets: planetRouter,
+
   hello: o
     .input(
       z.object({
@@ -22,12 +22,6 @@ export const router = o.router({
       return {
         message: `Hello, ${input.name ?? 'world'}!`,
       }
-    }),
-
-  getPlanets: o
-    .handler(async () => {
-      const allPlanets = await db.select().from(planets)
-      return allPlanets
     }),
 
   getSecretData: o

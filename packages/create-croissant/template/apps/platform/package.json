@@ -1,0 +1,47 @@
+{
+  "name": "platform",
+  "version": "0.0.1",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vite dev --port 3000",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint",
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@noble/ciphers": "^2.2.0",
+    "@orpc/client": "^1.14.0",
+    "@orpc/server": "^1.14.0",
+    "@orpc/tanstack-query": "^1.14.0",
+    "@tailwindcss/vite": "^4.2.4",
+    "@tanstack/react-form": "^1.29.1",
+    "@tanstack/react-query": "^5.100.5",
+    "@tanstack/react-router": "^1.168.24",
+    "@tanstack/react-start": "^1.167.49",
+    "@tanstack/router-plugin": "^1.167.27",
+    "@tanstack/zod-form-adapter": "^0.42.1",
+    "@workspace/auth": "*",
+    "@workspace/orpc": "*",
+    "@workspace/ui": "*",
+    "better-auth": "^1.6.9",
+    "lucide-react": "^1.11.0",
+    "nitro": "latest",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "tailwindcss": "^4.2.4",
+    "vite-tsconfig-paths": "^6.1.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "vite": "^8.0.10"
+  }
+}

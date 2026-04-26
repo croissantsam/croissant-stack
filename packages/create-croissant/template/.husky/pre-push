@@ -1,0 +1,11 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Get the name of the branch being pushed
+branch=$(git rev-parse --abbrev-ref HEAD)
+
+# Only run if pushing to main
+if [ "$branch" = "main" ]; then
+  echo "Pushing to main branch, running CI checks..."
+  npm run ci
+fi

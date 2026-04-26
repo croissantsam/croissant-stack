@@ -18,6 +18,12 @@ const ignoreList = [
   '.github/workflows/ci.yml', // Don't include the CI in the scaffolded project
 ];
 
+const includeList = [
+  'apps/mobile',
+  'apps/web',
+  'apps/platform',
+];
+
 async function prepareTemplate() {
   console.log('Preparing template for create-croissant...');
 
@@ -44,6 +50,25 @@ async function prepareTemplate() {
       for (const pkg of packageItems) {
         if (pkg === 'create-croissant') continue;
         await fs.copy(path.resolve(srcPath, pkg), path.resolve(destPath, pkg), {
+          dereference: true,
+          filter: (src) => {
+            const relativePath = path.relative(monorepoRoot, src);
+            return !ignoreList.some(ignore => relativePath.startsWith(ignore));
+          }
+        });
+      }
+      continue;
+    }
+
+    // Special handling for 'apps' to ensure we include all apps (including mobile)
+    if (item === 'apps') {
+      await fs.ensureDir(destPath);
+      const appItems = await fs.readdir(srcPath);
+      for (const app of appItems) {
+        const appSrcPath = path.resolve(srcPath, app);
+        const appDestPath = path.resolve(destPath, app);
+        
+        await fs.copy(appSrcPath, appDestPath, {
           dereference: true,
           filter: (src) => {
             const relativePath = path.relative(monorepoRoot, src);

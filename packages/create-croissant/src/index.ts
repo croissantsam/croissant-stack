@@ -34,6 +34,12 @@ program
         message: 'Would you like to install dependencies?',
         default: true,
       },
+      {
+        type: 'confirm',
+        name: 'mobile',
+        message: 'Would you like to include the mobile app (Expo)?',
+        default: true,
+      },
     ]);
 
     const finalProjectName = projectName || answers.name;
@@ -75,6 +81,29 @@ program
             return !ignoreList.some(ignore => relativePath.startsWith(ignore));
           }
         });
+      }
+
+      // Remove mobile app if not selected
+      if (!answers.mobile) {
+        const mobilePath = path.join(projectPath, 'apps/mobile');
+        if (await fs.pathExists(mobilePath)) {
+          await fs.remove(mobilePath);
+          
+          // Remove mobile app references from root package.json if it exists
+          const rootPkgPath = path.join(projectPath, 'package.json');
+          if (await fs.pathExists(rootPkgPath)) {
+            const rootPkg = await fs.readJson(rootPkgPath);
+            if (rootPkg.scripts) {
+              // Remove mobile specific scripts if they exist
+              Object.keys(rootPkg.scripts).forEach(key => {
+                if (key.includes('mobile')) {
+                  delete rootPkg.scripts[key];
+                }
+              });
+            }
+            await fs.writeJson(rootPkgPath, rootPkg, { spaces: 2 });
+          }
+        }
       }
 
       // Customize package.json

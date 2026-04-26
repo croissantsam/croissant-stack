@@ -39,6 +39,8 @@
     "drizzle-orm": "^0.45.2",
     "esbuild": "^0.25.0",
     "lodash": "^4.17.21",
-    "lodash-es": "^4.17.21"
+    "lodash-es": "^4.17.21",
+    "postcss": "^8.5.10",
+    "uuid": "^14.0.0"
   }
 }
