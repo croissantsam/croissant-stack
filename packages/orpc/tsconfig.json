@@ -1,17 +1,10 @@
 {
+  "extends": "@workspace/config-typescript/react.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "jsx": "react-jsx",
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
     "paths": {
       "@workspace/orpc/*": ["./src/*"]
     }
   },
-  "include": ["."],
+  "include": ["src", "eslint.config.ts", "prettier.config.ts"],
   "exclude": ["node_modules", "dist"]
 }

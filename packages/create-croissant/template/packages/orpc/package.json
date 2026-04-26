@@ -15,6 +15,11 @@
     "@workspace/db": "*",
     "zod": "^4.3.6"
   },
+  "devDependencies": {
+    "@workspace/config-eslint": "*",
+    "@workspace/config-typescript": "*",
+    "@workspace/config-prettier": "*"
+  },
   "exports": {
     "./router": "./src/lib/router.ts"
   }

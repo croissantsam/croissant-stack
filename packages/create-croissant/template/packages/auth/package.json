@@ -14,6 +14,9 @@
     "@workspace/db": "*"
   },
   "devDependencies": {
+    "@workspace/config-eslint": "*",
+    "@workspace/config-typescript": "*",
+    "@workspace/config-prettier": "*",
     "@better-auth/cli": "^1.4.22",
     "drizzle-kit": "^0.31.10"
   },

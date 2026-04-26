@@ -1,3 +1,3 @@
-import { tanstackConfig } from "@tanstack/eslint-config"
+import config from "@workspace/config-eslint"
 
-export default [...tanstackConfig]
+export default config

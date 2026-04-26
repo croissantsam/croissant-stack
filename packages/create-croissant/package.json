@@ -35,6 +35,9 @@
     "ora": "^9.4.0"
   },
   "devDependencies": {
+    "@workspace/config-eslint": "*",
+    "@workspace/config-typescript": "*",
+    "@workspace/config-prettier": "*",
     "@types/fs-extra": "^11.0.4",
     "@types/inquirer": "^9.0.9",
     "@types/node": "^25.6.0",

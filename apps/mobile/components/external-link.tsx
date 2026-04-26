@@ -1,6 +1,7 @@
-import { Href, Link } from 'expo-router';
-import { openBrowserAsync, WebBrowserPresentationStyle } from 'expo-web-browser';
-import { type ComponentProps } from 'react';
+import { Link } from 'expo-router';
+import { WebBrowserPresentationStyle, openBrowserAsync } from 'expo-web-browser';
+import type { Href} from 'expo-router';
+import type {ComponentProps} from 'react';
 
 type Props = Omit<ComponentProps<typeof Link>, 'href'> & { href: Href & string };
 

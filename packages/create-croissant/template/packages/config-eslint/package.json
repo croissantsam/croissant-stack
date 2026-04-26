@@ -1,0 +1,11 @@
+{
+  "name": "@workspace/config-eslint",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.ts",
+  "types": "index.ts",
+  "dependencies": {
+    "@tanstack/eslint-config": "0.3.4"
+  }
+}
