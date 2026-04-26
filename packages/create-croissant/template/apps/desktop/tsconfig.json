@@ -1,9 +1,0 @@
-{
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.node.json" },
-    { "path": "./tsconfig.web.json" }
-  ],
-  "include": [],
-  "exclude": ["node_modules", "out", "dist"]
-}

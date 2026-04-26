@@ -1,2 +1,0 @@
-npm run prepare-template -w create-croissant
-git add packages/create-croissant/template
