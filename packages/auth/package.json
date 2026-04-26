@@ -10,11 +10,11 @@
     "generate": "better-auth generate --output ../db/src/lib/auth-schema.ts"
   },
   "dependencies": {
-    "better-auth": "^1.6.7",
+    "better-auth": "^1.6.9",
     "@workspace/db": "*"
   },
   "devDependencies": {
-    "@better-auth/cli": "^1.4.21",
+    "@better-auth/cli": "^1.4.22",
     "drizzle-kit": "^0.31.10"
   },
   "exports": {
