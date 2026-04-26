@@ -20,7 +20,7 @@
     "template"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm --clean --minify",
+    "build": "npm run prepare-template && tsup src/index.ts --format esm --clean --minify",
     "dev": "tsup src/index.ts --format esm --watch",
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
