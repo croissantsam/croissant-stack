@@ -19,10 +19,11 @@ const ignoreList = [
 ];
 
 const includeList = [
-  'apps/mobile',
-  'apps/web',
-  'apps/platform',
-];
+   'apps/mobile',
+   'apps/web',
+   'apps/platform',
+   'apps/desktop',
+ ];
 
 async function prepareTemplate() {
   console.log('Preparing template for create-croissant...');
