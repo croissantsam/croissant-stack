@@ -12,8 +12,7 @@
     "@orpc/client": "^1.14.0",
     "@orpc/server": "^1.14.0",
     "@workspace/auth": "*",
-    "@workspace/db": "*",
-    "zod": "^4.3.6"
+    "@workspace/db": "*"
   },
   "devDependencies": {
     "@workspace/config-eslint": "*",

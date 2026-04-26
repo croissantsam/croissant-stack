@@ -4,7 +4,7 @@ import { createServerFn } from "@tanstack/react-start"
 import { Check, Pencil, Plus, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import { useForm } from "@tanstack/react-form"
-import { z } from "zod"
+import { type } from "arktype"
 
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
@@ -21,11 +21,19 @@ import { orpc } from "@/lib/orpc"
 type Outputs = InferRouterOutputs<typeof router>
 type Planet = Outputs["planets"]["getPlanets"][number]
 
-const planetSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  description: z.string(),
-  distance: z.string().refine((val) => !isNaN(parseFloat(val)), "Must be a number"),
-  diameter: z.string().refine((val) => !isNaN(parseFloat(val)), "Must be a number"),
+const planetSchema = type({
+  name: "string>0",
+  description: "string",
+  distance: "string",
+  diameter: "string",
+}).narrow((data, ctx) => {
+  if (isNaN(parseFloat(data.distance))) {
+    ctx.error({ message: "Must be a number", path: ["distance"] })
+  }
+  if (isNaN(parseFloat(data.diameter))) {
+    ctx.error({ message: "Must be a number", path: ["diameter"] })
+  }
+  return true
 })
 
 const getPlanets = createServerFn({ method: "GET" }).handler(async () => {

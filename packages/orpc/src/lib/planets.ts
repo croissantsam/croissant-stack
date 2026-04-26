@@ -1,7 +1,7 @@
 import { ORPCError, os } from '@orpc/server'
 import { db, schema } from '@workspace/db'
 import { eq } from 'drizzle-orm'
-import { z } from 'zod'
+import { type } from 'arktype'
 import type { RPCContext } from './router'
 
 const { planets } = schema
@@ -17,13 +17,13 @@ export const planetRouter = o.router({
 
   createPlanet: o
     .input(
-      z.object({
-        name: z.string().min(1),
-        description: z.string().optional(),
-        distanceFromSun: z.number(),
-        diameter: z.number(),
-        hasRings: z.boolean().default(false),
-        atmosphere: z.string().optional(),
+      type({
+        name: 'string>0',
+        'description?': 'string',
+        distanceFromSun: 'number',
+        diameter: 'number',
+        'hasRings?': 'boolean',
+        'atmosphere?': 'string',
       }),
     )
     .handler(async ({ input }) => {
@@ -33,14 +33,14 @@ export const planetRouter = o.router({
 
   updatePlanet: o
     .input(
-      z.object({
-        id: z.number(),
-        name: z.string().min(1),
-        description: z.string().optional(),
-        distanceFromSun: z.number(),
-        diameter: z.number(),
-        hasRings: z.boolean(),
-        atmosphere: z.string().optional(),
+      type({
+        id: 'number',
+        name: 'string>0',
+        'description?': 'string',
+        distanceFromSun: 'number',
+        diameter: 'number',
+        hasRings: 'boolean',
+        'atmosphere?': 'string',
       }),
     )
     .handler(async ({ input }) => {
@@ -60,8 +60,8 @@ export const planetRouter = o.router({
 
   deletePlanet: o
     .input(
-      z.object({
-        id: z.number(),
+      type({
+        id: 'number',
       }),
     )
     .handler(async ({ input }) => {

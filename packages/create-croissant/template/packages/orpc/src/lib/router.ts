@@ -1,5 +1,5 @@
 import { ORPCError, os } from '@orpc/server'
-import { z } from 'zod'
+import { type } from 'arktype'
 import { planetRouter } from './planets'
 import type { Session } from '@workspace/auth/lib/auth'
 
@@ -14,8 +14,8 @@ export const router = o.router({
 
   hello: o
     .input(
-      z.object({
-        name: z.string().optional(),
+      type({
+        'name?': 'string',
       }),
     )
     .handler(({ input }) => {

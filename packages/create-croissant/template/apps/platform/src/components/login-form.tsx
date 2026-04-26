@@ -18,12 +18,12 @@ import { Input } from "@workspace/ui/components/input"
 import { useState } from "react"
 import { Link } from "@tanstack/react-router"
 import { useForm } from "@tanstack/react-form"
-import { z } from "zod"
+import { type } from "arktype"
 import { authClient } from "@/lib/auth-client"
 
-const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(1, "Password is required"),
+const loginSchema = type({
+  email: "string.email",
+  password: "string>0",
 })
 
 export function LoginForm({
