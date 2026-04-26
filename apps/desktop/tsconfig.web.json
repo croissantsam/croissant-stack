@@ -9,12 +9,16 @@
     "prettier.config.js"
   ],
   "compilerOptions": {
-    "ignoreDeprecations": "6.0",
     "composite": true,
-    "baseUrl": ".",
     "paths": {
       "@renderer/*": [
-        "src/renderer/src/*"
+        "./src/renderer/src/*"
+      ],
+      "@main/*": [
+        "./src/main/src/*"
+      ],
+      "@preload/*": [
+        "./src/preload/src/*"
       ]
     }
   }

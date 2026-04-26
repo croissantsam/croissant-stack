@@ -1,7 +1,7 @@
 import { tanstackConfig } from "@tanstack/eslint-config"
 import type { Linter } from "eslint"
 
-const config: Linter.Config[] = tanstackConfig.map((config) => {
+const config: Array<Linter.Config> = tanstackConfig.map((config) => {
   const parserOptions = config.languageOptions?.parserOptions as any
   if (parserOptions?.project) {
     const { project, ...rest } = parserOptions
