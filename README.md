@@ -26,7 +26,6 @@ npx create-croissant@latest
   - Path aliases (`@/`) for clean imports.
   - Strict TypeScript across the entire stack.
   - Ultra-fast linting and formatting with [Oxc](https://oxc.rs/) (`oxlint` and `oxfmt`).
-  - Automated CI checks on push via [Husky](https://typicode.github.io/husky/).
 
 ## 📁 Project Structure
 
