@@ -1,6 +1,6 @@
 {
   "name": "create-croissant",
-  "version": "0.1.41",
+  "version": "0.1.42",
   "description": "Scaffold a new project using the Croissant Stack",
   "repository": {
     "type": "git",
