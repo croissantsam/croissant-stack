@@ -1,7 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
 import { getSessionFn } from "@/lib/auth-utils";
-import { orpc } from "@/lib/orpc";
+import { useSecretData } from "@workspace/orpc/react";
 
 export const Route = createFileRoute("/_auth/examples/client-orpc-auth")({
   beforeLoad: async () => {
@@ -22,10 +21,7 @@ export const Route = createFileRoute("/_auth/examples/client-orpc-auth")({
 function ClientORPCAuth() {
   const { session } = Route.useRouteContext();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["secret-data"],
-    queryFn: () => orpc.getSecretData(),
-  });
+  const { data, isLoading } = useSecretData();
 
   return (
     <div className="flex flex-col gap-4">

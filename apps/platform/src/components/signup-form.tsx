@@ -17,24 +17,20 @@ import { Input } from "@workspace/ui/components/input";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
-import { type } from "arktype";
+import { z } from "zod";
 import { authClient } from "@/lib/auth-client";
 
-const signupSchema = type({
-  name: "string>0",
-  email: "string.email",
-  password: "string>=8",
-  confirmPassword: "string>0",
-}).narrow((data, ctx) => {
-  if (data.password !== data.confirmPassword) {
-    ctx.error({
-      message: "Passwords do not match",
-      path: ["confirmPassword"],
-    });
-    return false;
-  }
-  return true;
-});
+const signupSchema = z
+  .object({
+    name: z.string().min(1, "Name is required"),
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string().min(1, "Confirm password is required"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const [loading, setLoading] = useState(false);

@@ -1,114 +1,344 @@
-import { Image } from "expo-image";
-import { Platform, StyleSheet } from "react-native";
+import { useState } from "react";
+import {
+  Alert,
+  FlatList,
+  Modal,
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+  ScrollView,
+} from "react-native";
+import { useQueryClient } from "@tanstack/react-query";
+import { useForm } from "@tanstack/react-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { usePlanets, useCreatePlanet, useUpdatePlanet, useDeletePlanet } from "@workspace/orpc/react";
 
-import { Collapsible } from "@/components/ui/collapsible";
-import { ExternalLink } from "@/components/external-link";
-import ParallaxScrollView from "@/components/parallax-scroll-view";
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
-import { IconSymbol } from "@/components/ui/icon-symbol";
-import { Fonts } from "@/constants/theme";
+const planetSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  description: z.string(),
+  distance: z.string().refine((val) => !isNaN(parseFloat(val)), {
+    message: "Must be a number",
+  }),
+  diameter: z.string().refine((val) => !isNaN(parseFloat(val)), {
+    message: "Must be a number",
+  }),
+});
 
-export default function TabTwoScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
+export default function ExploreScreen() {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+
+  const { data: planets = [], isLoading } = usePlanets();
+
+  const form = useForm({
+    defaultValues: {
+      name: "",
+      description: "",
+      distance: "0",
+      diameter: "0",
+    },
+    validators: {
+      onChange: planetSchema,
+    },
+    onSubmit: async ({ value }) => {
+      const payload = {
+        name: value.name,
+        description: value.description || undefined,
+        distanceFromSun: parseFloat(value.distance) || 0,
+        diameter: parseFloat(value.diameter) || 0,
+        hasRings: false,
+      };
+
+      try {
+        if (editingId) {
+          await updateMutation.mutateAsync({ id: editingId, ...payload });
+        } else {
+          await createMutation.mutateAsync(payload);
+        }
+        closeModal();
+      } catch (err) {
+        // Error handled in mutation callbacks
       }
-    >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}
-        >
-          Explore
-        </ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{" "}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{" "}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{" "}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image
-          source={require("@/assets/images/react-logo.png")}
-          style={{ width: 100, height: 100, alignSelf: "center" }}
-        />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{" "}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{" "}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{" "}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{" "}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{" "}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+    },
+  });
+
+  const resetForm = () => {
+    form.reset();
+    setEditingId(null);
+  };
+
+  const createMutation = useCreatePlanet({
+    onSuccess: () => {
+      Alert.alert("Success", "Planet added successfully");
+    },
+    onError: (err) => {
+      Alert.alert("Error", err.message || "Failed to add planet");
+    },
+  });
+
+  const updateMutation = useUpdatePlanet({
+    onSuccess: () => {
+      Alert.alert("Success", "Planet updated successfully");
+    },
+    onError: (err) => {
+      Alert.alert("Error", err.message || "Failed to update planet");
+    },
+  });
+
+  const deleteMutation = useDeletePlanet({
+    onSuccess: () => {
+      Alert.alert("Success", "Planet deleted successfully");
+    },
+    onError: (err) => {
+      Alert.alert("Error", err.message || "Failed to delete planet");
+    },
+  });
+
+  const handleEdit = (planet: any) => {
+    setEditingId(planet.id);
+    form.setFieldValue("name", planet.name);
+    form.setFieldValue("description", planet.description || "");
+    form.setFieldValue("distance", planet.distanceFromSun.toString());
+    form.setFieldValue("diameter", planet.diameter.toString());
+    setModalVisible(true);
+  };
+
+  const handleDelete = (id: number) => {
+    deleteMutation.mutateAsync({id})
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    resetForm();
+  };
+
+  if (isLoading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" color="#000" />
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={planets}
+        keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={styles.listContent}
+        renderItem={({ item }) => (
+          <View style={styles.planetCard}>
+            <View style={styles.planetInfo}>
+              <Text style={styles.planetName}>{item.name}</Text>
+              <Text style={styles.planetDesc}>{item.description}</Text>
+              <Text style={styles.planetDetails}>
+                Distance: {item.distanceFromSun} AU • Diameter: {item.diameter} km
+              </Text>
+            </View>
+            <View style={styles.actions}>
+              <Button
+                variant="outline"
+                onPress={() => handleEdit(item)}
+                style={styles.actionBtn}
+              >
+                Edit
+              </Button>
+              <Button
+                variant="destructive"
+                onPress={() => handleDelete(item.id)}
+                style={styles.actionBtn}
+              >
+                Delete
+              </Button>
+            </View>
+          </View>
+        )}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>No planets found. Add one!</Text>
+        }
+      />
+
+      <Button
+        onPress={() => setModalVisible(true)}
+        style={styles.fab}
+      >
+        Add Planet
+      </Button>
+
+      <Modal
+        visible={modalVisible}
+        animationType="slide"
+        onRequestClose={closeModal}
+      >
+        <View style={styles.modalContainer}>
+          <ScrollView contentContainerStyle={styles.modalContent}>
+            <Text style={styles.modalTitle}>
+              {editingId ? "Edit Planet" : "Add New Planet"}
+            </Text>
+
+            <form.Field name="name">
+              {(field: any) => (
+                <Input
+                  label="Name"
+                  value={field.state.value}
+                  onChangeText={field.handleChange}
+                  placeholder="Earth"
+                  error={field.state.meta.errors?.[0]?.toString()}
+                />
+              )}
+            </form.Field>
+
+            <form.Field name="description">
+              {(field: any) => (
+                <Input
+                  label="Description"
+                  value={field.state.value}
+                  onChangeText={field.handleChange}
+                  placeholder="The blue planet"
+                />
+              )}
+            </form.Field>
+
+            <form.Field name="distance">
+              {(field: any) => (
+                <Input
+                  label="Distance from Sun (AU)"
+                  value={field.state.value}
+                  onChangeText={field.handleChange}
+                  keyboardType="numeric"
+                  error={field.state.meta.errors?.[0]?.toString()}
+                />
+              )}
+            </form.Field>
+
+            <form.Field name="diameter">
+              {(field: any) => (
+                <Input
+                  label="Diameter (km)"
+                  value={field.state.value}
+                  onChangeText={field.handleChange}
+                  keyboardType="numeric"
+                  error={field.state.meta.errors?.[0]?.toString()}
+                />
+              )}
+            </form.Field>
+
+            <View style={styles.modalActions}>
+              <Button
+                variant="outline"
+                onPress={closeModal}
+                style={styles.modalBtn}
+              >
+                Cancel
+              </Button>
+              <Button
+                onPress={form.handleSubmit}
+                loading={createMutation.isPending || updateMutation.isPending}
+                style={styles.modalBtn}
+              >
+                {editingId ? "Update" : "Create"}
+              </Button>
+            </View>
+          </ScrollView>
+        </View>
+      </Modal>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: "#808080",
-    bottom: -90,
-    left: -35,
-    position: "absolute",
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
   },
-  titleContainer: {
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  listContent: {
+    padding: 16,
+    paddingBottom: 100,
+  },
+  planetCard: {
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#eee",
+    marginBottom: 16,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  planetInfo: {
+    marginBottom: 16,
+  },
+  planetName: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 4,
+  },
+  planetDesc: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 8,
+  },
+  planetDetails: {
+    fontSize: 12,
+    color: "#999",
+  },
+  actions: {
     flexDirection: "row",
     gap: 8,
+  },
+  actionBtn: {
+    flex: 1,
+    height: 36,
+  },
+  emptyText: {
+    textAlign: "center",
+    marginTop: 40,
+    color: "#999",
+    fontStyle: "italic",
+  },
+  fab: {
+    position: "absolute",
+    bottom: 24,
+    left: 24,
+    right: 24,
+    height: 56,
+    borderRadius: 28,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  modalContent: {
+    padding: 24,
+    paddingTop: 60,
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 32,
+  },
+  modalActions: {
+    flexDirection: "row",
+    gap: 12,
+    marginTop: 32,
+  },
+  modalBtn: {
+    flex: 1,
   },
 });

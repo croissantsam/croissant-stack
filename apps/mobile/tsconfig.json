@@ -1,5 +1,8 @@
 {
-  "extends": "expo/tsconfig.base",
+  "extends": [
+    "expo/tsconfig.base",
+    "@workspace/config-typescript/react.json"
+  ],
   "compilerOptions": {
     "strict": true,
     "paths": {

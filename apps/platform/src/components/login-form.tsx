@@ -18,12 +18,13 @@ import { Input } from "@workspace/ui/components/input";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
-import { type } from "arktype";
+import { z } from "zod";
+
 import { authClient } from "@/lib/auth-client";
 
-const loginSchema = type({
-  email: "string.email",
-  password: "string>0",
+const loginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {

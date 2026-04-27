@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./router": "./src/lib/router.ts"
+    "./router": "./src/lib/router.ts",
+    "./react": "./src/react/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
@@ -12,8 +13,13 @@
   "dependencies": {
     "@orpc/client": "^1.14.0",
     "@orpc/server": "^1.14.0",
+    "@orpc/tanstack-query": "^1.14.0",
     "@workspace/auth": "*",
     "@workspace/db": "*"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.100.5",
+    "react": ">=18"
   },
   "devDependencies": {
     "@types/node": "^22.19.1",

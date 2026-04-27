@@ -1,114 +1,116 @@
-import { Image } from "expo-image";
-import { Platform, StyleSheet } from "react-native";
-
-import { HelloWave } from "@/components/hello-wave";
-import ParallaxScrollView from "@/components/parallax-scroll-view";
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
-import { Link } from "expo-router";
+import { useEffect, useState } from "react";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from "react-native";
+import { useRouter } from "expo-router";
 import { authClient } from "@/lib/auth-client";
+import { orpc } from "@/lib/orpc";
+import { Button } from "@/components/ui/button";
 
-export default function HomeScreen() {
+export default function DashboardScreen() {
+  const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
+  const [secretData, setSecretData] = useState<string>("");
+  const [loadingSecret, setLoadingSecret] = useState(false);
+
+  useEffect(() => {
+    if (!isPending && !session) {
+      router.replace("/login");
+      return;
+    }
+
+    if (session) {
+      const fetchSecret = async () => {
+        setLoadingSecret(true);
+        try {
+          const res = await orpc.getSecretData();
+          setSecretData(res.secret);
+        } catch (err: any) {
+          setSecretData("Error: " + (err.message || "Unknown error"));
+        } finally {
+          setLoadingSecret(false);
+        }
+      };
+
+      fetchSecret();
+    }
+  }, [session, isPending, router]);
+
+  const handleSignOut = async () => {
+    await authClient.signOut();
+    router.replace("/");
+  };
+
+  if (isPending) {
+    return (
+      <View style={styles.center}>
+        <Text>Loading dashboard...</Text>
+      </View>
+    );
+  }
 
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
-      headerImage={
-        <Image
-          source={require("@/assets/images/partial-react-logo.png")}
-          style={styles.reactLogo}
-        />
-      }
-    >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <Text style={styles.title}>Dashboard</Text>
+      <Text style={styles.welcome}>Welcome, {session?.user?.name}!</Text>
+      <Text style={styles.description}>
+        This is a protected page. Only authenticated users can see this.
+      </Text>
 
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Auth Status</ThemedText>
-        {isPending ? (
-          <ThemedText>Checking session...</ThemedText>
-        ) : session ? (
-          <ThemedText>Logged in as: {session.user.email}</ThemedText>
-        ) : (
-          <ThemedText>Not logged in</ThemedText>
-        )}
-      </ThemedView>
+      <View style={styles.secureBox}>
+        <Text style={styles.secureTitle}>Secure oRPC Data:</Text>
+        <Text style={styles.secureContent}>{secretData}</Text>
+      </View>
 
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{" "}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: "cmd + d",
-              android: "cmd + m",
-              web: "F12",
-            })}
-          </ThemedText>{" "}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert("Action pressed")} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert("Share pressed")}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert("Delete pressed")}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
-
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{" "}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{" "}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{" "}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      <Button variant="destructive" onPress={handleSignOut} style={styles.signOutBtn}>
+        Sign Out
+      </Button>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
   },
-  stepContainer: {
-    gap: 8,
+  content: {
+    padding: 24,
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: "absolute",
+  welcome: {
+    fontSize: 18,
+    marginBottom: 8,
+  },
+  description: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 24,
+  },
+  secureBox: {
+    padding: 16,
+    backgroundColor: "#f9f9f9",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#eee",
+    marginBottom: 24,
+  },
+  secureTitle: {
+    fontWeight: "600",
+    marginBottom: 8,
+  },
+  secureContent: {
+    fontFamily: Platform.OS === "ios" ? "Courier" : "monospace",
+    fontSize: 12,
+  },
+  signOutBtn: {
+    marginTop: 12,
   },
 });

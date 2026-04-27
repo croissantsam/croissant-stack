@@ -2,6 +2,8 @@ import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@workspace/ui/components/sonner";
 import { ThemeProvider } from "@workspace/ui/components/theme-provider";
+import { ORPCProvider } from "@workspace/orpc/react";
+import { orpc } from "@/lib/orpc";
 
 import appCss from "@workspace/ui/globals.css?url";
 
@@ -40,8 +42,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body>
         <ThemeProvider defaultTheme="system" storageKey="theme">
           <QueryClientProvider client={queryClient}>
-            {children}
-            <Toaster />
+            <ORPCProvider client={orpc}>
+              {children}
+              <Toaster />
+            </ORPCProvider>
           </QueryClientProvider>
         </ThemeProvider>
         <Scripts />

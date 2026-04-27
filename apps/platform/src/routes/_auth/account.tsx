@@ -1,9 +1,9 @@
 import * as React from "react";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
+import { z } from "zod";
 import { toast } from "sonner";
 import { Loader2, User } from "lucide-react";
-import { type } from "arktype";
 
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -22,24 +22,20 @@ import { Separator } from "@workspace/ui/components/separator";
 import { authClient } from "@/lib/auth-client";
 import { getSessionFn } from "@/lib/auth-utils";
 
-const profileSchema = type({
-  name: "string>0",
+const profileSchema = z.object({
+  name: z.string().min(1, "Name is required"),
 });
 
-const passwordSchema = type({
-  currentPassword: "string>0",
-  newPassword: "string>=8",
-  confirmPassword: "string>0",
-}).narrow((data, ctx) => {
-  if (data.newPassword !== data.confirmPassword) {
-    ctx.error({
-      message: "Passwords do not match",
-      path: ["confirmPassword"],
-    });
-    return false;
-  }
-  return true;
-});
+const passwordSchema = z
+  .object({
+    currentPassword: z.string().min(1, "Current password is required"),
+    newPassword: z.string().min(8, "New password must be at least 8 characters"),
+    confirmPassword: z.string().min(1, "Confirm password is required"),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 export const Route = createFileRoute("/_auth/account")({
   beforeLoad: async () => {

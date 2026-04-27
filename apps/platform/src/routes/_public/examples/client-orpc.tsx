@@ -2,9 +2,9 @@ import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, Pencil, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "@tanstack/react-form";
-import { type } from "arktype";
+import { z } from "zod";
 
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -12,25 +12,21 @@ import { Field, FieldError, FieldLabel } from "@workspace/ui/components/field";
 
 import type { router } from "@workspace/orpc/router";
 import type { InferRouterInputs, InferRouterOutputs } from "@orpc/server";
-import { orpc } from "@/lib/orpc";
+import { usePlanets, useCreatePlanet, useUpdatePlanet, useDeletePlanet } from "@workspace/orpc/react";
 
 type Inputs = InferRouterInputs<typeof router>;
 type Outputs = InferRouterOutputs<typeof router>;
 type Planet = Outputs["planets"]["getPlanets"][number];
 
-const planetSchema = type({
-  name: "string>0",
-  description: "string",
-  distance: "string",
-  diameter: "string",
-}).narrow((data, ctx) => {
-  if (isNaN(parseFloat(data.distance))) {
-    ctx.error({ message: "Must be a number", path: ["distance"] });
-  }
-  if (isNaN(parseFloat(data.diameter))) {
-    ctx.error({ message: "Must be a number", path: ["diameter"] });
-  }
-  return true;
+const planetSchema = z.object({
+  name: z.string().min(1),
+  description: z.string(),
+  distance: z.string().refine((val) => !isNaN(parseFloat(val)), {
+    message: "Must be a number",
+  }),
+  diameter: z.string().refine((val) => !isNaN(parseFloat(val)), {
+    message: "Must be a number",
+  }),
 });
 
 export const Route = createFileRoute("/_public/examples/client-orpc")({
@@ -52,10 +48,7 @@ function ClientORPC() {
   const queryClient = useQueryClient();
   const [editingId, setEditingId] = React.useState<number | null>(null);
 
-  const { data: planets = [], isLoading } = useQuery({
-    queryKey: ["planets"],
-    queryFn: () => orpc.planets.getPlanets(),
-  });
+  const { data: planets = [], isLoading } = usePlanets();
 
   const form = useForm({
     defaultValues: {
@@ -94,10 +87,8 @@ function ClientORPC() {
     setEditingId(null);
   };
 
-  const createMutation = useMutation({
-    mutationFn: (input: Inputs["planets"]["createPlanet"]) => orpc.planets.createPlanet(input),
+  const createMutation = useCreatePlanet({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["planets"] });
       resetForm();
       toast.success("Planet added successfully");
     },
@@ -106,10 +97,8 @@ function ClientORPC() {
     },
   });
 
-  const updateMutation = useMutation({
-    mutationFn: (input: Inputs["planets"]["updatePlanet"]) => orpc.planets.updatePlanet(input),
+  const updateMutation = useUpdatePlanet({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["planets"] });
       resetForm();
       toast.success("Planet updated successfully");
     },
@@ -118,10 +107,8 @@ function ClientORPC() {
     },
   });
 
-  const deleteMutation = useMutation({
-    mutationFn: (input: Inputs["planets"]["deletePlanet"]) => orpc.planets.deletePlanet(input),
+  const deleteMutation = useDeletePlanet({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["planets"] });
       toast.success("Planet deleted successfully");
     },
     onError: (err) => {
