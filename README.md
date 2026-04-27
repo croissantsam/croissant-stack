@@ -72,7 +72,7 @@ Ensure you provide the necessary variables:
 
 ```env
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/auth
-BETTER_AUTH_URL=http://localhost:3000
+BETTER_AUTH_URL=https://platform.localhost
 BETTER_AUTH_SECRET=your-secret-here
 ```
 

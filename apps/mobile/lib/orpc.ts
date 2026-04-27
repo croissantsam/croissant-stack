@@ -5,7 +5,7 @@ import { router } from '@workspace/orpc/router'
 import { authClient } from './auth-client'
 
 export const link = new RPCLink({
-  url: `http://localhost:3000/api/rpc`,
+  url: `https://platform.localhost/api/rpc`,
   async fetch(request, init) {
     const { fetch } = await import('expo/fetch')
     const headers = new Map<string, string>(); 
