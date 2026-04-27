@@ -6,8 +6,11 @@ import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { Link } from "expo-router";
+import { authClient } from "@/lib/auth-client";
 
 export default function HomeScreen() {
+  const { data: session, isPending } = authClient.useSession();
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
@@ -22,6 +25,18 @@ export default function HomeScreen() {
         <ThemedText type="title">Welcome!</ThemedText>
         <HelloWave />
       </ThemedView>
+
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">Auth Status</ThemedText>
+        {isPending ? (
+          <ThemedText>Checking session...</ThemedText>
+        ) : session ? (
+          <ThemedText>Logged in as: {session.user.email}</ThemedText>
+        ) : (
+          <ThemedText>Not logged in</ThemedText>
+        )}
+      </ThemedView>
+
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
         <ThemedText>

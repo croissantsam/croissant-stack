@@ -89,6 +89,27 @@ async function prepareTemplate() {
   }
 
   console.log("Template prepared successfully!");
+
+  // Clean up Expo integration from the template's backend auth
+  // This ensures the template is "clean" by default, and the CLI script handles the integration
+  console.log("Cleaning up Expo integration from template...");
+  const authLibPath = path.resolve(templatePath, "packages/auth/src/lib/auth.ts");
+  if (await fs.pathExists(authLibPath)) {
+    let authContent = await fs.readFile(authLibPath, "utf8");
+    authContent = authContent.replace(/import \{ expo \} from "@better-auth\/expo";\n/, "");
+    authContent = authContent.replace(/\s+plugins: \[expo\(\)\],/, "");
+    authContent = authContent.replace(/\s+trustedOrigins: \[[\s\S]*?\],/, "");
+    await fs.writeFile(authLibPath, authContent);
+  }
+
+  const authPkgPath = path.resolve(templatePath, "packages/auth/package.json");
+  if (await fs.pathExists(authPkgPath)) {
+    const authPkg = await fs.readJson(authPkgPath);
+    if (authPkg.dependencies && authPkg.dependencies["@better-auth/expo"]) {
+      delete authPkg.dependencies["@better-auth/expo"];
+      await fs.writeJson(authPkgPath, authPkg, { spaces: 2 });
+    }
+  }
 }
 
 prepareTemplate().catch((err) => {

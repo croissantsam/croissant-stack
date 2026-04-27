@@ -8,7 +8,8 @@
     "directory": "packages/create-croissant"
   },
   "bin": {
-    "create-croissant": "./dist/index.js"
+    "create-croissant": "./dist/index.js",
+    "croissant-add": "./dist/add.js"
   },
   "files": [
     "dist",
@@ -20,8 +21,8 @@
     "access": "public"
   },
   "scripts": {
-    "build": "npm run prepare-template && tsup src/index.ts --format esm --clean --minify",
-    "dev": "tsup src/index.ts --format esm --watch",
+    "build": "npm run prepare-template && tsup src/index.ts src/add.ts --format esm --clean --minify",
+    "dev": "tsup src/index.ts src/add.ts --format esm --watch",
     "typecheck": "tsc --noEmit",
     "prepare-template": "node scripts/prepare-template.js"
   },

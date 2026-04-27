@@ -89,8 +89,54 @@ program
         });
       }
 
-      // Remove mobile app if not selected
-      if (!answers.mobile) {
+      // Handle mobile app selection
+      if (answers.mobile) {
+        // Ensure Expo integration is in backend auth
+        const authLibPath = path.join(projectPath, "packages/auth/src/lib/auth.ts");
+        if (await fs.pathExists(authLibPath)) {
+          let authContent = await fs.readFile(authLibPath, "utf8");
+
+          // Add expo import if missing
+          if (!authContent.includes('@better-auth/expo')) {
+            authContent = `import { expo } from "@better-auth/expo";\n${authContent}`;
+          }
+
+          // Add expo plugin and trustedOrigins if missing
+          if (!authContent.includes('plugins: [expo()]')) {
+            const expoConfig = `
+  plugins: [expo()],
+  trustedOrigins: [
+    "mobile://",
+    ...(process.env.NODE_ENV === "development"
+      ? [
+          "exp://",
+          "exp://**",
+          "exp://192.168.*.*:*/**",
+          "http://localhost:8081",
+        ]
+      : []),
+  ],`;
+            authContent = authContent.replace(
+              'emailAndPassword: { enabled: true },',
+              `emailAndPassword: { enabled: true },${expoConfig}`,
+            );
+          }
+
+          await fs.writeFile(authLibPath, authContent);
+        }
+
+        // Add @better-auth/expo to packages/auth/package.json if missing
+        const authPkgPath = path.join(projectPath, "packages/auth/package.json");
+        if (await fs.pathExists(authPkgPath)) {
+          const authPkg = await fs.readJson(authPkgPath);
+          authPkg.dependencies = authPkg.dependencies || {};
+          if (!authPkg.dependencies["@better-auth/expo"]) {
+            authPkg.dependencies["@better-auth/expo"] = "latest"; // Or a specific version
+            await fs.writeJson(authPkgPath, authPkg, { spaces: 2 });
+          }
+        }
+      } else {
+        // Remove mobile app if not selected
         const mobilePath = path.join(projectPath, "apps/mobile");
         if (await fs.pathExists(mobilePath)) {
           await fs.remove(mobilePath);
@@ -108,6 +154,33 @@ program
               });
             }
             await fs.writeJson(rootPkgPath, rootPkg, { spaces: 2 });
+          }
+
+          // Remove Expo integration from backend auth
+          const authLibPath = path.join(projectPath, "packages/auth/src/lib/auth.ts");
+          if (await fs.pathExists(authLibPath)) {
+            let authContent = await fs.readFile(authLibPath, "utf8");
+
+            // Remove expo import
+            authContent = authContent.replace(/import \{ expo \} from "@better-auth\/expo";\n/, "");
+
+            // Remove expo plugin
+            authContent = authContent.replace(/\s+plugins: \[expo\(\)\],/, "");
+
+            // Remove trustedOrigins for mobile
+            authContent = authContent.replace(/\s+trustedOrigins: \[[\s\S]*?\],/, "");
+
+            await fs.writeFile(authLibPath, authContent);
+          }
+
+          // Remove @better-auth/expo from packages/auth/package.json
+          const authPkgPath = path.join(projectPath, "packages/auth/package.json");
+          if (await fs.pathExists(authPkgPath)) {
+            const authPkg = await fs.readJson(authPkgPath);
+            if (authPkg.dependencies && authPkg.dependencies["@better-auth/expo"]) {
+              delete authPkg.dependencies["@better-auth/expo"];
+              await fs.writeJson(authPkgPath, authPkg, { spaces: 2 });
+            }
           }
         }
       }
