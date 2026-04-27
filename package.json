@@ -25,7 +25,8 @@
   },
   "dependencies": {
     "react": "19.2.5",
-    "react-dom": "19.2.5"
+    "react-dom": "19.2.5",
+    "react-native": "0.83.6"
   },
   "devDependencies": {
     "@better-auth/core": "^1.6.9",
@@ -43,7 +44,8 @@
     "@noble/ciphers": "2.2.0",
     "drizzle-orm": "^0.45.2",
     "react": "19.2.5",
-    "react-dom": "19.2.5"
+    "react-dom": "19.2.5",
+    "react-native": "0.83.6"
   },
   "engines": {
     "node": ">=20"

@@ -1,34 +1,27 @@
-import { View, Text, StyleSheet, ScrollView, FlatList } from "react-native";
-import { Link, useRouter } from "expo-router";
-import { useQueryClient } from "@tanstack/react-query";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { useRouter } from "expo-router";
 import { Button } from "@/components/ui/button";
-import { usePlanets } from "@workspace/orpc/react";
-import { orpc } from "@/lib/orpc";
-import { useEffect, useState } from "react";
+import { usePlanets, useHello } from "@workspace/orpc/react";
 
 export default function LandingScreen() {
   const router = useRouter();
-  const [helloMessage, setHelloMessage] = useState("");
-  const { data: planets = [], isLoading } = usePlanets();
-
-  useEffect(() => {
-    orpc.hello({ name: "Croissant Stack Mobile" }).then((res) => {
-      setHelloMessage(res.message);
-    });
-  }, []);
+  const { data: helloData, isLoading: isHelloLoading } = useHello("Croissant Stack Mobile");
+  const { data: planets = [], isLoading: isPlanetsLoading } = usePlanets();
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.header}>
         <Text style={styles.title}>Project ready!</Text>
         <Text style={styles.subtitle}>
-          oRPC integration: <Text style={styles.bold}>{helloMessage || "Loading..."}</Text>
+          oRPC integration: <Text style={styles.bold}>
+            {isHelloLoading ? "Loading..." : helloData?.message}
+          </Text>
         </Text>
       </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Planets from Database:</Text>
-        {isLoading ? (
+        {isPlanetsLoading ? (
           <Text style={styles.loading}>Loading planets...</Text>
         ) : planets.length === 0 ? (
           <Text style={styles.empty}>

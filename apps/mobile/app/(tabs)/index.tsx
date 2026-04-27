@@ -1,45 +1,30 @@
-import { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from "react-native";
+import { useEffect } from "react";
+import { View, Text, StyleSheet, ScrollView, Platform } from "react-native";
 import { useRouter } from "expo-router";
 import { authClient } from "@/lib/auth-client";
-import { orpc } from "@/lib/orpc";
+import { useSecretData } from "@workspace/orpc/react";
 import { Button } from "@/components/ui/button";
 
 export default function DashboardScreen() {
   const router = useRouter();
-  const { data: session, isPending } = authClient.useSession();
-  const [secretData, setSecretData] = useState<string>("");
-  const [loadingSecret, setLoadingSecret] = useState(false);
+  const { data: session, isPending: isAuthPending } = authClient.useSession();
+  
+  const { data: secretData, isLoading: isLoadingSecret, error: secretError } = useSecretData({
+    enabled: !!session,
+  });
 
   useEffect(() => {
-    if (!isPending && !session) {
+    if (!isAuthPending && !session) {
       router.replace("/login");
-      return;
     }
-
-    if (session) {
-      const fetchSecret = async () => {
-        setLoadingSecret(true);
-        try {
-          const res = await orpc.getSecretData();
-          setSecretData(res.secret);
-        } catch (err: any) {
-          setSecretData("Error: " + (err.message || "Unknown error"));
-        } finally {
-          setLoadingSecret(false);
-        }
-      };
-
-      fetchSecret();
-    }
-  }, [session, isPending, router]);
+  }, [session, isAuthPending, router]);
 
   const handleSignOut = async () => {
     await authClient.signOut();
     router.replace("/");
   };
 
-  if (isPending) {
+  if (isAuthPending) {
     return (
       <View style={styles.center}>
         <Text>Loading dashboard...</Text>
@@ -57,7 +42,15 @@ export default function DashboardScreen() {
 
       <View style={styles.secureBox}>
         <Text style={styles.secureTitle}>Secure oRPC Data:</Text>
-        <Text style={styles.secureContent}>{secretData}</Text>
+        {isLoadingSecret ? (
+          <Text style={styles.secureContent}>Loading secret data...</Text>
+        ) : secretError ? (
+          <Text style={[styles.secureContent, styles.errorText]}>
+            Error: {secretError.message || "Unknown error"}
+          </Text>
+        ) : (
+          <Text style={styles.secureContent}>{secretData?.secret}</Text>
+        )}
       </View>
 
       <Button variant="destructive" onPress={handleSignOut} style={styles.signOutBtn}>
@@ -109,6 +102,9 @@ const styles = StyleSheet.create({
   secureContent: {
     fontFamily: Platform.OS === "ios" ? "Courier" : "monospace",
     fontSize: 12,
+  },
+  errorText: {
+    color: "#ef4444",
   },
   signOutBtn: {
     marginTop: 12,
