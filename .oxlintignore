@@ -1,0 +1,11 @@
+node_modules
+dist
+.turbo
+.vercel
+.output
+.nitro
+.tanstack
+.vinxi
+coverage
+apps/platform/src/routeTree.gen.ts
+packages/create-croissant/template
