@@ -1,6 +1,6 @@
 {
   "extends": "@workspace/config-typescript/react.json",
-  "include": ["**/*.ts", "**/*.tsx", "vite.config.ts", "eslint.config.ts", "prettier.config.ts"],
+  "include": ["**/*.ts", "**/*.tsx", "vite.config.ts"],
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],

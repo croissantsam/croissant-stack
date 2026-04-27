@@ -97,8 +97,8 @@ All scripts are orchestrated by Turborepo. You can run them from the root direct
 
 - `npm run dev`: Start all applications in development mode.
 - `npm run build`: Build all applications for production.
-- `npm run lint`: Lint all packages (uses Turbo's caching).
-- `npm run format`: Format all packages using Prettier.
+- `npm run quality`: Run all quality checks (linting and formatting) using Oxc.
+- `npm run quality:fix`: Automatically fix linting and formatting issues using Oxc.
 - `npm run typecheck`: Run TypeScript type checking across the workspace.
 
 ### 🗄️ Database Scripts

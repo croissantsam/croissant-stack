@@ -6,8 +6,6 @@
   "author": "example.com",
   "main": "./out/main/index.js",
   "scripts": {
-    "format": "prettier --write .",
-    "lint": "eslint --cache .",
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
     "typecheck": "npm run typecheck:node && npm run typecheck:web",
@@ -26,19 +24,12 @@
     "electron-updater": "^6.3.9"
   },
   "devDependencies": {
-    "@electron-toolkit/eslint-config-prettier": "^3.0.0",
-    "@electron-toolkit/eslint-config-ts": "^3.1.0",
     "@electron-toolkit/tsconfig": "^2.0.0",
     "@types/node": "^22.19.1",
     "@vitejs/plugin-react": "^5.1.1",
-    "@workspace/config-eslint": "*",
-    "@workspace/config-prettier": "*",
     "@workspace/config-typescript": "*",
     "electron": "39.8.9",
     "electron-builder": "^26.0.12",
-    "electron-vite": "^5.0.0",
-    "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.2"
+    "electron-vite": "^5.0.0"
   }
 }

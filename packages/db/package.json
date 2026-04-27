@@ -8,8 +8,6 @@
     "./schema": "./src/schema.ts"
   },
   "scripts": {
-    "lint": "eslint",
-    "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio"
@@ -21,8 +19,6 @@
   },
   "devDependencies": {
     "@types/pg": "^8.20.0",
-    "@workspace/config-eslint": "*",
-    "@workspace/config-prettier": "*",
     "@workspace/config-typescript": "*",
     "drizzle-kit": "^0.31.10",
     "tsx": "^4.21.0"

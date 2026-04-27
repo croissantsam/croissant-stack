@@ -8,8 +8,6 @@
     "./hooks/*": "./src/hooks/*.ts"
   },
   "scripts": {
-    "lint": "eslint",
-    "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
     "generate": "better-auth generate --output ../db/src/lib/auth-schema.ts"
   },
@@ -19,8 +17,6 @@
   },
   "devDependencies": {
     "@better-auth/cli": "^1.4.22",
-    "@workspace/config-eslint": "*",
-    "@workspace/config-prettier": "*",
     "@workspace/config-typescript": "*",
     "drizzle-kit": "^0.31.10",
     "tsx": "^4.21.0"

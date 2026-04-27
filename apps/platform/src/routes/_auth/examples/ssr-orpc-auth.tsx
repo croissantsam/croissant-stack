@@ -7,7 +7,7 @@ const getSecretData = createServerFn({ method: "GET" }).handler(async () => {
   try {
     const secretData = await orpc.getSecretData();
     return { secretData };
-  } catch (err) {
+  } catch {
     return { secretData: null, error: "Failed to fetch secret data" };
   }
 });

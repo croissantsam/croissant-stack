@@ -152,7 +152,7 @@ program
         try {
           await execa("npm", ["install"], { cwd: projectPath });
           installSpinner.succeed(chalk.green("Dependencies installed!"));
-        } catch (err) {
+        } catch {
           installSpinner.fail(
             chalk.red("Failed to install dependencies. You may need to run npm install manually."),
           );

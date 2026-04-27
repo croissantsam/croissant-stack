@@ -7,8 +7,6 @@
     "./router": "./src/lib/router.ts"
   },
   "scripts": {
-    "lint": "eslint",
-    "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -19,8 +17,6 @@
   },
   "devDependencies": {
     "@types/node": "^22.19.1",
-    "@workspace/config-eslint": "*",
-    "@workspace/config-prettier": "*",
     "@workspace/config-typescript": "*"
   }
 }
