@@ -25,10 +25,10 @@
   },
   "devDependencies": {
     "@electron-toolkit/tsconfig": "^2.0.0",
-    "@types/node": "^22.19.1",
-    "@vitejs/plugin-react": "^5.1.1",
+    "@types/node": "^25.6.0",
+    "@vitejs/plugin-react": "^6.0.1",
     "@workspace/config-typescript": "*",
-    "electron": "39.8.9",
+    "electron": "41.3.0",
     "electron-builder": "^26.0.12",
     "electron-vite": "^5.0.0"
   }
