@@ -18,11 +18,11 @@
     "@workspace/db": "*"
   },
   "peerDependencies": {
-    "@tanstack/react-query": "^5.100.5",
+    "@tanstack/react-query": "^5.100.6",
     "react": ">=18"
   },
   "devDependencies": {
-    "@types/node": "^22.19.1",
+    "@types/node": "^25.6.0",
     "@workspace/config-typescript": "*"
   }
 }
