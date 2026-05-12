@@ -15,7 +15,8 @@
     "@orpc/server": "^1.14.0",
     "@orpc/tanstack-query": "^1.14.0",
     "@workspace/auth": "workspace:*",
-    "@workspace/db": "workspace:*"
+    "@workspace/db": "workspace:*",
+    "drizzle-orm": "^0.45.2"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.100.5",

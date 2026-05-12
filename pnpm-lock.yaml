@@ -393,6 +393,9 @@ importers:
       '@workspace/db':
         specifier: workspace:*
         version: link:../db
+      drizzle-orm:
+        specifier: ^0.45.2
+        version: 0.45.2(@prisma/client@5.22.0)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(kysely@0.28.17)(pg@8.20.0)
       react:
         specifier: 19.2.5
         version: 19.2.5
