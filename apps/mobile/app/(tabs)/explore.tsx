@@ -51,6 +51,7 @@ export default function ExploreScreen() {
         diameter: parseFloat(value.diameter) || 0,
         hasRings: false,
       };
+      console.log('connard')
 
       try {
         if (editingId) {

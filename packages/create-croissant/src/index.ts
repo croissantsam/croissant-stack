@@ -78,7 +78,7 @@ program
           ".git",
           "packages/create-croissant",
           ".turbo",
-          "package-lock.json",
+          "pnpm-lock.yaml",
         ];
 
         await fs.copy(monorepoRoot, projectPath, {
@@ -148,7 +148,7 @@ program
             if (rootPkg.scripts) {
               // Remove mobile specific scripts if they exist
               Object.keys(rootPkg.scripts).forEach((key) => {
-                if (key.includes("mobile")) {
+                if (key.includes("mobile") || key.includes("ios") || key.includes("android")) {
                   delete rootPkg.scripts[key];
                 }
               });
@@ -223,19 +223,19 @@ program
       if (answers.install) {
         const installSpinner = ora("Installing dependencies...").start();
         try {
-          await execa("npm", ["install"], { cwd: projectPath });
+          await execa("pnpm", ["install"], { cwd: projectPath });
           installSpinner.succeed(chalk.green("Dependencies installed!"));
         } catch {
           installSpinner.fail(
-            chalk.red("Failed to install dependencies. You may need to run npm install manually."),
+            chalk.red("Failed to install dependencies. You may need to run pnpm install manually."),
           );
         }
       }
 
       console.log(chalk.bold.cyan("\nNext steps:"));
       console.log(`  cd ${finalProjectName}`);
-      console.log("  npm run db:up    # Start your PostgreSQL database");
-      console.log("  npm run dev      # Start development server\n");
+      console.log("  pnpm run db:up    # Start your PostgreSQL database");
+      console.log("  pnpm run dev      # Start development server\n");
       console.log(chalk.yellow("Happy hacking! 🥐\n"));
     } catch (error) {
       spinner.fail(chalk.red("An error occurred during scaffolding."));

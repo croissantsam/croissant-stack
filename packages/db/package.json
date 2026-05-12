@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@types/pg": "^8.20.0",
-    "@workspace/config-typescript": "*",
+    "@workspace/config-typescript": "workspace:*",
     "drizzle-kit": "^0.31.10",
     "tsx": "^4.21.0"
   }

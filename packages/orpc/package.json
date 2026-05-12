@@ -14,8 +14,8 @@
     "@orpc/client": "^1.14.0",
     "@orpc/server": "^1.14.0",
     "@orpc/tanstack-query": "^1.14.0",
-    "@workspace/auth": "*",
-    "@workspace/db": "*"
+    "@workspace/auth": "workspace:*",
+    "@workspace/db": "workspace:*"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.100.5",
@@ -23,6 +23,6 @@
   },
   "devDependencies": {
     "@types/node": "^22.19.1",
-    "@workspace/config-typescript": "*"
+    "@workspace/config-typescript": "workspace:*"
   }
 }

@@ -75,6 +75,8 @@ program
         // Add scripts back to root package.json
         rootPkg.scripts = rootPkg.scripts || {};
         rootPkg.scripts["dev:mobile"] = "turbo run dev --filter=mobile";
+        rootPkg.scripts["dev:ios"] = "turbo run dev --filter=mobile -- --ios";
+        rootPkg.scripts["dev:android"] = "turbo run dev --filter=mobile -- --android";
         rootPkg.scripts["build:mobile"] = "turbo run build --filter=mobile";
         await fs.writeJson(rootPkgPath, rootPkg, { spaces: 2 });
 
@@ -146,18 +148,18 @@ program
       if (install) {
         const installSpinner = ora("Installing dependencies...").start();
         try {
-          await execa("npm", ["install"], { cwd: projectPath });
+          await execa("pnpm", ["install"], { cwd: projectPath });
           installSpinner.succeed(chalk.green("Dependencies installed!"));
         } catch {
-          installSpinner.fail(chalk.red("Failed to install dependencies. Run npm install manually."));
+          installSpinner.fail(chalk.red("Failed to install dependencies. Run pnpm install manually."));
         }
       }
 
       console.log(chalk.bold.cyan("\nNext steps:"));
       if (type === "mobile") {
-        console.log("  npm run dev:mobile    # Start Expo development server");
+        console.log("  pnpm run dev:mobile    # Start Expo development server");
       } else {
-        console.log("  npm run dev:desktop   # Start Electron development server");
+        console.log("  pnpm run dev:desktop   # Start Electron development server");
       }
       console.log(chalk.yellow("\nHappy hacking! 🥐\n"));
 

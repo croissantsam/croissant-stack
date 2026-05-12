@@ -2,13 +2,10 @@
   "name": "croissant-stack",
   "version": "0.0.1",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "build": "turbo build",
-    "dev": "turbo dev",
+    "dev": "PORTLESS_LAN=1 turbo dev",
+    "proxy:lan": "portless proxy start --lan",
     "lint": "oxlint --ignore-path .oxlintignore .",
     "lint:fix": "oxlint --fix --ignore-path .oxlintignore .",
     "format": "oxfmt --check --ignore-path .oxlintignore",
@@ -16,11 +13,14 @@
     "quality": "turbo quality",
     "quality:fix": "turbo quality:fix",
     "typecheck": "turbo typecheck",
-    "ci": "npm run lint && npm run typecheck && npm run build",
+    "dev:mobile": "turbo run dev --filter=mobile",
+    "dev:ios": "turbo run dev --filter=mobile -- --ios",
+    "dev:android": "turbo run dev --filter=mobile -- --android",
+    "ci": "pnpm run lint && pnpm run typecheck && pnpm run build",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
     "db:logs": "docker compose logs -f",
-    "update-deps": "npx npm-check-updates -u -w --root && npm install",
+    "update-deps": "pnpm dlx npm-check-updates -u -w --root && pnpm install",
     "prepare": "husky"
   },
   "dependencies": {
@@ -33,23 +33,25 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "husky": "^9.1.7",
-    "oxfmt": "^0.46.0",
-    "oxlint": "^1.61.0",
+    "oxfmt": "latest",
+    "oxlint": "latest",
     "portless": "^0.11.0",
     "turbo": "^2.9.6",
     "typescript": "6.0.3",
     "vite": "^8.0.10",
     "zod": "4.3.6"
   },
-  "overrides": {
-    "@noble/ciphers": "2.2.0",
-    "drizzle-orm": "^0.45.2",
-    "react": "19.2.5",
-    "react-dom": "19.2.5",
-    "react-native": "0.83.6"
+  "pnpm": {
+    "overrides": {
+      "@noble/ciphers": "2.2.0",
+      "drizzle-orm": "^0.45.2",
+      "react": "19.2.5",
+      "react-dom": "19.2.5",
+      "react-native": "0.83.6"
+    }
   },
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "npm@11.13.0"
+  "packageManager": "pnpm@9.15.0"
 }

@@ -24,19 +24,37 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: "npm"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install Dependencies
-        run: npm install
+        run: pnpm install
 
       - name: Lint
-        run: npm run lint
+        run: pnpm run lint
 
       - name: Typecheck
-        run: npm run typecheck
+        run: pnpm run typecheck
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
   release:
     name: Release create-croissant
@@ -55,8 +73,14 @@ jobs:
           node-version: 24
           registry-url: "https://registry.npmjs.org"
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+          run_install: false
+
       - name: Install Dependencies
-        run: npm install
+        run: pnpm install
 
       - name: Bump Version and Publish
         run: |
@@ -65,10 +89,10 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
           # Prepare the template from the latest monorepo state
-          npm run prepare-template -w create-croissant
+          pnpm run prepare-template --filter create-croissant
 
           # Get the latest version from npm to avoid conflicts
-          NPM_VERSION=$(npm view create-croissant version 2>/dev/null || echo "0.0.0")
+          NPM_VERSION=$(pnpm view create-croissant version 2>/dev/null || echo "0.0.0")
           LOCAL_VERSION=$(node -p "require('./packages/create-croissant/package.json').version")
 
           echo "NPM version: $NPM_VERSION"
@@ -77,12 +101,12 @@ jobs:
           # If npm has a higher version, sync local version first
           if [ "$NPM_VERSION" != "$LOCAL_VERSION" ] && [ "$(printf '%s\n' "$NPM_VERSION" "$LOCAL_VERSION" | sort -V | tail -n1)" = "$NPM_VERSION" ] && [ "$NPM_VERSION" != "0.0.0" ]; then
             echo "Syncing local version to $NPM_VERSION to avoid conflict"
-            npm version $NPM_VERSION --no-git-tag-version -w create-croissant
+            pnpm version $NPM_VERSION --no-git-tag-version --filter create-croissant
           fi
 
           # Bump version (patch)
           # We do this from the root using workspaces to ensure all links are maintained
-          npm version patch --no-git-tag-version -w create-croissant
+          pnpm version patch --no-git-tag-version --filter create-croissant
           NEW_VERSION=$(node -p "require('./packages/create-croissant/package.json').version")
           REPO_VERSION=$(node -p "require('./package.json').version")
 
@@ -90,12 +114,12 @@ jobs:
           echo "Current repo version: $REPO_VERSION"
 
           # Build the package
-          npm run build -w create-croissant
+          pnpm run build --filter create-croissant
 
           # Publish to npm (using Trusted Publishing)
           # We move into the directory to ensure npm publish uses the correct package context
           cd packages/create-croissant
-          npm publish --provenance --access public
+          pnpm publish --provenance --access public --no-git-checks
 
           # Go back to root for git operations
           cd ../..

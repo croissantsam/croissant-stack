@@ -7,7 +7,7 @@ A modern, type-safe full-stack monorepo powered by **TanStack Start**, **Better 
 The fastest way to scaffold a new project with the Croissant Stack is using our CLI:
 
 ```bash
-npx create-croissant@latest
+pnpm dlx create-croissant@latest
 ```
 
 ---
@@ -21,7 +21,7 @@ npx create-croissant@latest
 - **API**: [oRPC](https://orpc.sh/) with a modular, namespaced router for end-to-end type-safety.
 - **Database**: [Drizzle ORM](https://orm.drizzle.team/) with PostgreSQL and Docker Compose setup.
 - **Styling**: [shadcn/ui](https://ui.shadcn.com/) components with Tailwind CSS.
-- **Monorepo Management**: Powered by [Turborepo](https://turbo.build/) for lightning-fast builds and smart task orchestration.
+- **Monorepo Management**: Powered by [pnpm](https://pnpm.io/) and [Turborepo](https://turbo.build/) for lightning-fast builds and smart task orchestration.
 - **Developer Experience**: 
   - Path aliases (`@/`) for clean imports.
   - Strict TypeScript across the entire stack.
@@ -47,7 +47,7 @@ npx create-croissant@latest
 ### 1. Install Dependencies
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### 2. Set Up the Database
@@ -55,7 +55,7 @@ npm install
 Start the PostgreSQL database using Docker Compose:
 
 ```bash
-npm run db:up
+pnpm run db:up
 ```
 
 This command runs a PostgreSQL container named `samstack` on port `5432`.
@@ -72,7 +72,7 @@ Ensure you provide the necessary variables:
 
 ```env
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/auth
-BETTER_AUTH_URL=https://platform.localhost
+BETTER_AUTH_URL=https://platform.local
 BETTER_AUTH_SECRET=your-secret-here
 ```
 
@@ -82,36 +82,36 @@ Synchronize your schema with the database:
 
 ```bash
 # From packages/db or via turbo
-npm run db:push --filter @workspace/db
+pnpm run db:push --filter @workspace/db
 ```
 
 ### 5. Run Development Server
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
-The web application will be available at `http://localhost:3000`.
+The web application will be available at `https://platform.local`.
 
 ## 📦 Scripts
 
 All scripts are orchestrated by Turborepo. You can run them from the root directory:
 
 ### Core Scripts
-- `npm run dev`: Start all applications in development mode.
-- `npm run build`: Build all applications for production.
-- `npm run quality`: Run all quality checks (linting and formatting) using Oxc.
-- `npm run quality:fix`: Automatically fix linting and formatting issues using Oxc.
-- `npm run typecheck`: Run TypeScript type checking across the workspace.
-- `npm run ci`: Run linting, type-checking, and build (used in CI/CD).
+- `pnpm run dev`: Start all applications in development mode.
+- `pnpm run build`: Build all applications for production.
+- `pnpm run quality`: Run all quality checks (linting and formatting) using Oxc.
+- `pnpm run quality:fix`: Automatically fix linting and formatting issues using Oxc.
+- `pnpm run typecheck`: Run TypeScript type checking across the workspace.
+- `pnpm run ci`: Run linting, type-checking, and build (used in CI/CD).
 
 ### 🗄️ Database Scripts
 These handle Docker and Drizzle operations:
-- `npm run db:up`: Start the PostgreSQL Docker container.
-- `npm run db:down`: Stop and remove the database container.
-- `npm run db:logs`: Tail logs from the database container.
-- `npm run db:push --filter @workspace/db`: Push Drizzle schema to the database.
-- `npm run db:studio --filter @workspace/db`: Open Drizzle Studio to explore your data.
+- `pnpm run db:up`: Start the PostgreSQL Docker container.
+- `pnpm run db:down`: Stop and remove the database container.
+- `pnpm run db:logs`: Tail logs from the database container.
+- `pnpm run db:push --filter @workspace/db`: Push Drizzle schema to the database.
+- `pnpm run db:studio --filter @workspace/db`: Open Drizzle Studio to explore your data.
 
 ## 🎯 Turborepo Power
 
@@ -120,10 +120,10 @@ Turbo allows you to run tasks for specific packages using the `--filter` flag:
 
 ```bash
 # Only lint the platform app
-npm run lint -- --filter platform
+pnpm run lint --filter platform
 
 # Build the db package and everything that depends on it
-npm run build -- --filter @workspace/db...
+pnpm run build --filter @workspace/db...
 ```
 
 ### Smart Caching
@@ -151,14 +151,14 @@ type Outputs = InferRouterOutputs<typeof router>;
 To add components to the shared UI package:
 
 ```bash
-npx shadcn@latest add [component-name] -c apps/platform
+pnpm dlx shadcn@latest add [component-name] -c apps/platform
 ```
 
 This will place the UI components in `packages/ui/src/components`.
 
 ## 🛡️ Quality & Git Hooks
 
-This project uses **Husky** to ensure code quality. When pushing to the `main` branch, it automatically runs the CI pipeline (`npm run ci`) to prevent broken code from being pushed.
+This project uses **Husky** to ensure code quality. When pushing to the `main` branch, it automatically runs the CI pipeline (`pnpm run ci`) to prevent broken code from being pushed.
 
 Formatting and linting are handled by **Oxc**, which is significantly faster than ESLint and Prettier.
 
