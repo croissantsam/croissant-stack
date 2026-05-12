@@ -13,9 +13,6 @@
     "quality": "turbo quality",
     "quality:fix": "turbo quality:fix",
     "typecheck": "turbo typecheck",
-    "dev:mobile": "turbo run dev --filter=mobile",
-    "dev:ios": "turbo run dev --filter=mobile -- --ios",
-    "dev:android": "turbo run dev --filter=mobile -- --android",
     "ci": "pnpm run lint && pnpm run typecheck && pnpm run build",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
@@ -25,8 +22,7 @@
   },
   "dependencies": {
     "react": "19.2.5",
-    "react-dom": "19.2.5",
-    "react-native": "0.83.6"
+    "react-dom": "19.2.5"
   },
   "devDependencies": {
     "@better-auth/core": "^1.6.9",
@@ -46,8 +42,7 @@
       "@noble/ciphers": "2.2.0",
       "drizzle-orm": "^0.45.2",
       "react": "19.2.5",
-      "react-dom": "19.2.5",
-      "react-native": "0.83.6"
+      "react-dom": "19.2.5"
     }
   },
   "engines": {

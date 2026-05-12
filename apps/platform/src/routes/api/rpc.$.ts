@@ -28,7 +28,7 @@ export const Route = createFileRoute("/api/rpc/$")({
         });
 
         if (response) {
-          response.headers.set("Access-Control-Allow-Origin", "http://localhost:8081");
+          response.headers.set("Access-Control-Allow-Origin", "*");
           response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
           response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
           response.headers.set("Access-Control-Allow-Credentials", "true");
@@ -40,7 +40,7 @@ export const Route = createFileRoute("/api/rpc/$")({
         return new Response(null, {
           status: 204,
           headers: {
-            "Access-Control-Allow-Origin": "http://localhost:8081",
+            "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
             "Access-Control-Allow-Headers": "Content-Type, Authorization",
             "Access-Control-Allow-Credentials": "true",
