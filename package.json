@@ -37,6 +37,16 @@
     "vite": "^8.0.10",
     "zod": "4.3.6"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "better-sqlite3",
+      "electron-winstaller",
+      "electron",
+      "esbuild",
+      "msw"
+    ]
+  },
   "engines": {
     "node": ">=20"
   },
