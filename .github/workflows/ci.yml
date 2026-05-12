@@ -91,9 +91,12 @@ jobs:
           # Prepare the template from the latest monorepo state
           pnpm --filter create-croissant run prepare-template
 
+          # Move into the package directory for versioning and publishing
+          cd packages/create-croissant
+
           # Get the latest version from npm to avoid conflicts
           NPM_VERSION=$(pnpm view create-croissant version 2>/dev/null || echo "0.0.0")
-          LOCAL_VERSION=$(node -p "require('./packages/create-croissant/package.json').version")
+          LOCAL_VERSION=$(node -p "require('./package.json').version")
 
           echo "NPM version: $NPM_VERSION"
           echo "Local version: $LOCAL_VERSION"
@@ -101,24 +104,19 @@ jobs:
           # If npm has a higher version, sync local version first
           if [ "$NPM_VERSION" != "$LOCAL_VERSION" ] && [ "$(printf '%s\n' "$NPM_VERSION" "$LOCAL_VERSION" | sort -V | tail -n1)" = "$NPM_VERSION" ] && [ "$NPM_VERSION" != "0.0.0" ]; then
             echo "Syncing local version to $NPM_VERSION to avoid conflict"
-            pnpm --filter create-croissant version $NPM_VERSION --no-git-tag-version
+            npm version $NPM_VERSION --no-git-tag-version
           fi
 
           # Bump version (patch)
-          # We do this from the root using workspaces to ensure all links are maintained
-          pnpm --filter create-croissant version patch --no-git-tag-version
-          NEW_VERSION=$(node -p "require('./packages/create-croissant/package.json').version")
-          REPO_VERSION=$(node -p "require('./package.json').version")
-
+          npm version patch --no-git-tag-version
+          
+          NEW_VERSION=$(node -p "require('./package.json').version")
           echo "New version to be published: $NEW_VERSION"
-          echo "Current repo version: $REPO_VERSION"
 
           # Build the package
-          pnpm --filter create-croissant run build
+          pnpm run build
 
           # Publish to npm (using Trusted Publishing)
-          # We move into the directory to ensure npm publish uses the correct package context
-          cd packages/create-croissant
           pnpm publish --provenance --access public --no-git-checks
 
           # Go back to root for git operations
