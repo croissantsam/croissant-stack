@@ -89,7 +89,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
           # Prepare the template from the latest monorepo state
-          pnpm run prepare-template --filter create-croissant
+          pnpm --filter create-croissant run prepare-template
 
           # Get the latest version from npm to avoid conflicts
           NPM_VERSION=$(pnpm view create-croissant version 2>/dev/null || echo "0.0.0")
