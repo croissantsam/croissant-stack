@@ -13,11 +13,22 @@ const ignoreList = [
   "dist",
   ".git",
   ".turbo",
+  ".expo",
+  ".output",
+  ".nitro",
+  ".tanstack",
+  ".vinxi",
   "package-lock.json",
   "pnpm-lock.yaml",
   "packages/create-croissant",
-  ".github/workflows/ci.yml", // Don't include the CI in the scaffolded project
+  ".github/workflows/ci.yml",
 ];
+
+function shouldIgnore(src) {
+  const relativePath = path.relative(monorepoRoot, src);
+  const parts = relativePath.split(path.sep);
+  return ignoreList.some((ignore) => parts.includes(ignore));
+}
 
 async function retryRemove(targetPath, retries = 5, delay = 500) {
   for (let i = 0; i < retries; i++) {
@@ -49,7 +60,7 @@ async function prepareTemplate() {
     const destPath = path.resolve(templatePath, item);
 
     // Skip ignored items
-    if (ignoreList.some((ignore) => item === ignore || item.startsWith(ignore + "/"))) {
+    if (shouldIgnore(srcPath)) {
       continue;
     }
 
@@ -61,10 +72,7 @@ async function prepareTemplate() {
         if (pkg === "create-croissant") continue;
         await fs.copy(path.resolve(srcPath, pkg), path.resolve(destPath, pkg), {
           dereference: true,
-          filter: (src) => {
-            const relativePath = path.relative(monorepoRoot, src);
-            return !ignoreList.some((ignore) => relativePath.startsWith(ignore));
-          },
+          filter: (src) => !shouldIgnore(src),
         });
       }
       continue;
@@ -80,10 +88,7 @@ async function prepareTemplate() {
 
         await fs.copy(appSrcPath, appDestPath, {
           dereference: true,
-          filter: (src) => {
-            const relativePath = path.relative(monorepoRoot, src);
-            return !ignoreList.some((ignore) => relativePath.startsWith(ignore));
-          },
+          filter: (src) => !shouldIgnore(src),
         });
       }
       continue;
@@ -92,10 +97,7 @@ async function prepareTemplate() {
     try {
       await fs.copy(srcPath, destPath, {
         dereference: true,
-        filter: (src) => {
-          const relativePath = path.relative(monorepoRoot, src);
-          return !ignoreList.some((ignore) => relativePath.startsWith(ignore));
-        },
+        filter: (src) => !shouldIgnore(src),
       });
     } catch (err) {
       console.warn(`Warning: Could not copy ${item}: ${err.message}`);
