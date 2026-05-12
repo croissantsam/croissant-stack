@@ -14,9 +14,23 @@ const ignoreList = [
   ".git",
   ".turbo",
   "package-lock.json",
+  "pnpm-lock.yaml",
   "packages/create-croissant",
   ".github/workflows/ci.yml", // Don't include the CI in the scaffolded project
 ];
+
+async function retryRemove(targetPath, retries = 5, delay = 500) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      await fs.remove(targetPath);
+      return;
+    } catch (err) {
+      if (i === retries - 1) throw err;
+      console.warn(`Retry ${i + 1} removing ${targetPath} due to error: ${err.message}`);
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+  }
+}
 
 // const includeList = ["apps/mobile", "apps/web", "apps/platform", "apps/desktop"];
 
@@ -24,7 +38,7 @@ async function prepareTemplate() {
   console.log("Preparing template for create-croissant...");
 
   // Remove existing template
-  await fs.remove(templatePath);
+  await retryRemove(templatePath);
   await fs.ensureDir(templatePath);
 
   // Get all items in the root directory
