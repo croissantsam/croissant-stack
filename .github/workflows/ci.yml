@@ -101,12 +101,12 @@ jobs:
           # If npm has a higher version, sync local version first
           if [ "$NPM_VERSION" != "$LOCAL_VERSION" ] && [ "$(printf '%s\n' "$NPM_VERSION" "$LOCAL_VERSION" | sort -V | tail -n1)" = "$NPM_VERSION" ] && [ "$NPM_VERSION" != "0.0.0" ]; then
             echo "Syncing local version to $NPM_VERSION to avoid conflict"
-            pnpm version $NPM_VERSION --no-git-tag-version --filter create-croissant
+            pnpm --filter create-croissant version $NPM_VERSION --no-git-tag-version
           fi
 
           # Bump version (patch)
           # We do this from the root using workspaces to ensure all links are maintained
-          pnpm version patch --no-git-tag-version --filter create-croissant
+          pnpm --filter create-croissant version patch --no-git-tag-version
           NEW_VERSION=$(node -p "require('./packages/create-croissant/package.json').version")
           REPO_VERSION=$(node -p "require('./package.json').version")
 
@@ -114,7 +114,7 @@ jobs:
           echo "Current repo version: $REPO_VERSION"
 
           # Build the package
-          pnpm run build --filter create-croissant
+          pnpm --filter create-croissant run build
 
           # Publish to npm (using Trusted Publishing)
           # We move into the directory to ensure npm publish uses the correct package context
