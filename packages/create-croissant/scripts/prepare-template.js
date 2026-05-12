@@ -21,7 +21,8 @@ const ignoreList = [
   "package-lock.json",
   "pnpm-lock.yaml",
   "packages/create-croissant",
-  ".github/workflows/ci.yml",
+  ".github",
+  ".husky",
 ];
 
 function shouldIgnore(src) {
