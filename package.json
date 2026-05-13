@@ -44,7 +44,8 @@
       "electron-winstaller",
       "electron",
       "esbuild",
-      "msw"
+      "msw",
+      "unrs-resolver"
     ]
   },
   "engines": {
