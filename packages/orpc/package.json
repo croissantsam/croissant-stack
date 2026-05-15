@@ -11,9 +11,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@orpc/client": "^1.14.0",
-    "@orpc/server": "^1.14.0",
-    "@orpc/tanstack-query": "^1.14.0",
+    "@orpc/client": "^1.14.3",
+    "@orpc/server": "^1.14.3",
+    "@orpc/tanstack-query": "^1.14.3",
     "@workspace/auth": "workspace:*",
     "@workspace/db": "workspace:*",
     "drizzle-orm": "^0.45.2"
@@ -23,7 +23,7 @@
     "react": ">=18"
   },
   "devDependencies": {
-    "@types/node": "^22.19.1",
+    "@types/node": "^25.8.0",
     "@workspace/config-typescript": "workspace:*"
   }
 }

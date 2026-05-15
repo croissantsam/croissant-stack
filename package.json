@@ -21,24 +21,24 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@orpc/client": "^1.14.2",
-    "@orpc/server": "^1.14.2",
+    "@orpc/client": "^1.14.3",
+    "@orpc/server": "^1.14.3",
     "@tanstack/react-start": "^1.167.65",
-    "react": "19.2.5",
-    "react-dom": "19.2.5"
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
   },
   "devDependencies": {
-    "@better-auth/core": "^1.6.9",
-    "@types/react": "^19.2.7",
+    "@better-auth/core": "^1.6.11",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "husky": "latest",
     "oxfmt": "latest",
     "oxlint": "latest",
-    "portless": "^0.11.0",
-    "turbo": "^2.9.6",
+    "portless": "^0.13.0",
+    "turbo": "^2.9.14",
     "typescript": "6.0.3",
-    "vite": "^8.0.10",
-    "zod": "4.3.6"
+    "vite": "^8.0.13",
+    "zod": "4.4.3"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

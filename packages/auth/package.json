@@ -13,12 +13,12 @@
   },
   "dependencies": {
     "@workspace/db": "workspace:*",
-    "better-auth": "^1.6.9"
+    "better-auth": "^1.6.11"
   },
   "devDependencies": {
     "@better-auth/cli": "^1.4.22",
     "@workspace/config-typescript": "workspace:*",
     "drizzle-kit": "^0.31.10",
-    "tsx": "^4.21.0"
+    "tsx": "^4.22.0"
   }
 }
