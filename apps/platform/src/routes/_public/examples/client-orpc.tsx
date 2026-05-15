@@ -2,7 +2,6 @@ import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, Pencil, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 
@@ -11,10 +10,9 @@ import { Input } from "@workspace/ui/components/input";
 import { Field, FieldError, FieldLabel } from "@workspace/ui/components/field";
 
 import type { router } from "@workspace/orpc/router";
-import type { InferRouterInputs, InferRouterOutputs } from "@orpc/server";
+import type { InferRouterOutputs } from "@orpc/server";
 import { usePlanets, useCreatePlanet, useUpdatePlanet, useDeletePlanet } from "@workspace/orpc/react";
 
-type Inputs = InferRouterInputs<typeof router>;
 type Outputs = InferRouterOutputs<typeof router>;
 type Planet = Outputs["planets"]["getPlanets"][number];
 
@@ -45,7 +43,6 @@ export const Route = createFileRoute("/_public/examples/client-orpc")({
 });
 
 function ClientORPC() {
-  const queryClient = useQueryClient();
   const [editingId, setEditingId] = React.useState<number | null>(null);
 
   const { data: planets = [], isLoading } = usePlanets();
