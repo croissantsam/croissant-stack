@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@renderer/lib/auth-client";
 import { useSecretData } from "@workspace/orpc/react";
 
 export const Route = createFileRoute("/_auth/dashboard")({

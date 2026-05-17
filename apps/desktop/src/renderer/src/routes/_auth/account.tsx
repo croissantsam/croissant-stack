@@ -19,7 +19,7 @@ import { Field, FieldError, FieldLabel } from "@workspace/ui/components/field";
 import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar";
 import { Separator } from "@workspace/ui/components/separator";
 
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@renderer/lib/auth-client";
 
 const profileSchema = z.object({
   name: z.string().min(1, "Name is required"),
