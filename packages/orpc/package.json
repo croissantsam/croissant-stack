@@ -11,8 +11,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@orpc/client": "^1.14.0",
-    "@orpc/server": "^1.14.0",
+    "@orpc/client": "^1.14.3",
+    "@orpc/server": "^1.14.3",
     "@orpc/tanstack-query": "^1.14.0",
     "@workspace/auth": "workspace:*",
     "@workspace/db": "workspace:*",
@@ -23,7 +23,7 @@
     "react": ">=18"
   },
   "devDependencies": {
-    "@types/node": "^22.19.1",
+    "@types/node": "^25.8.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@workspace/config-typescript": "workspace:*"
