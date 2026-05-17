@@ -126,13 +126,17 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
               />
               <Field>
                 <form.Subscribe
-                  selector={(state) => [state.canSubmit, state.isSubmitting]}
-                  children={([canSubmit, isSubmitting]) => (
-                    <Button type="submit" disabled={!canSubmit || isSubmitting || loading}>
-                      {isSubmitting || loading ? "Logging in..." : "Login"}
+                  selector={(state) => ({
+                    canSubmit: state.canSubmit,
+                    isSubmitting: state.isSubmitting,
+                  })}
+                >
+                  {(state: { canSubmit: boolean; isSubmitting: boolean }) => (
+                    <Button type="submit" disabled={!state.canSubmit || state.isSubmitting || loading}>
+                      {state.isSubmitting || loading ? "Logging in..." : "Login"}
                     </Button>
                   )}
-                />
+                </form.Subscribe>
                 <Button variant="outline" type="button" disabled={loading}>
                   Login with Google
                 </Button>

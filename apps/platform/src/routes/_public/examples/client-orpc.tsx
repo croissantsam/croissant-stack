@@ -227,24 +227,28 @@ function ClientORPC() {
           </div>
           <div className="mt-6 flex gap-2">
             <form.Subscribe
-              selector={(state) => [state.canSubmit, state.isSubmitting]}
-              children={([canSubmit, isSubmitting]) => (
+              selector={(state) => ({
+                canSubmit: state.canSubmit,
+                isSubmitting: state.isSubmitting,
+              })}
+            >
+              {(state: { canSubmit: boolean; isSubmitting: boolean }) => (
                 <>
                   {editingId ? (
                     <>
                       <Button
                         type="submit"
                         className="flex items-center gap-2"
-                        disabled={!canSubmit || isSubmitting || updateMutation.isPending}
+                        disabled={!state.canSubmit || state.isSubmitting || updateMutation.isPending}
                       >
                         <Check className="h-4 w-4" />{" "}
-                        {isSubmitting || updateMutation.isPending ? "Saving..." : "Save Changes"}
+                        {state.isSubmitting || updateMutation.isPending ? "Saving..." : "Save Changes"}
                       </Button>
                       <Button
                         variant="outline"
                         type="button"
                         onClick={resetForm}
-                        disabled={isSubmitting || updateMutation.isPending}
+                        disabled={state.isSubmitting || updateMutation.isPending}
                       >
                         Cancel
                       </Button>
@@ -253,15 +257,15 @@ function ClientORPC() {
                     <Button
                       type="submit"
                       className="flex items-center gap-2"
-                      disabled={!canSubmit || isSubmitting || createMutation.isPending}
+                      disabled={!state.canSubmit || state.isSubmitting || createMutation.isPending}
                     >
                       <Plus className="h-4 w-4" />{" "}
-                      {isSubmitting || createMutation.isPending ? "Adding..." : "Add Planet"}
+                      {state.isSubmitting || createMutation.isPending ? "Adding..." : "Add Planet"}
                     </Button>
                   )}
                 </>
               )}
-            />
+            </form.Subscribe>
           </div>
         </form>
       </div>

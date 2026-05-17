@@ -223,23 +223,27 @@ function SSRORPC() {
           </div>
           <div className="mt-6 flex gap-2">
             <form.Subscribe
-              selector={(state) => [state.canSubmit, state.isSubmitting]}
-              children={([canSubmit, isSubmitting]) => (
+              selector={(state) => ({
+                canSubmit: state.canSubmit,
+                isSubmitting: state.isSubmitting,
+              })}
+            >
+              {(state: { canSubmit: boolean; isSubmitting: boolean }) => (
                 <>
                   {editingId ? (
                     <>
                       <Button
                         type="submit"
                         className="flex items-center gap-2"
-                        disabled={!canSubmit || isSubmitting}
+                        disabled={!state.canSubmit || state.isSubmitting}
                       >
-                        <Check className="h-4 w-4" /> {isSubmitting ? "Saving..." : "Save Changes"}
+                        <Check className="h-4 w-4" /> {state.isSubmitting ? "Saving..." : "Save Changes"}
                       </Button>
                       <Button
                         variant="outline"
                         type="button"
                         onClick={resetForm}
-                        disabled={isSubmitting}
+                        disabled={state.isSubmitting}
                       >
                         Cancel
                       </Button>
@@ -248,14 +252,14 @@ function SSRORPC() {
                     <Button
                       type="submit"
                       className="flex items-center gap-2"
-                      disabled={!canSubmit || isSubmitting}
+                      disabled={!state.canSubmit || state.isSubmitting}
                     >
-                      <Plus className="h-4 w-4" /> {isSubmitting ? "Adding..." : "Add Planet"}
+                      <Plus className="h-4 w-4" /> {state.isSubmitting ? "Adding..." : "Add Planet"}
                     </Button>
                   )}
                 </>
               )}
-            />
+            </form.Subscribe>
           </div>
         </form>
       </div>
