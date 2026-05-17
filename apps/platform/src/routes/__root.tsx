@@ -5,7 +5,7 @@ import { ThemeProvider } from "@workspace/ui/components/theme-provider";
 import { ORPCProvider } from "@workspace/orpc/react";
 import { orpc } from "@/lib/orpc";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@workspace/ui/components/empty";
-import { Button } from "@workspace/ui/components/button";
+import { Button, buttonVariants } from "@workspace/ui/components/button";
 
 import appCss from "@workspace/ui/globals.css?url";
 
@@ -43,9 +43,9 @@ export const Route = createRootRoute({
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <Button asChild variant="outline">
-            <Link to="/">Go Home</Link>
-          </Button>
+          <Link to="/" className={buttonVariants({ variant: "outline" })}>
+            Go Home
+          </Link>
         </EmptyContent>
       </Empty>
     );

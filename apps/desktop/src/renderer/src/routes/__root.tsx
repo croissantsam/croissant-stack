@@ -6,7 +6,7 @@ import { ORPCProvider } from "@workspace/orpc/react";
 import { orpc } from "@renderer/lib/orpc";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@workspace/ui/components/empty";
-import { Button } from "@workspace/ui/components/button";
+import { Button, buttonVariants } from "@workspace/ui/components/button";
 
 import "@workspace/ui/globals.css";
 
@@ -24,9 +24,9 @@ export const Route = createRootRoute({
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <Button asChild variant="outline">
-            <Link to="/">Go Home</Link>
-          </Button>
+          <Link to="/" className={buttonVariants({ variant: "outline" })}>
+            Go Home
+          </Link>
         </EmptyContent>
       </Empty>
     );
