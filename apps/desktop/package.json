@@ -44,6 +44,7 @@
     "@workspace/config-typescript": "workspace:*",
     "electron": "39.8.9",
     "electron-builder": "^26.0.12",
-    "electron-vite": "^5.0.0"
+    "electron-vite": "^5.0.0",
+    "vite": "^8.0.12"
   }
 }
