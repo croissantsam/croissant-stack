@@ -1,8 +1,15 @@
-import { contextBridge } from "electron";
+import { contextBridge, ipcRenderer, shell } from "electron";
 import { electronAPI } from "@electron-toolkit/preload";
 
 // Custom APIs for renderer
-const api = {};
+const api = {
+  onAuthCallback: (callback: (url: string) => void) => {
+    const listener = (_: any, url: string) => callback(url);
+    ipcRenderer.on("auth-callback", listener);
+    return () => ipcRenderer.removeListener("auth-callback", listener);
+  },
+  openExternal: (url: string) => shell.openExternal(url),
+};
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise

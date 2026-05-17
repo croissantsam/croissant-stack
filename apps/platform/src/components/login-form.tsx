@@ -16,7 +16,7 @@ import {
 } from "@workspace/ui/components/field";
 import { Input } from "@workspace/ui/components/input";
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useSearch } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 
@@ -30,6 +30,7 @@ const loginSchema = z.object({
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const search = useSearch({ from: "/_public/login" }) as { redirect?: string };
 
   const form = useForm({
     defaultValues: {
@@ -45,7 +46,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
       const { error: signInError } = await authClient.signIn.email({
         email: value.email,
         password: value.password,
-        callbackURL: "/dashboard",
+        callbackURL: search.redirect || "/dashboard",
       });
       if (signInError) {
         setError(signInError.message || "Failed to sign in");

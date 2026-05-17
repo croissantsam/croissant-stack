@@ -1,9 +1,11 @@
-import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";
+import { HeadContent, Link, Scripts, createRootRoute } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@workspace/ui/components/sonner";
 import { ThemeProvider } from "@workspace/ui/components/theme-provider";
 import { ORPCProvider } from "@workspace/orpc/react";
 import { orpc } from "@/lib/orpc";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@workspace/ui/components/empty";
+import { Button } from "@workspace/ui/components/button";
 
 import appCss from "@workspace/ui/globals.css?url";
 
@@ -31,6 +33,23 @@ export const Route = createRootRoute({
     ],
   }),
   shellComponent: RootDocument,
+  notFoundComponent: () => {
+    return (
+      <Empty className="h-screen border-none">
+        <EmptyHeader>
+          <EmptyTitle>404 - Page Not Found</EmptyTitle>
+          <EmptyDescription>
+            The page you are looking for does not exist or has been moved.
+          </EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <Button asChild variant="outline">
+            <Link to="/">Go Home</Link>
+          </Button>
+        </EmptyContent>
+      </Empty>
+    );
+  },
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {

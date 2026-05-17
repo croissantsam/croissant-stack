@@ -15,7 +15,7 @@ import {
   FieldLabel,
 } from "@workspace/ui/components/field";
 import { Input } from "@workspace/ui/components/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
@@ -31,6 +31,27 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = window.api.onAuthCallback(async (url) => {
+      const token = new URL(url).searchParams.get("token");
+      if (token) {
+        setLoading(true);
+        // Better Auth typically handles this via the setSession/proxy
+        // In deep link flow, we might need to manually set the session
+        // or let the client handle the token.
+        // For now, we redirect to dashboard and let authClient.getSession() handle it
+        navigate({ to: "/dashboard" });
+        setLoading(false);
+      }
+    });
+    return () => unsubscribe();
+  }, [navigate]);
+
+  const handleBrowserLogin = () => {
+     const platformUrl = `${import.meta.env.VITE_API_URL.replace("/api/auth", "")}/login?redirect=desktop://auth-callback`;
+     window.api.openExternal(platformUrl);
+   };
 
   const form = useForm({
     defaultValues: {
@@ -139,6 +160,17 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                     </Button>
                   )}
                 </form.Subscribe>
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+                  </div>
+                </div>
+                <Button variant="outline" type="button" onClick={handleBrowserLogin} disabled={loading}>
+                  Login with Browser
+                </Button>
                 <Button variant="outline" type="button" disabled={loading}>
                   Login with Google
                 </Button>

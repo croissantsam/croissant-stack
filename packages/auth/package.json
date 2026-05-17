@@ -12,7 +12,8 @@
     "generate": "better-auth generate --output ../db/src/lib/auth-schema.ts"
   },
   "dependencies": {
-    "@workspace/db": "workspace:*"
+    "@workspace/db": "workspace:*",
+    "better-auth": "1.6.11"
   },
   "devDependencies": {
     "@better-auth/cli": "^1.4.22",

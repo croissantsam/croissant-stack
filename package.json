@@ -25,11 +25,9 @@
     "@orpc/server": "latest",
     "@orpc/tanstack-query": "latest",
     "@tanstack/react-form": "latest",
-    "@tanstack/react-query": "latest",
-    "better-auth": "^1.6.11"
+    "@tanstack/react-query": "latest"
   },
   "devDependencies": {
-    "@better-auth/core": "^1.6.11",
     "husky": "latest",
     "oxfmt": "latest",
     "oxlint": "latest",

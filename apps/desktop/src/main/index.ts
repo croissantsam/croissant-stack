@@ -17,6 +17,20 @@ function createWindow(): void {
     },
   });
 
+  // Handle deep links
+  if (process.defaultApp) {
+    if (process.argv.length >= 2) {
+      app.setAsDefaultProtocolClient("desktop", process.execPath, [join(__dirname, "../../")]);
+    }
+  } else {
+    app.setAsDefaultProtocolClient("desktop");
+  }
+
+  app.on("open-url", (event, url) => {
+    event.preventDefault();
+    mainWindow.webContents.send("auth-callback", url);
+  });
+
   mainWindow.on("ready-to-show", () => {
     mainWindow.show();
   });

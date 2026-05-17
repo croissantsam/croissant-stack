@@ -26,6 +26,7 @@
     "@workspace/auth": "workspace:*",
     "@workspace/orpc": "workspace:*",
     "@workspace/ui": "workspace:*",
+    "better-auth": "1.6.11",
     "electron-updater": "^6.3.9",
     "lucide-react": "^1.14.0",
     "react": "19.2.5",
