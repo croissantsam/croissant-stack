@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@workspace/ui/components/sonner";
 import { ThemeProvider } from "@workspace/ui/components/theme-provider";
 import { ORPCProvider } from "@workspace/orpc/react";
-import { orpc } from "@/lib/orpc";
+import { orpc } from "@renderer/lib/orpc";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
 import "@workspace/ui/globals.css";

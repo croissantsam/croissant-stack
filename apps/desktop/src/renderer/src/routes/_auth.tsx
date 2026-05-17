@@ -1,7 +1,7 @@
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 import { SidebarProvider, SidebarTrigger } from "@workspace/ui/components/sidebar";
-import { AuthSidebar } from "@/components/app-sidebar";
-import { authClient } from "@/lib/auth-client";
+import { AuthSidebar } from "@renderer/components/app-sidebar";
+import { authClient } from "@renderer/lib/auth-client";
 
 export const Route = createFileRoute("/_auth")({
   beforeLoad: async ({ location }) => {

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useSecretData } from "@workspace/orpc/react";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@renderer/lib/auth-client";
 
 export const Route = createFileRoute("/_auth/examples/client-orpc-auth")({
   component: ClientORPCAuth,

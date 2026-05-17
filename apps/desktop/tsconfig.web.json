@@ -10,7 +10,6 @@
   "compilerOptions": {
     "composite": true,
     "paths": {
-      "@/*": ["./src/renderer/src/*"],
       "@renderer/*": ["./src/renderer/src/*"],
       "@main/*": ["./src/main/src/*"],
       "@preload/*": ["./src/preload/src/*"]

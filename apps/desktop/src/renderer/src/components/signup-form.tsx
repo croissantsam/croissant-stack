@@ -18,7 +18,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@renderer/lib/auth-client";
 
 const signupSchema = z
   .object({

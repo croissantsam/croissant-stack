@@ -18,7 +18,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar";
 import { ModeToggle } from "@workspace/ui/components/mode-toggle";
 
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@renderer/lib/auth-client";
 
 // This is sample data.
 export const authNavItems = [
