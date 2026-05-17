@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
-import { Route as PublicSignupRouteImport } from './routes/_public/signup'
 import { Route as PublicLoginRouteImport } from './routes/_public/login'
 import { Route as AuthDashboardRouteImport } from './routes/_auth/dashboard'
 import { Route as AuthAccountRouteImport } from './routes/_auth/account'
@@ -30,11 +29,6 @@ const AuthRoute = AuthRouteImport.update({
 const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicSignupRoute = PublicSignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
   getParentRoute: () => PublicRoute,
 } as any)
 const PublicLoginRoute = PublicLoginRouteImport.update({
@@ -70,7 +64,6 @@ export interface FileRoutesByFullPath {
   '/account': typeof AuthAccountRoute
   '/dashboard': typeof AuthDashboardRoute
   '/login': typeof PublicLoginRoute
-  '/signup': typeof PublicSignupRoute
   '/examples/client-orpc-auth': typeof AuthExamplesClientOrpcAuthRoute
   '/examples/client-orpc': typeof PublicExamplesClientOrpcRoute
 }
@@ -79,7 +72,6 @@ export interface FileRoutesByTo {
   '/account': typeof AuthAccountRoute
   '/dashboard': typeof AuthDashboardRoute
   '/login': typeof PublicLoginRoute
-  '/signup': typeof PublicSignupRoute
   '/examples/client-orpc-auth': typeof AuthExamplesClientOrpcAuthRoute
   '/examples/client-orpc': typeof PublicExamplesClientOrpcRoute
 }
@@ -90,7 +82,6 @@ export interface FileRoutesById {
   '/_auth/account': typeof AuthAccountRoute
   '/_auth/dashboard': typeof AuthDashboardRoute
   '/_public/login': typeof PublicLoginRoute
-  '/_public/signup': typeof PublicSignupRoute
   '/_public/': typeof PublicIndexRoute
   '/_auth/examples/client-orpc-auth': typeof AuthExamplesClientOrpcAuthRoute
   '/_public/examples/client-orpc': typeof PublicExamplesClientOrpcRoute
@@ -102,7 +93,6 @@ export interface FileRouteTypes {
     | '/account'
     | '/dashboard'
     | '/login'
-    | '/signup'
     | '/examples/client-orpc-auth'
     | '/examples/client-orpc'
   fileRoutesByTo: FileRoutesByTo
@@ -111,7 +101,6 @@ export interface FileRouteTypes {
     | '/account'
     | '/dashboard'
     | '/login'
-    | '/signup'
     | '/examples/client-orpc-auth'
     | '/examples/client-orpc'
   id:
@@ -121,7 +110,6 @@ export interface FileRouteTypes {
     | '/_auth/account'
     | '/_auth/dashboard'
     | '/_public/login'
-    | '/_public/signup'
     | '/_public/'
     | '/_auth/examples/client-orpc-auth'
     | '/_public/examples/client-orpc'
@@ -153,13 +141,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof PublicIndexRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/signup': {
-      id: '/_public/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof PublicSignupRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/login': {
@@ -216,14 +197,12 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface PublicRouteChildren {
   PublicLoginRoute: typeof PublicLoginRoute
-  PublicSignupRoute: typeof PublicSignupRoute
   PublicIndexRoute: typeof PublicIndexRoute
   PublicExamplesClientOrpcRoute: typeof PublicExamplesClientOrpcRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
   PublicLoginRoute: PublicLoginRoute,
-  PublicSignupRoute: PublicSignupRoute,
   PublicIndexRoute: PublicIndexRoute,
   PublicExamplesClientOrpcRoute: PublicExamplesClientOrpcRoute,
 }

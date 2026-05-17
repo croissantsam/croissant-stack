@@ -58,10 +58,6 @@ export const publicNavItems = [
         title: "Login",
         url: "/login",
       },
-      {
-        title: "Sign Up",
-        url: "/signup",
-      },
     ],
   },
   {
@@ -157,7 +153,7 @@ export function AppSidebar({ items = authNavItems, ...props }: AppSidebarProps) 
                       <Settings className="h-4 w-4" />
                     </SidebarMenuButton>
                     <SidebarMenuButton
-                      onClick={async (e) => {
+                      onClick={async (e: React.MouseEvent) => {
                         e.preventDefault();
                         e.stopPropagation();
                         await authClient.signOut();
