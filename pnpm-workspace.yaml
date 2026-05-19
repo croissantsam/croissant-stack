@@ -4,8 +4,6 @@ packages:
 allowBuilds:
   '@prisma/client': true
   better-sqlite3: true
-  electron: true
-  electron-winstaller: true
   esbuild: true
   msw: true
   unrs-resolver: true

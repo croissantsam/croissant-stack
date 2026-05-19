@@ -15,7 +15,7 @@ const program = new Command();
 
 program
   .name("croissant-add")
-  .description("Add a mobile or desktop app to an existing Croissant Stack project")
+  .description("Add a mobile app to an existing Croissant Stack project")
   .action(async () => {
     console.log(chalk.bold.yellow("\n🥐 Croissant Stack: Add App\n"));
 
@@ -34,31 +34,26 @@ program
     }
 
     const mobilePath = path.join(process.cwd(), "apps/mobile");
-    const desktopPath = path.join(process.cwd(), "apps/desktop");
-
     const mobileExists = await fs.pathExists(mobilePath);
-    const desktopExists = await fs.pathExists(desktopPath);
 
-    if (mobileExists && desktopExists) {
-      console.log(chalk.blue("Both mobile and desktop apps are already present. Nothing to add!\n"));
+    if (mobileExists) {
+      console.log(chalk.blue("Mobile app is already present. Nothing to add!\n"));
       return;
     }
 
-    const choices = [];
-    if (!mobileExists) choices.push({ name: "Mobile App (Expo)", value: "mobile" });
-    if (!desktopExists) choices.push({ name: "Desktop App (Electron)", value: "desktop" });
-
-    const { type } = await inquirer.prompt([
+    const { confirm } = await inquirer.prompt([
       {
-        type: "list",
-        name: "type",
-        message: "Which app would you like to add?",
-        choices,
+        type: "confirm",
+        name: "confirm",
+        message: "Would you like to add the Mobile App (Expo)?",
+        default: true,
       },
     ]);
 
+    if (!confirm) return;
+
     const projectPath = process.cwd();
-    const spinner = ora(`Adding ${type} app...`).start();
+    const spinner = ora(`Adding mobile app...`).start();
 
     try {
       // Find template path (local dev or published)
@@ -68,31 +63,30 @@ program
         templatePath = path.resolve(__dirname, "../../..");
       }
 
-      if (type === "mobile") {
-        const mobileTemplatePath = path.join(templatePath, "apps/mobile");
-        await fs.copy(mobileTemplatePath, mobilePath);
+      const mobileTemplatePath = path.join(templatePath, "apps/mobile");
+      await fs.copy(mobileTemplatePath, mobilePath);
 
-        // Add scripts back to root package.json
-        rootPkg.scripts = rootPkg.scripts || {};
-        rootPkg.scripts["dev:mobile"] = "turbo run dev --filter=mobile";
-        rootPkg.scripts["dev:ios"] = "turbo run dev --filter=mobile -- --ios";
-        rootPkg.scripts["dev:android"] = "turbo run dev --filter=mobile -- --android";
-        rootPkg.scripts["build:mobile"] = "turbo run build --filter=mobile";
-        await fs.writeJson(rootPkgPath, rootPkg, { spaces: 2 });
+      // Add scripts back to root package.json
+      rootPkg.scripts = rootPkg.scripts || {};
+      rootPkg.scripts["dev:mobile"] = "turbo run dev --filter=mobile";
+      rootPkg.scripts["dev:ios"] = "turbo run dev --filter=mobile -- --ios";
+      rootPkg.scripts["dev:android"] = "turbo run dev --filter=mobile -- --android";
+      rootPkg.scripts["build:mobile"] = "turbo run build --filter=mobile";
+      await fs.writeJson(rootPkgPath, rootPkg, { spaces: 2 });
 
-        // Handle Expo integration in backend auth
-        const authLibPath = path.join(projectPath, "packages/auth/src/lib/auth.ts");
-        if (await fs.pathExists(authLibPath)) {
-          let authContent = await fs.readFile(authLibPath, "utf8");
+      // Handle Expo integration in backend auth
+      const authLibPath = path.join(projectPath, "packages/auth/src/lib/auth.ts");
+      if (await fs.pathExists(authLibPath)) {
+        let authContent = await fs.readFile(authLibPath, "utf8");
 
-          // Add expo import if missing
-          if (!authContent.includes('@better-auth/expo')) {
-            authContent = `import { expo } from "@better-auth/expo";\n${authContent}`;
-          }
+        // Add expo import if missing
+        if (!authContent.includes('@better-auth/expo')) {
+          authContent = `import { expo } from "@better-auth/expo";\n${authContent}`;
+        }
 
-          // Add expo plugin and trustedOrigins if missing
-          if (!authContent.includes('plugins: [expo()]')) {
-            const expoConfig = `
+        // Add expo plugin and trustedOrigins if missing
+        if (!authContent.includes('plugins: [expo()]')) {
+          const expoConfig = `
   plugins: [expo()],
   trustedOrigins: [
     "mobile://",
@@ -105,36 +99,26 @@ program
         ]
       : []),
   ],`;
-            authContent = authContent.replace(
-              'emailAndPassword: { enabled: true },',
-              `emailAndPassword: { enabled: true },${expoConfig}`,
-            );
-          }
-          await fs.writeFile(authLibPath, authContent);
+          authContent = authContent.replace(
+            'emailAndPassword: { enabled: true },',
+            `emailAndPassword: { enabled: true },${expoConfig}`,
+          );
         }
-
-        // Add @better-auth/expo to packages/auth/package.json
-        const authPkgPath = path.join(projectPath, "packages/auth/package.json");
-        if (await fs.pathExists(authPkgPath)) {
-          const authPkg = await fs.readJson(authPkgPath);
-          authPkg.dependencies = authPkg.dependencies || {};
-          if (!authPkg.dependencies["@better-auth/expo"]) {
-            authPkg.dependencies["@better-auth/expo"] = "latest";
-            await fs.writeJson(authPkgPath, authPkg, { spaces: 2 });
-          }
-        }
-      } else if (type === "desktop") {
-        const desktopTemplatePath = path.join(templatePath, "apps/desktop");
-        await fs.copy(desktopTemplatePath, desktopPath);
-
-        // Add scripts back to root package.json
-        rootPkg.scripts = rootPkg.scripts || {};
-        rootPkg.scripts["dev:desktop"] = "turbo run dev --filter=desktop";
-        rootPkg.scripts["build:desktop"] = "turbo run build --filter=desktop";
-        await fs.writeJson(rootPkgPath, rootPkg, { spaces: 2 });
+        await fs.writeFile(authLibPath, authContent);
       }
 
-      spinner.succeed(chalk.green(`${type === "mobile" ? "Mobile" : "Desktop"} app added successfully!`));
+      // Add @better-auth/expo to packages/auth/package.json
+      const authPkgPath = path.join(projectPath, "packages/auth/package.json");
+      if (await fs.pathExists(authPkgPath)) {
+        const authPkg = await fs.readJson(authPkgPath);
+        authPkg.dependencies = authPkg.dependencies || {};
+        if (!authPkg.dependencies["@better-auth/expo"]) {
+          authPkg.dependencies["@better-auth/expo"] = "latest";
+          await fs.writeJson(authPkgPath, authPkg, { spaces: 2 });
+        }
+      }
+
+      spinner.succeed(chalk.green("Mobile app added successfully!"));
 
       const { install } = await inquirer.prompt([
         {
@@ -156,15 +140,11 @@ program
       }
 
       console.log(chalk.bold.cyan("\nNext steps:"));
-      if (type === "mobile") {
-        console.log("  pnpm run dev:mobile    # Start Expo development server");
-      } else {
-        console.log("  pnpm run dev:desktop   # Start Electron development server");
-      }
+      console.log("  pnpm run dev:mobile    # Start Expo development server");
       console.log(chalk.yellow("\nHappy hacking! 🥐\n"));
 
     } catch (error) {
-      spinner.fail(chalk.red(`An error occurred while adding the ${type} app.`));
+      spinner.fail(chalk.red("An error occurred while adding the mobile app."));
       console.error(error);
       process.exit(1);
     }

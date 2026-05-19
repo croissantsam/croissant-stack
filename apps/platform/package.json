@@ -12,7 +12,6 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "@better-auth/electron": "1.6.11",
     "@noble/ciphers": "^2.2.0",
     "@tailwindcss/vite": "^4.2.4",
     "@tanstack/react-router": "^1.168.24",

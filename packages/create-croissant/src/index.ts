@@ -40,12 +40,6 @@ program
         message: "Would you like to include the mobile app (Expo)?",
         default: true,
       },
-      {
-        type: "confirm",
-        name: "desktop",
-        message: "Would you like to include the desktop app (Electron)?",
-        default: true,
-      },
     ]);
 
     const finalProjectName = projectName || answers.name;
@@ -181,29 +175,6 @@ program
               delete authPkg.dependencies["@better-auth/expo"];
               await fs.writeJson(authPkgPath, authPkg, { spaces: 2 });
             }
-          }
-        }
-      }
-
-      // Remove desktop app if not selected
-      if (!answers.desktop) {
-        const desktopPath = path.join(projectPath, "apps/desktop");
-        if (await fs.pathExists(desktopPath)) {
-          await fs.remove(desktopPath);
-
-          // Remove desktop app references from root package.json if it exists
-          const rootPkgPath = path.join(projectPath, "package.json");
-          if (await fs.pathExists(rootPkgPath)) {
-            const rootPkg = await fs.readJson(rootPkgPath);
-            if (rootPkg.scripts) {
-              // Remove desktop specific scripts if they exist
-              Object.keys(rootPkg.scripts).forEach((key) => {
-                if (key.includes("desktop")) {
-                  delete rootPkg.scripts[key];
-                }
-              });
-            }
-            await fs.writeJson(rootPkgPath, rootPkg, { spaces: 2 });
           }
         }
       }

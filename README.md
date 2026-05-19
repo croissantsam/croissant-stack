@@ -16,7 +16,6 @@ pnpm dlx create-croissant@latest
 
 - **Web (Platform)**: [TanStack Start](https://tanstack.com/start) for a seamless, type-safe React experience.
 - **Mobile**: [Expo](https://expo.dev/) (React Native) for cross-platform mobile development.
-- **Desktop**: [Electron](https://www.electronjs.org/) with [electron-vite](https://electron-vite.org/) for native desktop applications.
 - **Authentication**: [Better Auth](https://www.better-auth.com/) with Drizzle adapter and PostgreSQL.
 - **API**: [oRPC](https://orpc.sh/) with a modular, namespaced router for end-to-end type-safety.
 - **Database**: [Drizzle ORM](https://orm.drizzle.team/) with PostgreSQL and Docker Compose setup.
@@ -32,7 +31,6 @@ pnpm dlx create-croissant@latest
 ### Apps
 - `apps/platform`: The main TanStack Start web application.
 - `apps/mobile`: Expo-powered mobile application.
-- `apps/desktop`: Electron-powered desktop application.
 
 ### Packages
 - `packages/auth` (`@workspace/auth`): Authentication logic and Better Auth configuration.
