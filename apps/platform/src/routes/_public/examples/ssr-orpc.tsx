@@ -237,7 +237,8 @@ function SSRORPC() {
                         className="flex items-center gap-2"
                         disabled={!state.canSubmit || state.isSubmitting}
                       >
-                        <Check className="h-4 w-4" /> {state.isSubmitting ? "Saving..." : "Save Changes"}
+                        <Check className="h-4 w-4" />{" "}
+                        {state.isSubmitting ? "Saving..." : "Save Changes"}
                       </Button>
                       <Button
                         variant="outline"

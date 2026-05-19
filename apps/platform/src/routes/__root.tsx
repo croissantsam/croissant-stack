@@ -4,7 +4,13 @@ import { Toaster } from "@workspace/ui/components/sonner";
 import { ThemeProvider } from "@workspace/ui/components/theme-provider";
 import { ORPCProvider } from "@workspace/orpc/react";
 import { orpc } from "@/lib/orpc";
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@workspace/ui/components/empty";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from "@workspace/ui/components/empty";
 import { Button, buttonVariants } from "@workspace/ui/components/button";
 
 import appCss from "@workspace/ui/globals.css?url";

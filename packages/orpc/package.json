@@ -18,14 +18,14 @@
     "@workspace/db": "workspace:*",
     "drizzle-orm": "^0.45.2"
   },
-  "peerDependencies": {
-    "@tanstack/react-query": "^5.100.5",
-    "react": ">=18"
-  },
   "devDependencies": {
     "@types/node": "^22.19.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@workspace/config-typescript": "workspace:*"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.100.5",
+    "react": ">=18"
   }
 }

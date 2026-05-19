@@ -107,7 +107,7 @@ jobs:
 
           # Bump version (patch)
           npm version patch --no-git-tag-version
-          
+
           NEW_VERSION=$(node -p "require('./package.json').version")
           echo "New version to be published: $NEW_VERSION"
 

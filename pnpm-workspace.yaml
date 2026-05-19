@@ -1,8 +1,8 @@
 packages:
-  - 'apps/*'
-  - 'packages/*'
+  - "apps/*"
+  - "packages/*"
 allowBuilds:
-  '@prisma/client': true
+  "@prisma/client": true
   better-sqlite3: true
   electron: set this to true or false
   electron-winstaller: set this to true or false

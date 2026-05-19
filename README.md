@@ -16,12 +16,13 @@ pnpm dlx create-croissant@latest
 
 - **Web (Platform)**: [TanStack Start](https://tanstack.com/start) for a seamless, type-safe React experience.
 - **Mobile**: [Expo](https://expo.dev/) (React Native) for cross-platform mobile development.
+- **Desktop**: [Tauri](https://tauri.app/) for native desktop applications using web technologies.
 - **Authentication**: [Better Auth](https://www.better-auth.com/) with Drizzle adapter and PostgreSQL.
 - **API**: [oRPC](https://orpc.sh/) with a modular, namespaced router for end-to-end type-safety.
 - **Database**: [Drizzle ORM](https://orm.drizzle.team/) with PostgreSQL and Docker Compose setup.
 - **Styling**: [shadcn/ui](https://ui.shadcn.com/) components with Tailwind CSS.
 - **Monorepo Management**: Powered by [pnpm](https://pnpm.io/) and [Turborepo](https://turbo.build/) for lightning-fast builds and smart task orchestration.
-- **Developer Experience**: 
+- **Developer Experience**:
   - Path aliases (`@/`) for clean imports.
   - Strict TypeScript across the entire stack.
   - Ultra-fast linting and formatting with [Oxc](https://oxc.rs/) (`oxlint` and `oxfmt`).
@@ -29,10 +30,13 @@ pnpm dlx create-croissant@latest
 ## 📁 Project Structure
 
 ### Apps
+
 - `apps/platform`: The main TanStack Start web application.
 - `apps/mobile`: Expo-powered mobile application.
+- `apps/desktop`: Tauri-powered desktop application.
 
 ### Packages
+
 - `packages/auth` (`@workspace/auth`): Authentication logic and Better Auth configuration.
 - `packages/db` (`@workspace/db`): Database schema, migrations, and Drizzle client.
 - `packages/orpc` (`@workspace/orpc`): Type-safe API router and definitions.
@@ -96,6 +100,7 @@ The web application will be available at `https://platform.local`.
 All scripts are orchestrated by Turborepo. You can run them from the root directory:
 
 ### Core Scripts
+
 - `pnpm run dev`: Start all applications in development mode.
 - `pnpm run build`: Build all applications for production.
 - `pnpm run quality`: Run all quality checks (linting and formatting) using Oxc.
@@ -104,7 +109,9 @@ All scripts are orchestrated by Turborepo. You can run them from the root direct
 - `pnpm run ci`: Run linting, type-checking, and build (used in CI/CD).
 
 ### 🗄️ Database Scripts
+
 These handle Docker and Drizzle operations:
+
 - `pnpm run db:up`: Start the PostgreSQL Docker container.
 - `pnpm run db:down`: Stop and remove the database container.
 - `pnpm run db:logs`: Tail logs from the database container.
@@ -114,6 +121,7 @@ These handle Docker and Drizzle operations:
 ## 🎯 Turborepo Power
 
 ### Filtering Tasks
+
 Turbo allows you to run tasks for specific packages using the `--filter` flag:
 
 ```bash
@@ -125,6 +133,7 @@ pnpm run build --filter @workspace/db...
 ```
 
 ### Smart Caching
+
 Tasks like `build` and `lint` are cached. If the code hasn't changed, Turbo will replay the logs and output instantly.
 
 ## 🔗 oRPC & Type Safety
