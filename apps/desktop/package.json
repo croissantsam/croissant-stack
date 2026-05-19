@@ -12,8 +12,8 @@
   "dependencies": {
     "@noble/ciphers": "^2.2.0",
     "@tailwindcss/vite": "^4.2.4",
-    "@tanstack/react-router": "^1.168.24",
-    "@tanstack/router-plugin": "^1.167.27",
+    "@tanstack/react-router": "^1.170.4",
+    "@tanstack/router-plugin": "^1.168.6",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
     "@workspace/auth": "workspace:*",
@@ -21,19 +21,19 @@
     "@workspace/ui": "workspace:*",
     "better-auth": "1.6.11",
     "lucide-react": "^1.11.0",
-    "react": "19.2.5",
-    "react-dom": "19.2.5",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
     "sonner": "^2.0.7",
     "tailwindcss": "^4.2.4"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2",
-    "@types/node": "^25.6.0",
-    "@types/react": "19.2.14",
+    "@types/node": "^25.9.1",
+    "@types/react": "19.2.15",
     "@types/react-dom": "19.2.3",
-    "@vitejs/plugin-react": "^4.6.0",
+    "@vitejs/plugin-react": "^6.0.2",
     "@workspace/config-typescript": "workspace:*",
-    "typescript": "~5.8.3",
+    "typescript": "~6.0.3",
     "vite": "^8.0.10",
     "vite-tsconfig-paths": "^6.1.1"
   }
