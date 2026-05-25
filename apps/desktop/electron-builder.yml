@@ -1,4 +1,7 @@
-appId: com.electron.app
+appId: com.desktop.app
+protocol: 
+  name: desktop
+  scheme: com.desktop.app
 productName: desktop
 directories:
   buildResources: build

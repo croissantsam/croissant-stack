@@ -1,5 +1,6 @@
 import Versions from './components/Versions'
 import electronLogo from './assets/electron.svg'
+import { Auth } from './components/auth'
 
 function App(): React.JSX.Element {
   const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
@@ -12,9 +13,7 @@ function App(): React.JSX.Element {
         Build an Electron app with <span className="react">React</span>
         &nbsp;and <span className="ts">TypeScript</span>
       </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
+      <Auth />
       <div className="actions">
         <div className="action">
           <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">

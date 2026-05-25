@@ -1,5 +1,8 @@
 import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import { setupRenderer } from "@better-auth/electron/preload";
+
+setupRenderer();
 
 // Custom APIs for renderer
 const api = {}

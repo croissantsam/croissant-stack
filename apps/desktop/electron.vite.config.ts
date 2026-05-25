@@ -4,7 +4,13 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   main: {},
-  preload: {},
+  preload: {
+    build: {
+      externalizeDeps: { 
+        exclude: ["@better-auth/electron"], 
+      }, 
+    },
+  },
   renderer: {
     resolve: {
       alias: {

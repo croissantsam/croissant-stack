@@ -1,7 +1,10 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
+import { authClient } from '@lib/auth-client';
 
 declare global {
-  interface Window {
+  type Bridges = typeof authClient.$Infer.Bridges;
+
+  interface Window extends Bridges {
     electron: ElectronAPI
     api: unknown
   }

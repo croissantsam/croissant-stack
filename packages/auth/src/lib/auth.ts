@@ -19,12 +19,10 @@ export const auth = betterAuth({
     secure: true,
   },
   trustedOrigins: [
-    "http://localhost:5173",
-    "http://localhost:1420",
-    "tauri://localhost",
-    "http://tauri.localhost",
+    "com.desktop.app:/",
+    "https://platform.localhost",
   ],
-  plugins: [tanstackStartCookies(), electron()],
+  plugins: [electron(), tanstackStartCookies()],
 });
 
 export type Session = typeof auth.$Infer.Session;
