@@ -1,9 +1,10 @@
 import * as React from "react";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Loader2, User } from "lucide-react";
+import { AccessDenied } from "@/components/access-denied";
 
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -40,14 +41,6 @@ const passwordSchema = z
 export const Route = createFileRoute("/_auth/account")({
   beforeLoad: async () => {
     const session = await getSessionFn();
-    if (!session) {
-      throw redirect({
-        to: "/login",
-        search: {
-          redirect: "/account",
-        },
-      });
-    }
     return { session };
   },
   component: AccountPage,
@@ -56,6 +49,11 @@ export const Route = createFileRoute("/_auth/account")({
 function AccountPage() {
   const { session } = Route.useRouteContext();
   const [loading, setLoading] = React.useState(false);
+
+  if (!session) {
+    return <AccessDenied />;
+  }
+
   const user = session.user;
 
   const profileForm = useForm({

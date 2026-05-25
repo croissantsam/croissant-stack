@@ -20,8 +20,8 @@ import { ModeToggle } from "@workspace/ui/components/mode-toggle";
 
 import { authClient } from "@/lib/auth-client";
 
-// This is sample data.
-export const authNavItems = [
+// Unified navigation items
+export const navItems = [
   {
     title: "Dashboard",
     items: [
@@ -35,22 +35,6 @@ export const authNavItems = [
       },
     ],
   },
-  {
-    title: "Examples",
-    items: [
-      {
-        title: "SSR + oRPC (Auth)",
-        url: "/examples/ssr-orpc-auth",
-      },
-      {
-        title: "Client + oRPC (Auth)",
-        url: "/examples/client-orpc-auth",
-      },
-    ],
-  },
-];
-
-export const publicNavItems = [
   {
     title: "Welcome",
     items: [
@@ -76,8 +60,16 @@ export const publicNavItems = [
         url: "/examples/ssr-orpc",
       },
       {
+        title: "SSR + oRPC (Auth)",
+        url: "/examples/ssr-orpc-auth",
+      },
+      {
         title: "Client + oRPC",
         url: "/examples/client-orpc",
+      },
+      {
+        title: "Client + oRPC (Auth)",
+        url: "/examples/client-orpc-auth",
       },
       {
         title: "ISR",
@@ -87,27 +79,8 @@ export const publicNavItems = [
   },
 ];
 
-interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
-  items?: Array<{
-    title: string;
-    items: Array<{
-      title: string;
-      url: string;
-    }>;
-  }>;
-}
-
-export function AuthSidebar(props: React.ComponentProps<typeof Sidebar>) {
-  return <AppSidebar items={authNavItems} {...props} />;
-}
-
-export function PublicSidebar(props: React.ComponentProps<typeof Sidebar>) {
-  return <AppSidebar items={publicNavItems} {...props} />;
-}
-
-export function AppSidebar({ items = authNavItems, ...props }: AppSidebarProps) {
+export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const { data: session } = authClient.useSession();
-
   const user = session?.user || null;
 
   return (
@@ -119,22 +92,29 @@ export function AppSidebar({ items = authNavItems, ...props }: AppSidebarProps) 
         </div>
       </SidebarHeader>
       <SidebarContent>
-        {items.map((item) => (
+        {navItems.map((item) => (
           <SidebarGroup key={item.title}>
             <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {item.items.map((subItem) => (
-                  <SidebarMenuItem key={subItem.title}>
-                    <SidebarMenuButton
-                      render={
-                        <Link to={subItem.url} activeProps={{ className: "bg-sidebar-accent" }} />
-                      }
-                    >
-                      {subItem.title}
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+                {item.items.map((subItem) => {
+                  // Hide Login/Signup if user is already logged in
+                  if (user && (subItem.url === "/login" || subItem.url === "/signup")) {
+                    return null;
+                  }
+
+                  return (
+                    <SidebarMenuItem key={subItem.title}>
+                      <SidebarMenuButton
+                        render={
+                          <Link to={subItem.url} activeProps={{ className: "bg-sidebar-accent" }} />
+                        }
+                      >
+                        {subItem.title}
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>

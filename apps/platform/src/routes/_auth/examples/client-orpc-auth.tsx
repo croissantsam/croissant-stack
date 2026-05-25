@@ -1,18 +1,11 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { getSessionFn } from "@/lib/auth-utils";
 import { useSecretData } from "@workspace/orpc/react";
+import { AccessDenied } from "@/components/access-denied";
 
 export const Route = createFileRoute("/_auth/examples/client-orpc-auth")({
   beforeLoad: async () => {
     const session = await getSessionFn();
-    if (!session) {
-      throw redirect({
-        to: "/login",
-        search: {
-          redirect: "/examples/client-orpc-auth",
-        },
-      });
-    }
     return { session };
   },
   component: ClientORPCAuth,
@@ -22,6 +15,10 @@ function ClientORPCAuth() {
   const { session } = Route.useRouteContext();
 
   const { data, isLoading } = useSecretData();
+
+  if (!session) {
+    return <AccessDenied />;
+  }
 
   return (
     <div className="flex flex-col gap-4">

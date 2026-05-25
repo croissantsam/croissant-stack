@@ -9,15 +9,16 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "generate": "better-auth generate --output ../db/src/lib/auth-schema.ts"
+    "generate": "auth generate --output ../db/src/lib/auth-schema.ts"
   },
   "dependencies": {
+    "@better-auth/electron": "^1.6.11",
     "@workspace/db": "workspace:*",
     "better-auth": "1.6.11"
   },
   "devDependencies": {
-    "@better-auth/cli": "^1.4.22",
     "@workspace/config-typescript": "workspace:*",
+    "auth": "^1.6.11",
     "drizzle-kit": "^0.31.10",
     "tsx": "^4.21.0"
   }

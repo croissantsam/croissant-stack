@@ -1,6 +1,6 @@
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { SidebarProvider, SidebarTrigger } from "@workspace/ui/components/sidebar";
-import { PublicSidebar } from "@/components/app-sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
 
 export const Route = createFileRoute("/_public")({
   component: PublicLayout,
@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_public")({
 function PublicLayout() {
   return (
     <SidebarProvider>
-      <PublicSidebar />
+      <AppSidebar />
       <main className="flex flex-1 flex-col overflow-hidden">
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger />

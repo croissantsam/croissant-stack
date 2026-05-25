@@ -4,6 +4,7 @@ import { Toaster } from "@workspace/ui/components/sonner";
 import { ThemeProvider } from "@workspace/ui/components/theme-provider";
 import { ORPCProvider } from "@workspace/orpc/react";
 import { orpc } from "@/lib/orpc";
+import { getSessionFn } from "@/lib/auth-utils";
 import {
   Empty,
   EmptyContent,

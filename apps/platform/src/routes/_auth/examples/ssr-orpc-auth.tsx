@@ -1,10 +1,13 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { getSessionFn } from "@/lib/auth-utils";
 import { orpc } from "@/lib/orpc";
+import { AccessDenied } from "@/components/access-denied";
 
 const getSecretData = createServerFn({ method: "GET" }).handler(async () => {
   try {
+    const session = await getSessionFn();
+    if (!session) return { secretData: null, error: "Unauthorized" };
     const secretData = await orpc.getSecretData();
     return { secretData };
   } catch {
@@ -15,14 +18,6 @@ const getSecretData = createServerFn({ method: "GET" }).handler(async () => {
 export const Route = createFileRoute("/_auth/examples/ssr-orpc-auth")({
   beforeLoad: async () => {
     const session = await getSessionFn();
-    if (!session) {
-      throw redirect({
-        to: "/login",
-        search: {
-          redirect: "/examples/ssr-orpc-auth",
-        },
-      });
-    }
     return { session };
   },
   loader: () => getSecretData(),
@@ -32,6 +27,10 @@ export const Route = createFileRoute("/_auth/examples/ssr-orpc-auth")({
 function SSRORPCAuth() {
   const { session } = Route.useRouteContext();
   const { secretData, error } = Route.useLoaderData();
+
+  if (!session) {
+    return <AccessDenied />;
+  }
 
   return (
     <div className="flex flex-col gap-4">

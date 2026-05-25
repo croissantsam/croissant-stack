@@ -1,19 +1,16 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { getSessionFn } from "@/lib/auth-utils";
 import { authClient } from "@/lib/auth-client";
 import { orpc } from "@/lib/orpc";
+import { AccessDenied } from "@/components/access-denied";
 
 export const Route = createFileRoute("/_auth/dashboard")({
   beforeLoad: async () => {
     const session = await getSessionFn();
-    if (!session) {
-      throw redirect({
-        to: "/",
-      });
-    }
     return { session };
   },
-  loader: async () => {
+  loader: async ({ context }) => {
+    if (!context.session) return { secretData: null };
     try {
       const data = await orpc.getSecretData();
       return { secretData: data.secret };
@@ -27,6 +24,10 @@ export const Route = createFileRoute("/_auth/dashboard")({
 function Dashboard() {
   const { session } = Route.useRouteContext();
   const { secretData } = Route.useLoaderData();
+
+  if (!session) {
+    return <AccessDenied />;
+  }
 
   return (
     <div className="flex min-h-svh p-6">
