@@ -2,7 +2,6 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@workspace/db";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
-import { electron } from "@better-auth/electron";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -18,11 +17,8 @@ export const auth = betterAuth({
     sameSite: "none",
     secure: true,
   },
-  trustedOrigins: [
-    "com.desktop.app:/",
-    "https://platform.localhost",
-  ],
-  plugins: [electron(), tanstackStartCookies()],
+  trustedOrigins: ["https://platform.localhost"],
+  plugins: [tanstackStartCookies()],
 });
 
 export type Session = typeof auth.$Infer.Session;

@@ -12,7 +12,6 @@
     "generate": "auth generate --output ../db/src/lib/auth-schema.ts"
   },
   "dependencies": {
-    "@better-auth/electron": "^1.6.11",
     "@workspace/db": "workspace:*",
     "better-auth": "1.6.11"
   },

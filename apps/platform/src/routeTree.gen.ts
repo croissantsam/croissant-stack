@@ -13,7 +13,6 @@ import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as PublicSignupRouteImport } from './routes/_public/signup'
-import { Route as PublicLoginDesktopRouteImport } from './routes/_public/login-desktop'
 import { Route as PublicLoginRouteImport } from './routes/_public/login'
 import { Route as AuthDashboardRouteImport } from './routes/_auth/dashboard'
 import { Route as AuthAccountRouteImport } from './routes/_auth/account'
@@ -41,11 +40,6 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
 const PublicSignupRoute = PublicSignupRouteImport.update({
   id: '/signup',
   path: '/signup',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicLoginDesktopRoute = PublicLoginDesktopRouteImport.update({
-  id: '/login-desktop',
-  path: '/login-desktop',
   getParentRoute: () => PublicRoute,
 } as any)
 const PublicLoginRoute = PublicLoginRouteImport.update({
@@ -106,7 +100,6 @@ export interface FileRoutesByFullPath {
   '/account': typeof AuthAccountRoute
   '/dashboard': typeof AuthDashboardRoute
   '/login': typeof PublicLoginRoute
-  '/login-desktop': typeof PublicLoginDesktopRoute
   '/signup': typeof PublicSignupRoute
   '/examples/client-orpc-auth': typeof AuthExamplesClientOrpcAuthRoute
   '/examples/ssr-orpc-auth': typeof AuthExamplesSsrOrpcAuthRoute
@@ -121,7 +114,6 @@ export interface FileRoutesByTo {
   '/account': typeof AuthAccountRoute
   '/dashboard': typeof AuthDashboardRoute
   '/login': typeof PublicLoginRoute
-  '/login-desktop': typeof PublicLoginDesktopRoute
   '/signup': typeof PublicSignupRoute
   '/examples/client-orpc-auth': typeof AuthExamplesClientOrpcAuthRoute
   '/examples/ssr-orpc-auth': typeof AuthExamplesSsrOrpcAuthRoute
@@ -138,7 +130,6 @@ export interface FileRoutesById {
   '/_auth/account': typeof AuthAccountRoute
   '/_auth/dashboard': typeof AuthDashboardRoute
   '/_public/login': typeof PublicLoginRoute
-  '/_public/login-desktop': typeof PublicLoginDesktopRoute
   '/_public/signup': typeof PublicSignupRoute
   '/_public/': typeof PublicIndexRoute
   '/_auth/examples/client-orpc-auth': typeof AuthExamplesClientOrpcAuthRoute
@@ -156,7 +147,6 @@ export interface FileRouteTypes {
     | '/account'
     | '/dashboard'
     | '/login'
-    | '/login-desktop'
     | '/signup'
     | '/examples/client-orpc-auth'
     | '/examples/ssr-orpc-auth'
@@ -171,7 +161,6 @@ export interface FileRouteTypes {
     | '/account'
     | '/dashboard'
     | '/login'
-    | '/login-desktop'
     | '/signup'
     | '/examples/client-orpc-auth'
     | '/examples/ssr-orpc-auth'
@@ -187,7 +176,6 @@ export interface FileRouteTypes {
     | '/_auth/account'
     | '/_auth/dashboard'
     | '/_public/login'
-    | '/_public/login-desktop'
     | '/_public/signup'
     | '/_public/'
     | '/_auth/examples/client-orpc-auth'
@@ -234,13 +222,6 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof PublicSignupRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/login-desktop': {
-      id: '/_public/login-desktop'
-      path: '/login-desktop'
-      fullPath: '/login-desktop'
-      preLoaderRoute: typeof PublicLoginDesktopRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/login': {
@@ -334,7 +315,6 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface PublicRouteChildren {
   PublicLoginRoute: typeof PublicLoginRoute
-  PublicLoginDesktopRoute: typeof PublicLoginDesktopRoute
   PublicSignupRoute: typeof PublicSignupRoute
   PublicIndexRoute: typeof PublicIndexRoute
   PublicExamplesClientOrpcRoute: typeof PublicExamplesClientOrpcRoute
@@ -344,7 +324,6 @@ interface PublicRouteChildren {
 
 const PublicRouteChildren: PublicRouteChildren = {
   PublicLoginRoute: PublicLoginRoute,
-  PublicLoginDesktopRoute: PublicLoginDesktopRoute,
   PublicSignupRoute: PublicSignupRoute,
   PublicIndexRoute: PublicIndexRoute,
   PublicExamplesClientOrpcRoute: PublicExamplesClientOrpcRoute,
