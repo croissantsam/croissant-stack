@@ -28,16 +28,16 @@
   },
   "dependencies": {
     "chalk": "^5.6.2",
-    "commander": "^14.0.3",
+    "commander": "^15.0.0",
     "execa": "^9.6.1",
     "fs-extra": "^11.3.4",
-    "inquirer": "^13.4.2",
+    "inquirer": "^14.0.2",
     "ora": "^9.4.0"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
-    "@types/inquirer": "^9.0.9",
-    "@types/node": "^25.6.0",
+    "@types/inquirer": "^9.0.10",
+    "@types/node": "^25.9.3",
     "@workspace/config-typescript": "workspace:*",
     "tsup": "^8.5.1",
     "typescript": "6.0.3"
