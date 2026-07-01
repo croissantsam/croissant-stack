@@ -11,16 +11,16 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@orpc/client": "^1.14.0",
-    "@orpc/server": "^1.14.0",
-    "@orpc/tanstack-query": "^1.14.0",
+    "@orpc/client": "^1.14.6",
+    "@orpc/server": "^1.14.6",
+    "@orpc/tanstack-query": "^1.14.6",
     "@workspace/auth": "workspace:*",
     "@workspace/db": "workspace:*",
     "drizzle-orm": "^0.45.2"
   },
   "devDependencies": {
-    "@types/node": "^22.19.1",
-    "@types/react": "^19.2.14",
+    "@types/node": "^26.1.0",
+    "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@workspace/config-typescript": "workspace:*"
   },
